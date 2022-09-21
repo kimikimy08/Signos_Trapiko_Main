@@ -29,7 +29,7 @@
     
     <link href="{% static 'css/user_report.css' %}" rel="stylesheet">
     
-    {% if '/userAccounts/' == request.path or '/userAccounts/member/' == request.path or '/userAccounts/admin/' == request.path or '/userAccounts/superadmin/' == request.path %}
+    {% if '/superadmin/userAccounts' == request.path or '/superadmin/userAccounts/member' == request.path or '/superadmin/userAccounts/admin' == request.path or '/superadmin/userAccounts/superadmin' == request.path %}
     <link href="{% static 'css/user_account.css' %}" rel="stylesheet">
     {% endif %}
 

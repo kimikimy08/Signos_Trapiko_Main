@@ -11,10 +11,10 @@ urlpatterns = [
     #path('userReport/approved/', views.a_userReport_approved, name='a_userReport_approved'),
     #path('userReport/rejected/', views.a_userReport_rejected, name='a_userReport_rejected'),
     
-    #path('userAccount/delete_users/<user_id>', views.a_deleteUser, name="a_deleteUser"),
-    #path('userAccount/', views.a_userAccount, name='a_userAccount'),
-    #path('userAccount/member/', views.a_userAccount_member, name='a_userAccount_member'),
-    #path('userAccount/admin/', views.a_userAccount_admin, name='a_userAccount_admin'),
-    #path('userAccount/superadmin/', views.a_userAccount_superadmin, name='a_userAccount_superadmin'),
+    path('userAccount/delete/<user_id>', views.admin_user_account_delete, name="admin_user_account_delete"),
+    path('userAccount/', views.admin_user_account, name='admin_user_account'),
+    path('userAccount/member/', views.admin_user_account_member, name='admin_user_account_member'),
+    path('userAccount/admin/', views.admin_user_account_admin, name='admin_user_account_admin'),
+    path('userAccount/superadmin/', views.admin_user_account_superadmin, name='admin_user_account_superadmin'),
     
 ]

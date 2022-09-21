@@ -55,7 +55,7 @@ class MemberForm(forms.ModelForm):
         model = UserProfile
         fields = ['birthdate', 'upload_id']
 
-class UserFormAdmin(forms.ModelForm):
+class UserManagementForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'middle_name', 'last_name', 'username', 'email', 'mobile_number', 'password']
@@ -75,13 +75,11 @@ class UserFormAdmin(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control',}))
     #password = forms.CharField(validators=[MinLengthValidator(8),RegexValidator('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])$', message="Password should be a combination of Alphabets and Numbers")], widget=forms.PasswordInput(attrs={'placeholder': '********', 'style': 'width: 460px; '}))
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '********', 'class': 'form-control', }))
-    password_readonly = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '********', 'class': 'form-control h6-password'}))
-    
-        
+   
         
         
     def clean(self):
-        clean_data = super(UserFormAdmin, self).clean()
+        clean_data = super(UserManagementForm, self).clean()
         password = clean_data.get('password')
         confirm_password = clean_data.get('confirm_password')
         

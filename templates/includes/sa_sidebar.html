@@ -55,7 +55,7 @@
 
     <!-- User Accounts-->
     <li class="{% if '/userAccounts/' == request.path %} nav-item active {% else %} nav-item {% endif %}">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="{% url 'super_user_account' %}">
             <i class='bx bxs-user-detail'></i>
             <span class="">User Accounts</span></a>
     </li>
