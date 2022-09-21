@@ -129,25 +129,26 @@ def logout(request):
     messages.info(request, "You are logged out.")
     return redirect('login')
 
-@login_required(login_url = 'signin')
+@login_required(login_url = 'login')
 def myAccount(request):
     user = request.user
     redirectUrl = detectUser(user)
     return redirect(redirectUrl)
 
-@login_required(login_url = 'signin')
+
+@login_required(login_url = 'login')
 @user_passes_test(check_role_member)
-def memberDashboard(request):
+def member_dashboard(request):
     return render(request, 'pages/m_Dashboard.html')
 
-@login_required(login_url = 'signin')
+@login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
-def adminDashboard(request):
+def admin_dashboard(request):
     return render(request, 'pages/a_Dashboard.html')
 
-@login_required(login_url = 'signin')
+@login_required(login_url = 'login')
 @user_passes_test(check_role_super)
-def superDashboard(request):
+def superadmin_dashboard(request):
     return render(request, 'pages/sa_Dashboard.html')
 
 

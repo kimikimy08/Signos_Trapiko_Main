@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'accounts',
+    'member',
+    'admins',
+    'superadmin'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

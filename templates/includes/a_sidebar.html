@@ -69,7 +69,7 @@
 
     <!-- My Profile-->
     <li class="{% if '/profile/' == request.path %} nav-item active {% else %} nav-item {% endif %}">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="{% url 'admin_profile' %}">
             <i class='bx bx-user'></i>
             <span class="">My Profile</span></a>
     </li>

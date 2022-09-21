@@ -8,7 +8,7 @@ urlpatterns = [
     path('myAccount', views.myAccount, name='myAccount'),
     path('activate/<uidb64>/<token>', views.activate, name='activate'),
     
-    path('dashboard/', views.memberDashboard, name='memberDashboard'),
-    path('adashboard/', views.adminDashboard, name='adminDashboard'),
-    path('sdashboard/', views.superDashboard, name='superDashboard'),
+    path('dashboard/', views.member_dashboard, name='member_dashboard'),
+    path('adashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('sdashboard/', views.superadmin_dashboard, name='superadmin_dashboard'),
 ]
