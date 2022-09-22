@@ -40,7 +40,7 @@
         <!-- Reports Sub-Menu  -->
         <div id="collapseReports" class="collapse" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner">
-                <a class="{% if '/userReports/' == request.path %} collapse-item active {% else %} collapse-item{% endif %} " href="">
+                <a class="{% if '/userReports/' == request.path %} collapse-item active {% else %} collapse-item{% endif %} " href="{% url 'user_reports' %}">
                     <i class='bx bx-user-voice'></i>
                     <span>User Report</span></a>
                 <a class="collapse-item" href="#">

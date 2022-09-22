@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'accounts',
     'member',
     'admins',
-    'superadmin'
+    'superadmin',
+    'incidentreport',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
