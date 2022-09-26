@@ -1,2 +1,2 @@
-release: python3 manage.py migrate.py migrate
+release: python3 manage.py migrate
 web: gunicorn signosTrapiko.wsgi
