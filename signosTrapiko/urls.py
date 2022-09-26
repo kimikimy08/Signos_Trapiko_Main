@@ -27,4 +27,4 @@ urlpatterns = [
     path('admins/', include('admins.urls')),
     path('superadmin/', include('superadmin.urls')),
     path('', include('incidentreport.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
