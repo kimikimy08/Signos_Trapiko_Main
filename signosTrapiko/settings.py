@@ -16,7 +16,7 @@ import os
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = Path(BASE_DIR, "templates")
 
 
@@ -142,10 +142,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'static'),
-    )
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'signosTrapiko/static'),
+]
 
 STATIC_URL = '/media/'
 MEDIA_ROOT = Path(BASE_DIR, 'media')
