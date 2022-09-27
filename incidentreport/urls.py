@@ -17,5 +17,7 @@ urlpatterns = [
     path('myReport/pending', views.my_report_pending, name='my_report_pending'),
     path('myReport/approved', views.my_report_approved, name='my_report_approved'),
     path('myReport/rejected', views.my_report_rejected, name='my_report_rejected'),
+    path('myReport/add', views.my_report_add, name='my_report_add'),
     path('myReport/delete/<incident_id>', views.my_report_delete, name='my_report_delete'),
+        
 ]

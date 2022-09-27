@@ -25,16 +25,20 @@
     <!-- Custom CSS -->
     
     <link href="{% static 'css/vendor/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/m_myreports.css' %}" rel="stylesheet">
+
+    <link href=" {% static 'css/profile.css' %} " rel="stylesheet">
     
     <link href="{% static 'css/user_report.css' %}" rel="stylesheet">
-    
+    {% if '/myReport/add' == request.path or '/myReport' == request.path or  '/myReport/pending' == request.path or '/myReport/approved' == request.path or '/myReport/rejected' == request.path%}
+    <link href="{% static 'css/m_myreports.css' %}" rel="stylesheet">
+    <link href="{% static 'css/m_reports.css' %}" rel="stylesheet">
+    {% endif %}
     {% if '/superadmin/userAccounts' == request.path or '/superadmin/userAccounts/member' == request.path or '/superadmin/userAccounts/admin' == request.path or '/superadmin/userAccounts/superadmin' == request.path %}
     <link href="{% static 'css/user_account.css' %}" rel="stylesheet">
     {% endif %}
 
+    <link href=" {% static 'css/custom.css' %} " rel="stylesheet">
     
-    <link href=" {% static 'css/profile.css' %} " rel="stylesheet">
    
 
 </head>

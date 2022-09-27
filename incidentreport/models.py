@@ -2,7 +2,7 @@ from django.db import models
 from accounts.models import User
 
 # Create your models here.
-class IncidentReport(models.Model):
+class UserReport(models.Model):
     PENDING = 1
     APPROVED = 2
     REJECTED = 3
@@ -14,6 +14,7 @@ class IncidentReport(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField(max_length=250, blank=True)
     location = models.CharField(max_length=250)
+    upload_photovideo = models.ImageField(default='user.jpeg', upload_to='incident_report/image')
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
     status = models.PositiveSmallIntegerField(choices=STATUS, blank=True, null=True)

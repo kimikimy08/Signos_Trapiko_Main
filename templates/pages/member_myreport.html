@@ -17,7 +17,7 @@
         <div id="content">
 
             {% include 'includes/navbar.html' %}
-
+            {% include 'includes/alerts_frame.html' %}
 
 
             <!-- ===== MAIN CONTENT  ===== -->
@@ -47,10 +47,9 @@
 
 
                 <div class="add-incident">
-                    <button class="add-incident-btn mt-2 mb-2"><i class="fa-regular fa-plus"><a href="#" data-toggle="modal" data-target="#addReport-Modal" title="Add Incident Report"></i> Add Incident Report</button></a>
-                </div>    
+                    <button class="add-incident-btn mt-2 mb-2"><i class="fa-regular fa-plus"><a href="{% url 'my_report_add' %}" title="Add Incident Report"></i> Add Incident Report</button></a>
+                </div>     
              
-    
 
             <!-- Page Title -->
             
@@ -61,15 +60,15 @@
                 <div class="card-header py-3">
                     <ul class="nav nav-pills card-header-pills">
                         <li class="nav-item">
-                            <a class="{% if '/userReports/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report' %}">All Reports</a>
+                            <a class="{% if '/myReport' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report' %}">All Reports</a>
                         </li>
                         <li class="nav-item">
-                            <a class="{% if '/userReports/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report_pending' %}">Pending</a>
+                            <a class="{% if '/myReport/pending' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report_pending' %}">Pending</a>
                         </li>
                         <li class="nav-item">
-                            <a class="{% if '/userReports/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report_approved' %}">Approved</a>
+                            <a class="{% if '/myReport/approved' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report_approved' %}">Approved</a>
                         <li class="nav-item">
-                            <a class="{% if '/userReports/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report_rejected' %}">Rejected</a>
+                            <a class="{% if '/myReport/rejected' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report_rejected' %}">Rejected</a>
                         </li>
                     </ul>
                 </div>
@@ -107,95 +106,26 @@
                                     <td>{{incident.date}}</td>
                                     <td>{{incident.time}}</td>
                                     <td>
+                                        {% comment %} {{incident.status}} {% endcomment %}
                                         {% if incident.status == 1 %}
                                         <span class="badge badge-warning">{{incident.get_status}}</span>
                                         {% elif incident.status == 2 %}
                                         <span class="badge badge-success">{{incident.get_status}}</span>
-                                        {% else %}
+                                        {% elif incident.status == 3 %}
                                         <span class="badge badge-danger">{{incident.get_status}}</span>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <a href="#" data-toggle="modal" data-target="#viewReportModal{{ incident.id }}"><i class='bx bxs-folder-open'
-                                            data-toggle="tooltip" title="View"></i></a>
-                                        <a href="#" data-toggle="modal" data-target="#editUserModal{{ users.id }}"><i class='bx bxs-edit'
+                                        <a href="m_myviewreports.html"><i class='bx bxs-folder-open'
+                                                data-toggle="tooltip" title="View"></i></a>
+                                        <a href="m_myeditreports.html"><i class='bx bxs-edit'
                                                 data-toggle="tooltip" title="Edit"></i></a>
-                                        
-                                        <a href="#" data-toggle="modal" data-target="#deleteReportModal{{ incident.id }}"><i class='bx bx-trash'
-                                                data-toggle="tooltip" title="Delete" ></i></a>
-                                                
+                                        <a href="#!"><i class='bx bx-trash'
+                                                data-toggle="tooltip" title="Delete"></i></a>
                                     </td>
                                 </tr>
 
-                                <div class="modal fade" id="viewReportModal{{ incident.id }}" role="dialog">
-                                    <div class="modal-dialog">
-                                      <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title"> View Incident Report</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                                <i class="fa-solid fa-xmark"></i>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            
-                                            <!-- TO EDIT -->
-                                            <!-- <img src="assets/img/roadmishap.jpg" class="viewReport-img mb-4"> -->
-                                  
-                                                <h6><strong>Date and Time</strong></h6>
-                                                <p>{{incident.created_at}}</p>
-                                      
-                                           
-                                                <h6><strong>Location</strong></h6>
-                                                <p>{{incident.location}}</p>
-                                           
-                                         
-                                                <h6><strong>Description</strong></h6>
-                                                <p>{{incident.description}}</p>
-                                          
-                                        
-                                                <h6><strong>Status</strong></h6>
-                                                <p>{% if incident.status %}{{incident.get_status}}{% endif %}</p>
-                                           
-                                         
-                                                <h6><strong>Username</strong></h6>
-                                                <p>{{incident.user.username}}</p>
-                                            
-                                                <h6><strong>Created At</strong></h6>
-                                                <p>{{incident.created_at}}</p>
-                                             
-                                                <h6><strong>Updated At</strong></h6>
-                                                <p>{{incident.updated_at}}</p>
-                                          
                                 
-                                        </div>
-                                      </div>
-                                    </div>
-                                </div>
-
-                                 <!-- Delete Modal HTML -->
-<div class="modal fade" id="deleteReportModal{{ incident.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete this account?</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                    </button>
-            </div>
-        <div class="modal-body">
-            <h6>Do you want to delete the selected record {{incident.id}}? This process cannot be undone.</h6>
-        </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                
-    
-        
-                    <a class="btn btn-sm btn-danger" href="{% url 'my_report_delete' incident.id %}">Delete</a>
-            
-                </div>
-        </div>
-    </div>
-    </div>
 
                                 <!-- End of Modals  -->
                                {% endfor %}
@@ -204,334 +134,10 @@
                         </table>
 
                        
-                        <!-- View User Modal -->
 
 
                         
 
-                                     <!--============= MODAL FOR EDIT -->
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="editReport-Modal" role="dialog">
-                                        <div class="modal-dialog">
-                                        
-                                          <!--=========== MODAL CONTENT ========-->
-                                          <div class="modal-content">
-                                            <div class="modal       -header">
-                                              <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                              <h4 class="modal-title"> Edit Incident Report</h4> 
-                                            </div>
-
-                                            <div class="modal-body">
-                                              <h4 class="incident-title"> Edit Incident Report 
-                                                <span><button type="button" class="btn-close float-right" data-dismiss="modal"><i class="fa fa-xmark fa-sm"></i></button></span> </h4>
-
-
-                                                <!-- =========== Date and Time-->
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-6">
-                                                          <label for="inputdate">Date</label>
-                                                          <input type="date" class="form-control" id="inputdate">
-                                                        </div>
-                                                         <div class="form-group col-md-6">
-                                                          <label for="inputtime">Time</label>
-                                                          <input type="time" class="form-control" id="inputmobile">
-                                                        </div>
-                                                    </div>
-
-                                                      
-                                                 <!-- =========== LOCATION, AND DESCRIPTION-->
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-12">
-                                                          <label for="inputlocation">Location</label>
-                                                          <input type="text" class="form-control" id="inputlocation" placeholder="Congressional Avenue, Villa Lourdes Townhomes, Bahay Toro, 1st District, Quezon City, Eastern Manila District, Metro Manila, 1106, Philippines">
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-12">
-                                                          <label for="inputdescription">Description</label>
-                                                          <input type="text" class="form-control" id="inputdescription" placeholder="It was raining when two vehicles collided.">
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- ===========  SEVERITY, AND MAIN CAUSE -->
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-6">
-                                                          <label for="inputdate">Severity </label>
-                                                          <div class="dropdown">
-                                                              <button class="btn btn- dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Property Damage </button>
-                                                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item" href="#">Property Damage</a>
-                                                                <a class="dropdown-item" href="#">Fatal</a>
-                                                                <a class="dropdown-item" href="#">Other</a>
-                                                              </div>
-                                                            </div>
-                                                        </div>
-
-                                                         <div class="form-group col-md-6">
-                                                          <label for="inputtime">Main Cause</label>
-                                                          <div class="dropdown">
-                                                              <button class="btn btn- dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Human Error </button>
-                                                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item" href="#">Human Error</a>
-                                                                <a class="dropdown-item" href="#">Mechanical Error</a>
-                                                                <a class="dropdown-item" href="#">Other</a>
-                                                              </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- ===========  COLLISION TYPE, AND VEHICLE INVOLVED -->
-                                                     <div class="form-row">
-                                                        <div class="form-group col-md-6">
-                                                          <label for="inputdate"> Collision Type</label>
-                                                          <div class="dropdown">
-                                                              <button class="btn btn- dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Side Swipe </button>
-                                                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item" href="#"> Side Swipe </a>
-                                                                <a class="dropdown-item" href="#">Rear-End Collision</a>
-                                                                <a class="dropdown-item" href="#">Head-On Collision</a>
-                                                                <a class="dropdown-item" href="#"> Single Vehicle Collision</a>
-                                                                <a class="dropdown-item" href="#"> Multiple Vehicle Collision</a>
-                                                                <a class="dropdown-item" href="#"> Blind-Spot Collision</a>
-                                                              </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group col-md-6">
-                                                          <label for="inputdate"> Vehicle Involved</label>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                                              <label class="form-check-label" for="flexCheckDefault"> SUV </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                                              <label class="form-check-label" for="flexCheckChecked"> Van </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                                              <label class="form-check-label" for="flexCheckDefault"> Jeepney </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                                              <label class="form-check-label" for="flexCheckChecked"> Taxi </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                                              <label class="form-check-label" for="flexCheckDefault"> Truck </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                                              <label class="form-check-label" for="flexCheckChecked"> Tricycle  </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                                              <label class="form-check-label" for="flexCheckDefault"> Bike </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                                              <label class="form-check-label" for="flexCheckChecked"> Motocycle </label>
-                                                          </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                    <!-- =========== DOES IT CAUSE TRAFFIC-->
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-8">
-                                                          <label for="inputdate"> Does it cause traffic</label>
-                                                          <div class="dropdown">
-                                                              <button class="btn btn- dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Yes </button>
-                                                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item" href="#">Yes</a>
-                                                                <a class="dropdown-item" href="#">No</a>
-                                                              </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                    <div class="form-row">
-                                                    <label class="form-label" for="image"></label>
-                                                        <h6>Upload Image or Video </h6>
-                                                        <input type="file" 
-                                                               id="idphoto" 
-                                                               class="form-control p-1" 
-                                                               placeholder=""/> 
-                                                        <span class="text-danger"> </span> 
-                                                      </td>
-                                                  </div>
-                                            </div>
-
-                                            <div class="modal-footer">
-                                              <button type="button" class="btn-save"> Save Changes </button>
-                                            </div>
-                                            
-                                          </div>
-                                        </div>
-                                    </div>
-
-                                      <!--============= MODAL FOR ADD -->
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="addReport-Modal" role="dialog">
-                                        <div class="modal-dialog">
-                                        
-                                          <!--=========== MODAL CONTENT ========-->
-                                          <div class="modal-content">
-                                            <div class="modal       -header">
-                                              <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                              <h4 class="modal-title"> Add Incident Report</h4> 
-                                            </div>
-
-                                            <div class="modal-body">
-                                              <h4 class="incident-title"> Add Incident Report 
-                                                <span><button type="button" class="btn-close float-right" data-dismiss="modal"><i class="fa fa-xmark fa-sm"></i></button></span> </h4>
-
-
-                                                <!-- =========== Date and Time-->
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-6">
-                                                          <label for="inputdate">Date</label>
-                                                          <input type="date" class="form-control" id="inputdate">
-                                                        </div>
-                                                         <div class="form-group col-md-6">
-                                                          <label for="inputtime">Time</label>
-                                                          <input type="time" class="form-control" id="inputmobile">
-                                                        </div>
-                                                    </div>
-
-                                                      
-                                                 <!-- =========== LOCATION, AND DESCRIPTION-->
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-12">
-                                                          <label for="inputlocation">Location</label>
-                                                          <input type="text" class="form-control" id="inputlocation">
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-12">
-                                                          <label for="inputdescription">Description</label>
-                                                          <input type="text" class="form-control" id="inputdescription">
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- ===========  SEVERITY, AND MAIN CAUSE -->
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-6">
-                                                          <label for="inputdate">Severity </label>
-                                                          <div class="dropdown">
-                                                              <button class="btn btn- dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> __________ </button>
-                                                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item" href="#">Property Damage</a>
-                                                                <a class="dropdown-item" href="#">Fatal</a>
-                                                                <a class="dropdown-item" href="#">Other</a>
-                                                              </div>
-                                                            </div>
-                                                        </div>
-
-                                                         <div class="form-group col-md-6">
-                                                          <label for="inputtime">Main Cause</label>
-                                                          <div class="dropdown">
-                                                              <button class="btn btn- dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> __________ </button>
-                                                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item" href="#">Human Error</a>
-                                                                <a class="dropdown-item" href="#">Mechanical Error</a>
-                                                                <a class="dropdown-item" href="#">Other</a>
-                                                              </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- ===========  COLLISION TYPE, AND VEHICLE INVOLVED -->
-                                                     <div class="form-row">
-                                                        <div class="form-group col-md-6">
-                                                          <label for="inputdate"> Collision Type</label>
-                                                          <div class="dropdown">
-                                                              <button class="btn btn- dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> __________ </button>
-                                                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item" href="#"> Side Swipe </a>
-                                                                <a class="dropdown-item" href="#">Rear-End Collision</a>
-                                                                <a class="dropdown-item" href="#">Head-On Collision</a>
-                                                                <a class="dropdown-item" href="#"> Single Vehicle Collision</a>
-                                                                <a class="dropdown-item" href="#"> Multiple Vehicle Collision</a>
-                                                                <a class="dropdown-item" href="#"> Blind-Spot Collision</a>
-                                                              </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group col-md-6">
-                                                          <label for="inputdate"> Vehicle Involved</label>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                                              <label class="form-check-label" for="flexCheckDefault"> SUV </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                                              <label class="form-check-label" for="flexCheckChecked"> Van </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
-                                                              <label class="form-check-label" for="flexCheckDefault"> Jeepney </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                                              <label class="form-check-label" for="flexCheckChecked"> Taxi </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
-                                                              <label class="form-check-label" for="flexCheckDefault"> Truck </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                                              <label class="form-check-label" for="flexCheckChecked"> Tricycle  </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                                              <label class="form-check-label" for="flexCheckDefault"> Bike </label>
-                                                          </div>
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                                              <label class="form-check-label" for="flexCheckChecked"> Motocycle </label>
-                                                          </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                    <!-- =========== DOES IT CAUSE TRAFFIC-->
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-8">
-                                                          <label for="inputdate"> Does it cause traffic</label>
-                                                          <div class="dropdown">
-                                                              <button class="btn btn- dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> __________   </button>
-                                                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item" href="#">Yes</a>
-                                                                <a class="dropdown-item" href="#">No</a>
-                                                              </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-row">
-                                                    <label class="form-label" for="image"></label>
-                                                        <h6>Upload Image or Video </h6>
-                                                        <input type="file" 
-                                                               id="idphoto" 
-                                                               class="form-control p-1" 
-                                                               placeholder=""/> 
-                                                        <span class="text-danger"> </span> 
-                                                      </td>
-                                                  </div>
-                                            </div>
-
-                                            <div class="modal-footer">
-                                              <button type="button" class="discard-btn"> Discard </button>
-                                               <button type="button" class="btn-save"> Add Incident </button>
-                                            </div>
-                                            
-                                          </div>
-                                        </div>
-                                    </div>
                     </div>
                 </div>
             </div>
@@ -556,6 +162,6 @@
         </a>
         <!-- End of Scroll to Top-->
 
-{% include 'includes/alerts.html' %}
+
 
 {% endblock %}
