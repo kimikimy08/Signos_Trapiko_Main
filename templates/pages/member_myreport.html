@@ -116,16 +116,14 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <a href="m_myviewreports.html"><i class='bx bxs-folder-open'
+                                        <a href="{% url 'my_report_view' incident.id %}"><i class='bx bxs-folder-open'
                                                 data-toggle="tooltip" title="View"></i></a>
-                                        <a href="m_myeditreports.html"><i class='bx bxs-edit'
-                                                data-toggle="tooltip" title="Edit"></i></a>
-                                        <a href="#!"><i class='bx bx-trash'
-                                                data-toggle="tooltip" title="Delete"></i></a>
+                                                <a href="#" data-toggle="modal" data-target="#deleteModal{{ incident.id }}"><i class='bx bx-trash'
+                                                    data-toggle="tooltip" title="Delete" ></i></a>
                                     </td>
                                 </tr>
 
-                                
+                               
 
                                 <!-- End of Modals  -->
                                {% endfor %}

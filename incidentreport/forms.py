@@ -11,7 +11,7 @@ class TimeInput(forms.TimeInput):
 
 class UserReportForm(forms.ModelForm):
     date = forms.DateField(widget=DateInput(attrs={'class': 'form-control'}), initial=datetime.datetime.now())
-    upload_photovideo = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control p-1'}))
+    upload_photovideo = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control p-1'} ) )
     time = forms.TimeField(widget=TimeInput(attrs={'class': 'form-control'}), initial=datetime.datetime.now())
     location = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Start typing...', 'required': 'required', 'class': 'form-control'}))
     description = forms.CharField(widget=forms.Textarea(attrs={'area': '3', 'class': 'form-control'}))
@@ -21,6 +21,12 @@ class UserReportForm(forms.ModelForm):
     class Meta:
         model = UserReport
         fields = ['location', 'description', 'upload_photovideo']
+    
+    def __init__(self, *args, **kwargs):
+            # first call parent's constructor
+        super(UserReportForm, self).__init__(*args, **kwargs)
+        # there's a `fields` property now
+        self.fields['upload_photovideo'].required = False
 
     # def __init__(self, *args, **kwargs):
     #     super(UserReportForm, self).__init__(*args, **kwargs)

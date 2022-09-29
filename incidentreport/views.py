@@ -159,11 +159,14 @@ def my_report_add(request):
             time=request.POST['time']
             location=request.POST['location']
             description=request.POST['description']
-            upload_photovideo=request.FILES['upload_photovideo']
+            
+            
+            upload_photovideo=request.FILES.get('upload_photovideo')
+            status = 1
             # user_report = form.save(commit=False)
             # user_report.user = get_user(request)
             # user_report.save()
-            obj=UserReport.objects.create(user_id=request.user.pk, date=date, time=time, location=location,description=description,upload_photovideo=upload_photovideo)
+            obj=UserReport.objects.create(user_id=request.user.pk, date=date, time=time, location=location,description=description,upload_photovideo=upload_photovideo, status=status)
             obj.save()
             messages.success(request, 'User Report added successfully!')
             return redirect('my_report')
@@ -179,4 +182,36 @@ def my_report_add(request):
 
     }
     return render(request, 'pages/member_myreport_add.html', context)
-    
+
+def my_report_view(request, id):
+    user_report = get_object_or_404(UserReport, pk=id)
+    context = {
+        'user_report': user_report,
+    }
+
+    return render(request, 'pages/member_myreport_view.html', context)
+
+@login_required(login_url = 'login')
+@user_passes_test(check_role_member)
+def my_report_edit(request, id):
+    user_report = get_object_or_404(UserReport, pk=id)
+    if request.method == 'POST':
+        form = UserReportForm(request.POST or None, request.FILES or None, instance=user_report)
+        if form.is_valid():
+            form.save()
+            return redirect('my_report')
+    else:
+        form = UserReportForm(instance=user_report)
+    context = {
+        'form': form,
+        'user_report': user_report,
+    }
+    return render(request, 'pages/member_myreport_edit.html', context)
+
+@login_required(login_url = 'login')
+@user_passes_test(check_role_member)
+def my_report_delete(request, id):
+    user_report = get_object_or_404(UserReport, pk=id)
+    user_report.delete()
+    return redirect('my_report')
+

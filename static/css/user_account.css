@@ -1,27 +1,3 @@
-:root {
-    /* Main Palette */
-    --darkBlue: #20325A;
-    --moderateBlue: #345192;
-    --darkRed: #A50000;
-    --softRed: #EF4B4C;
-    --darkCyan: #108d6f;
-    --strongCyan: #18d2a5;
-    --softOrange: #EAA74D;
-    --pureYellow: #FAE500;
-    --lightGrayishBlue: #EAECF4;
-    --black: #222;
-    --white: #FFF;
-
-    /* Shadow */
-    --box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1);
-
-    /* Sizing  */
-    --normal-font-size: 1rem;
-    --header-height: 3rem;
-    --nav-width: 68px;
-}
-
-/* ========== END OF MAIN PALETTE */
 
 
 table.dataTable>thead .sorting:before,
@@ -62,9 +38,6 @@ td a i {
     font-size: 18px;
 }
 
-.form-group {
-    width: 150px;
-}
 
 .custom-select {
     font-size: 14px;
@@ -76,52 +49,6 @@ td a i {
 
 /* ========== ADD USER MODAL */
 
-.form-control {
-    width: 440px;
-}
-
-input.form-control.date {
-    cursor: pointer;
-}
-
-label.custom-file-label {
-    width: 440px;
-    cursor: pointer;
-}
-
-select.custom-select {
-    width: 440px;
-    cursor: pointer;
-}
-
-
-@media (max-width: 500px) {
-    input.form-control {
-        width: 300px;
-    }
-
-    label.custom-file-label {
-        width: 300px;
-    }
-
-    select.custom-select {
-        width: 300px;
-    }
-}
-
-@media (min-width: 576) and (max-width: 768px) {
-    input.form-control {
-        width: 335px;
-    }
-
-    label.custom-file-label {
-        width: 440px;
-    }
-
-    select.custom-select {
-        width: 440px;
-    }
-}
 
 .modal .modal-dialog {
     max-width: 500px;
@@ -160,4 +87,36 @@ select.custom-select {
 
 .modal form label {
     font-weight: normal;
+}
+
+/* ========== MAIN CONTENT*/
+
+
+.footer-user-management{
+    margin-left: auto;
+}
+
+.view-user-img{
+    width: 15%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    border-radius: 100%;
+}
+
+
+.role-btn{
+    background-color: #EAA74D;
+    border: none;
+    color: #fff;
+    font-size: 13px;
+    width: 8rem;
+    height: auto;
+    margin-right: auto;
+    margin-left: auto;
+    border-radius: 8rem;
+    margin-top: 10px;
+    cursor: context-menu;
+
 }
