@@ -32,18 +32,14 @@
                     <div class="card social-prof">
                         <div class="card-body-profile" style="background-color:{{profile.cover_color}}" >
                             <div>
-                                {% if member.profile_picture %}
-                                <img class="thumbnail" src="{{profile.profile_picture.url}}" alt="Profile Picture">
+                                {% if profile.profile_picture %}
+                                <img src="{{profile.profile_picture.url}}" class="view-user-img mb-1" alt="Image not Found">
                                 {% else %}
-                                <img class="thumbnail" src="{% static 'images/user.jpeg' %}" alt="Profile Picture">
-                                {% endif %}   
-                                {% if member.cover_color == '#000000FF' %}
-                                <h3 class="text-center" style="color:white">{{profile.user.first_name}} {{profile.user.last_name}}</h3>
-                                {% else %}
-                                <h3 class="text-center">{{profile.user.first_name}} {{profile.user.last_name}}</h3>
-                                {% endif %}
+                                <img src="{% static 'images/user.jpeg' %}" class="view-user-img mb-1" alt="Image not Found">
+                                {% endif %} 
+                                
                                 <button class="admin-btn mt-3" > {{profile.user.get_role}} </button>
-                                <button class="edit-btn mb-3" type="button" href="#!"> Edit</button>
+                                <a href="{% url 'admin_profile_edit' %}"><button class="edit-btn mb-3" type="button" href=""> Edit</button></a>
                             </div>
                         </div>
                     </div>

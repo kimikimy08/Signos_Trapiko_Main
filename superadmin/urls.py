@@ -17,7 +17,6 @@ urlpatterns = [
     path('userAccounts/admin', views.super_user_account_admin, name='super_user_account_admin'),
     path('userAccounts/superadmin', views.super_user_account_superadmin, name='super_user_account_superadmin'),
     path('userAccounts/add/', views.super_user_account_add, name='super_user_account_add'),
-    path('userAccounts/delete/<user_id>', views.super_user_account_delete, name="super_user_account_delete"),
     path('userAccounts/view/<int:id>', views.super_user_account_view, name='super_user_account_view'),
     path('userAccounts/edit/<int:id>', views.super_user_account_edit, name='super_user_account_edit'),
     path('userAccounts/delete/<int:id>', views.super_user_account_delete, name='super_user_account_delete'),

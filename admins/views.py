@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_admin
 from django.contrib import messages
 from django.core.paginator import Paginator
-from accounts.forms import UserForm, MemberForm, UserManagementForm
+from accounts.forms import UserForm, MemberForm, UserManagementForm, UserUpdateForm, ProfileMgmtUpdateForm, UserUpdateManagementForm
 
 # Create your views here.
 @login_required(login_url = 'login')
@@ -16,6 +16,45 @@ def admin_profile(request):
         'profile': profile,
     }
     return render(request, 'pages/admin_profile.html', context)
+
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
+def admin_profile_edit(request):
+    user = User.objects.get(username = request.user.username)
+    profile = get_object_or_404(UserProfile, user=request.user)
+    if request.method == 'POST':
+        profile_form = MemberForm(request.POST  or None, request.FILES  or None, instance=profile)
+        user_form = UserUpdateForm(request.POST  or None, instance=request.user)
+        if profile_form.is_valid() and user_form.is_valid():
+            user_form.instance.username = request.user
+            # user.first_name = user_form.cleaned_data['first_name']
+            # user.middle_name = user_form.cleaned_data['middle_name']
+            # user.last_name = user_form.cleaned_data['last_name']
+            # user.username = user_form.cleaned_data['username']
+            # user.email = user_form.cleaned_data['email']
+            # user.mobile_number = user_form.cleaned_data['mobile_number']
+            # my_form = user_form.save(commit=False)
+            # my_form.username = request.user.username
+            profile_form.save()
+            user_form.save()
+            messages.success(request, 'Profile updated')
+            return redirect('admin_profile')
+        else:
+            print(profile_form.errors)
+            print(user_form.errors)
+
+    else:
+        profile_form = MemberForm(instance=profile)
+        user_form = UserUpdateForm(instance=request.user, initial={"email": user.email, 
+                                                        "username": user.username})
+    context = {
+        'profile_form': profile_form,
+        'user_form' : user_form,
+        'profile': profile,
+    }
+    
+    return render(request, 'pages/admin_profile_edit.html', context)
+
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
@@ -80,10 +119,70 @@ def admin_user_account_superadmin(request):
     }
     return render(request, 'pages/admin_user_account.html', context)
 
+
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
-def admin_user_account_delete(request, user_id):
-    user = User.objects.get(pk=user_id)
+def admin_user_account_view(request, id):
+    user = get_object_or_404(User, pk=id)
+    profile = get_object_or_404(UserProfile, pk=user.id)
+    context = {
+        'user': user,
+        'profile': profile,
+    }
+
+    return render(request, 'pages/admin_user_account_view.html', context) 
+
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
+def admin_user_account_edit(request, id=None):
+    user =  get_object_or_404(User, pk=id)
+    profile = get_object_or_404(UserProfile, pk=id)
+    if request.method == 'POST':
+        profile_form = ProfileMgmtUpdateForm(request.POST  or None, request.FILES  or None, instance=profile)
+        user_form = UserUpdateManagementForm(request.POST  or None,  instance=user)
+        if profile_form.is_valid() and user_form.is_valid():
+            user_form.instance.username = request.user
+            # user.first_name = user_form.cleaned_data['first_name']
+            # user.middle_name = user_form.cleaned_data['middle_name']
+            # user.last_name = user_form.cleaned_data['last_name']
+            # user.username = user_form.cleaned_data['username']
+            # user.email = user_form.cleaned_data['email']
+            # user.mobile_number = user_form.cleaned_data['mobile_number']
+            # my_form = user_form.save(commit=False)
+            # my_form.username = request.user.username
+            profile_form.save()
+            user_form.save(commit=False)
+            if user is not None and user.status == 3:
+                user.is_active = False
+                user.status = User.INACTIVE
+                user.save()
+                messages.success(request, 'Profile updated')
+                messages.success(request, 'Account is Inactive')
+                return redirect('admin_user_account')
+            else:
+
+                return redirect('admin_user_account')
+        else:
+            print(profile_form.errors)
+            print(user_form.errors)
+
+    else:
+        profile_form = ProfileMgmtUpdateForm(instance=profile)
+        user_form = UserUpdateManagementForm(instance=user, initial={"email": user.email, 
+                                                        "username": user.username})
+    context = {
+        'profile_form': profile_form,
+        'user_form' : user_form,
+        'profile': profile,
+        'user': user
+    }
+    
+    return render(request, 'pages/admin_user_account_edit.html', context)
+
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
+def admin_user_account_delete(request, id=None):
+    user = User.objects.get(pk=id)
     if user.role == 1 or user.role == 2:
         user.delete()
         return redirect('admin_user_account')

@@ -6,7 +6,7 @@
 
 <!-- Page Wrapper -->
 
-{% include 'includes/sa_sidebar.html' %}
+{% include 'includes/a_sidebar.html' %}
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -89,9 +89,9 @@
                                 </table>
            
                                 <div class="footer-user-management">
-                                    <button type="button" class="discard-myreports-btn"> <a href="{% url 'super_user_account' %}" class="discard-link"> Cancel </a></button>
+                                    <button type="button" class="discard-myreports-btn"> <a href="{% url 'admin_user_account' %}" class="discard-link"> Cancel </a></button>
                                         
-                                        <a href="{% url 'super_user_account_edit' user.id %}" class="discard-link"> 
+                                        <a href="{% url 'admin_user_account_edit' user.id %}" class="discard-link"> 
                                             <input type="submit" 
                                                 class="save-myreports-btn" 
                                                 value="Edit"
