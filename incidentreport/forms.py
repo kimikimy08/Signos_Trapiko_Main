@@ -1,6 +1,6 @@
 import datetime
 from django import forms
-from .models import UserReport
+from .models import UserReport, IncidentGeneral
 #from .validators import allow_only_images_validator
 
 class DateInput(forms.DateInput):
@@ -34,3 +34,22 @@ class UserReportForm(forms.ModelForm):
         #     if field == 'latitude' or field == 'longitude':
         #         self.fields[field].widget.attrs['readonly'] = 'readonly'
 
+class IncidentGeneralForm(forms.ModelForm):
+    class Meta:
+        model = IncidentGeneral
+        fields = ['accident_factor', 'collision_type', 'crash_type', 'weather', 'light', 'severity', 'movement_code']
+
+    WEATHER_CHOICE = (
+        (1, 'Clear Night'),
+        (2, 'Cloudy'),
+        (3, 'Day'),
+        (4, 'Fog'),
+        (5, 'Hail'),
+        (6, 'Partially cloudy day'),
+        (7, 'Partially cloudy night'),
+        (8, 'Rain'),
+        (9, 'Rain'),
+        (10, 'Wind'),
+    )
+    
+    weather = forms.CharField(widget=forms.Select(choices=WEATHER_CHOICE, attrs={ 'class': 'form-control', }))

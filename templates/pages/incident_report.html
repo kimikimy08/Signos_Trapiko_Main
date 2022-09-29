@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<!-- Page Wrapper -->
+
+{% include 'includes/sa_sidebar.html' %}
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                {% include 'includes/navbar.html' %}
+                <!-- Breadcrumb  -->
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-white border mb-4 shadow rounded-0">
+                        <li class="breadcrumb-item">Manage</li>
+                        <li class="breadcrumb-item">User Accounts</li>
+                        <!-- <li class="breadcrumb-item active"><a href="#">Page</a></li> -->
+                        <li class="breadcrumb-item active" aria-current="page">All Users</li>
+                    </ol>
+                </nav>
+                <!-- End of Breadcrumb  -->
+
+
+
+                <!-- ===== INSERT CONTENT HERE  ===== -->
+
+                <!-- Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Title -->
+                    <div class="d-flex bd-highlight">
+                        <div class="pg-title p-2 flex-grow-1 bd-highlight">
+                            <h4>Incident Report</h4>
+                        </div>
+                    </div>
+
+                    <!-- User Report Table  -->
+                    <div class="card shadow mb-5 d-flex ">
+                        <!-- Top Pagination  -->
+                        <div class="card-header py-3">
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="general_incident_report.html">General</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="people_incident_report.html">People</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="vehicle_incident_report.html">Vehicle</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="media_incident_report.html">Media</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="remarks_incident_report.html">Remarks</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table>
+                                    <form id="form1" action="{% url 'incident_report_general' %}" enctype="multipart/form-data" method="post">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputEmail4">Date</label>
+                                                {{user_report_form.date}}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputPassword4">Time</label>
+                                                {{user_report_form.time}}
+                                            </div>
+                                        </div>
+                                        <hr>
+
+                                        <div class="form-group">
+                                            <label for="inputAddress">Street Address</label>
+                                            {{user_report_form.location}}
+                                        </div>
+                                        {% comment %} <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputState">Barangay</label>
+                                                <select id="inputState" class="form-control">
+                                                    <option selected>---</option>
+                                                    <option>Bagong Lipunan ng Crame</option>
+                                                    <option>Botocan</option>
+                                                    <option>Central</option>
+                                                    <option>Damayan Lagi</option>
+                                                    <option>Don Manuel</option>
+                                                    <option>Dona Aurora</option>
+                                                    <option>Dona Imelda</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="inputCity">City</label>
+                                                <input type="text" readonly class="form-control" id="inputCity"
+                                                    value="Quezon City">
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label for="inputZip">Zip</label>
+                                                <input type="text" class="form-control" id="inputZip" placeholder="---">
+                                            </div>
+                                        </div> {% endcomment %}
+                                        <!-- ================================= -->
+                                        <hr>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputWeather">Weather</label>
+                                                {{inc_gen_form.weather}}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputLight">Light</label>
+                                                <select id="inputLight" class="form-control">
+                                                    <option selected>---</option>
+                                                    <option>Dawn</option>
+                                                    <option>Day</option>
+                                                    <option>Dusk</option>
+                                                    <option>Night</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- ================================= -->
+                                        <hr>
+                                        <div class="form-group">
+                                            <label for="inputSeverity">Severity</label>
+                                            <select id="inputSeverity" class="form-control">
+                                                <option selected>---</option>
+                                                <option>Damage to Property</option>
+                                                <option>Fatal</option>
+                                                <option>Non-Fatal</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputAccident">Accident Factor</label>
+                                            <select id="inputAccident" class="form-control">
+                                                <option selected>---</option>
+                                                <option>Human Error</option>
+                                                <option>Human Error (Beating the Red Light)</option>
+                                                <option>Human Error (Falling Passenger)</option>
+                                                <option>Human Error (Gutter)</option>
+                                                <option>Human Error (Lost Control) </option>
+                                                <option>Human Error (Low Side Crash)</option>
+                                                <option>Human Error (Open door)</option>
+                                                <option>Human Error (Overturned)</option>
+                                                <option>Human Error (Overshoot)</option>
+                                                <option>Human Error (Passenger Fell)</option>
+                                                <option>Human Error (Slide)</option>
+                                                <option>Mechanical Defect</option>
+                                                <option>No Accident Factor (Based on the Police Blotter Book)</option>
+                                                <option>Road Condition</option>
+                                                <option>Road Condition (Deep Hole)</option>
+                                                <option>Road Condition (Oil Spill)</option>
+                                                <option>Road Condition (Open Manhole)</option>
+                                                <option>Road Condition (Pothole)</option>
+                                                <option>Road Condition (Slippery Road)</option>
+                                                <option>Road Condition (Wet Road)</option>
+                                                <option>Under the influence of Liquor</option>
+                                                <option>Vehicle Defect</option>
+                                                <option>Vehicle Defect (Battery Problem)</option>
+                                                <option>Vehicle Defect (Detached Propeller)</option>
+                                                <option>Vehicle Defect (Detached Tire)</option>
+                                                <option>Vehicle Defect (Exploded, Flat Tire)</option>
+                                                <option>Vehicle Defect (Fire Exploded)</option>
+                                                <option>Vehicle Defect (Loss Brake)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputCollision">Collision Type</label>
+                                            <select id="inputCollision" class="form-control">
+                                                <option selected>---</option>
+                                                <option>Angle Impact </option>
+                                                <option>Head On</option>
+                                                <option>Hit and Run</option>
+                                                <option>Hit and Run / Angle Impact</option>
+                                                <option>Hit and Run / Head On</option>
+                                                <option>Hit and Run / Hit Parked Vehicle</option>
+                                                <option>Hit and Run / Hit Pedestrian</option>
+                                                <option>Hit and Run / Multiple Collision</option>
+                                                <option>Hit and Run / Rear End</option>
+                                                <option>Hit and Run / Side Swipe</option>
+                                                <option>Hit Object</option>
+                                                <option>Hit Parked Vehicle</option>
+                                                <option>Hit Pedestrian</option>
+                                                <option>Multiple Collision</option>
+                                                <option>No Collision Stated (Based on the Police Blotter Book)</option>
+                                                <option>Rear End</option>
+                                                <option>Self-Accident</option>
+                                                <option>Side Swipe</option>
+                                            </select>
+                                        </div>
+                                        <!-- ================================= -->
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputCrashType">Crash Type</label>
+                                                <select id="inputCrashType" class="form-control">
+                                                    <option selected>---</option>
+                                                    <option>Maneuvering </option>
+                                                    <option>Off path curve</option>
+                                                    <option>Off path straight </option>
+                                                    <option>On path</option>
+                                                    <option>Overtaking</option>
+                                                    <option>Passenger and miscellaneous</option>
+                                                    <option>Pedestrian on Foot</option>
+                                                    <option>Vehicle from adjacent directions (Intersection only)
+                                                    </option>
+                                                    <option>Vehicle from opposing direction</option>
+                                                    <option>Vehicle from same direction </option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputMovement">Movement Code</label>
+                                                <input type="text" class="form-control" id="inputMovementCode"
+                                                    placeholder="---">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- ================================= -->
+                                        <br>
+                                        <div class="modal-footer mb-3">
+                                            <input type="button" class="btn btn-secondary" data-dismiss="modal"
+                                                value="Clear">
+                                            <input type="submit" class="btn btn-primary" value="Save">
+                                        </div>
+                                    </form>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of User Report Table  -->
+
+                </div>
+                <!-- End of Page Content -->
+
+                <!-- ===== END OF CONTENT  ===== -->
+
+
+            </div>
+
+                <!-- ===== END OF CONTENT  ===== -->
+
+
+       
+            <!-- End of Main Content  -->
+
+
+            <!-- Scroll to Top-->
+            <a class="scroll-to-top rounded" href="#scroll-up">
+                <i class='bx bxs-up-arrow'></i>
+            </a>
+            <!-- End of Scroll to Top-->
+
+
+
+            {% include 'includes/alerts.html' %}
+
+            {% endblock %}
+
+
+
+
+

@@ -21,5 +21,6 @@ urlpatterns = [
     path('myReport/view/<int:id>', views.my_report_view, name='my_report_view'),
     path('myReport/edit/<int:id>', views.my_report_edit, name='my_report_edit'),
     path('myReport/delete/<int:id>', views.my_report_delete, name='my_report_delete'),
-        
+    
+    path('incidentReport/general', views.incident_report_general, name='incident_report_general'),
 ]

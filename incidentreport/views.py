@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from accounts.models import UserProfile, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_admin, check_role_super, check_role_member
-from incidentreport.models import UserReport
+from incidentreport.models import UserReport, IncidentGeneral
 from django.contrib import messages
 from .forms import UserReportForm
 
@@ -214,4 +214,13 @@ def my_report_delete(request, id):
     user_report = get_object_or_404(UserReport, pk=id)
     user_report.delete()
     return redirect('my_report')
+
+def incident_report_general(request):
+    user_report_form = UserReportForm(request.POST, request.FILES)
+    inc_gen_form = IncidentGeneral(request.POST, request.FILES)
+    context = {
+        'user_report_form': user_report_form,
+        'inc_gen_form': inc_gen_form,
+    }
+    return render(request, 'pages/incident_report.html', context)
 
