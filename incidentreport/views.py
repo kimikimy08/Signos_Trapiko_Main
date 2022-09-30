@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_admin, check_role_super, check_role_member
 from incidentreport.models import UserReport, IncidentGeneral
 from django.contrib import messages
-from .forms import UserReportForm
+from .forms import UserReportForm, IncidentGeneralForm
 
 @login_required(login_url = 'login')
 
@@ -216,11 +216,17 @@ def my_report_delete(request, id):
     return redirect('my_report')
 
 def incident_report_general(request):
-    user_report_form = UserReportForm(request.POST, request.FILES)
-    inc_gen_form = IncidentGeneral(request.POST, request.FILES)
+    if request.method == 'POST':
+        user_report_form = UserReportForm(request.POST, request.FILES)
+        inc_gen_form = IncidentGeneralForm(request.POST, request.FILES)
+        
+    else:
+        user_report_form = UserReportForm()
+        inc_gen_form = IncidentGeneralForm()
     context = {
         'user_report_form': user_report_form,
         'inc_gen_form': inc_gen_form,
     }
     return render(request, 'pages/incident_report.html', context)
+
 

@@ -52,4 +52,22 @@ class IncidentGeneralForm(forms.ModelForm):
         (10, 'Wind'),
     )
     
+    LIGHT_CHOICE = (
+        (1, 'Dawn'),
+        (2, 'Day'),
+        (3, 'Dusk'),
+        (4, 'Night'),
+    )
+    
+    SEVERITY_CHOICE = (
+        (1, 'Damage to Property'),
+        (2, 'Fatal'),
+        (3, 'Non-Fatal'),
+    )
+    
     weather = forms.CharField(widget=forms.Select(choices=WEATHER_CHOICE, attrs={ 'class': 'form-control', }))
+    light = forms.CharField(widget=forms.Select(choices=LIGHT_CHOICE, attrs={ 'class': 'form-control', }))
+    severity = forms.CharField(widget=forms.Select(choices=SEVERITY_CHOICE, attrs={ 'class': 'form-control', }))
+
+    def __init__(self, *args, **kwargs):
+        super(IncidentGeneralForm, self).__init__(*args, **kwargs)

@@ -116,25 +116,14 @@
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label for="inputLight">Light</label>
-                                                <select id="inputLight" class="form-control">
-                                                    <option selected>---</option>
-                                                    <option>Dawn</option>
-                                                    <option>Day</option>
-                                                    <option>Dusk</option>
-                                                    <option>Night</option>
-                                                </select>
+                                                {{inc_gen_form.light}}
                                             </div>
                                         </div>
                                         <!-- ================================= -->
                                         <hr>
                                         <div class="form-group">
                                             <label for="inputSeverity">Severity</label>
-                                            <select id="inputSeverity" class="form-control">
-                                                <option selected>---</option>
-                                                <option>Damage to Property</option>
-                                                <option>Fatal</option>
-                                                <option>Non-Fatal</option>
-                                            </select>
+                                            {{inc_gen_form.severity}}
                                         </div>
                                         <div class="form-group">
                                             <label for="inputAccident">Accident Factor</label>
@@ -198,20 +187,7 @@
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
                                                 <label for="inputCrashType">Crash Type</label>
-                                                <select id="inputCrashType" class="form-control">
-                                                    <option selected>---</option>
-                                                    <option>Maneuvering </option>
-                                                    <option>Off path curve</option>
-                                                    <option>Off path straight </option>
-                                                    <option>On path</option>
-                                                    <option>Overtaking</option>
-                                                    <option>Passenger and miscellaneous</option>
-                                                    <option>Pedestrian on Foot</option>
-                                                    <option>Vehicle from adjacent directions (Intersection only)
-                                                    </option>
-                                                    <option>Vehicle from opposing direction</option>
-                                                    <option>Vehicle from same direction </option>
-                                                </select>
+                                                {{inc_gen_form.crash_type.crash_type}}
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label for="inputMovement">Movement Code</label>

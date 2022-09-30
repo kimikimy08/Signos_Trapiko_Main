@@ -1,5 +1,7 @@
 from django.db import models
 from accounts.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class UserReport(models.Model):
     PENDING = 1
@@ -10,7 +12,7 @@ class UserReport(models.Model):
         (APPROVED, 'Approved'),
         (REJECTED, 'Rejected')
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default='Anonymous')
     description = models.TextField(max_length=250, blank=True)
     location = models.CharField(max_length=250)
     upload_photovideo = models.ImageField(default='user.jpeg', upload_to='incident_report/image')
@@ -34,22 +36,39 @@ class UserReport(models.Model):
     
 
 class AccidentCausation(models.Model):
-    accident_factor = models.CharField(max_length=250, blank=True)
-    accident_subfactor = models.CharField(max_length=250, blank=True)
+    category = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.accident_factor
+        return self.category
+
+class AccidentCausationSub(models.Model):
+    accident_factor = models.ForeignKey(AccidentCausation, on_delete=models.CASCADE)
+    sub_category = models.CharField(max_length=250, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.sub_category
+
 
 class CollisionType(models.Model):
-    collision_type = models.CharField(max_length=250, blank=True)
-    collision_subtype = models.CharField(max_length=250, blank=True)
+    category = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.collision_type
+        return self.category
+
+class CollisionTypeSub(models.Model):
+    collision_type = models.ForeignKey(CollisionType, on_delete=models.CASCADE)
+    sub_category = models.CharField(max_length=250, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.sub_category
 
 class CrashType(models.Model):
     crash_type = models.CharField(max_length=250, blank=True)
@@ -86,6 +105,7 @@ class IncidentGeneral(models.Model):
         (3, 'Non-Fatal'),
     )
     
+    user_report = models.OneToOneField(UserReport, on_delete=models.CASCADE, primary_key=True)
     accident_factor = models.OneToOneField(AccidentCausation, on_delete=models.CASCADE)
     collision_type = models.OneToOneField(CollisionType, on_delete=models.CASCADE)
     crash_type = models.OneToOneField(CrashType, on_delete=models.CASCADE)
@@ -95,6 +115,13 @@ class IncidentGeneral(models.Model):
     movement_code = models.CharField(max_length=250, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @receiver(post_save, sender=UserReport)
+    def create_user_report_general(sender, instance, created, **kwargs):
+        if created:
+            IncidentGeneral.objects.get_or_create(user_report=instance)
+    
+    post_save.connect(create_user_report_general, sender=UserReport) 
 
 class IncidentPerson(models.Model):
     GENDER = (
@@ -145,8 +172,6 @@ class IncidentPerson(models.Model):
         (2, 'Not worn'),
         (3, 'Not worn correctly'),
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    userreport = models.ForeignKey(UserReport, on_delete=models.CASCADE)
     incident_general = models.ManyToManyField(IncidentGeneral, blank=True, null=True)
     incident_first_name = models.CharField(max_length=250, blank=True)
     incident_middle_name = models.CharField(max_length=250, blank=True)

@@ -7,7 +7,7 @@ from django.dispatch import receiver
 
 # Create your models here.
 class UserManager(BaseUserManager):
-    def create_user(self, first_name, last_name, username, email, password=None):
+    def create_user(self, first_name, middle_name, last_name, username, email, mobile_number, password=None):
         if not email:
             raise ValueError('User must have an email address')
 
@@ -15,22 +15,26 @@ class UserManager(BaseUserManager):
             raise ValueError('User must have an username')
 
         user = self.model(
-            email = self.normalize_email(email),
+            email = self.normalize_email(email), #lowercase email
             username = username,
             first_name = first_name,
+            middle_name = middle_name,
             last_name = last_name,
+            mobile_number = mobile_number,
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, first_name, last_name, username, email, password=None):
+    def create_superuser(self, first_name, middle_name, last_name, username, email, mobile_number, password=None):
         user = self.create_user(
-            email = self.normalize_email(email),
+            email = self.normalize_email(email), #lowercase email
             username = username,
             password = password,
             first_name = first_name,
+            middle_name = middle_name,
             last_name = last_name,
+            mobile_number = mobile_number,
         )
         user.is_admin = True
         user.is_active = True
