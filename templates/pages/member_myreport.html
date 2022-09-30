@@ -75,6 +75,7 @@
 
                 <div class="card-body">
                     <div class="table-responsive">
+                        {% if incidents %}
                         <table class="table table-bordered table-hover text-dark" id="user_report" width="100%"
                             style="cursor: pointer;" cellspacing="0">
 
@@ -97,6 +98,7 @@
                             <tbody>
                                 {% for incident in incidentReports %}
         
+                           
                                 <tr>
                                     <td>{{incident.id}}</td>
                                     <td>{{incident.user.username}}</td>
@@ -123,6 +125,7 @@
                                     </td>
                                 </tr>
 
+                                
                                
 
                                 <!-- End of Modals  -->
@@ -131,7 +134,11 @@
                             <!-- End of Table Body  -->
                         </table>
 
-                       
+                        {% else %}
+
+                        <h5 class="text-center">No User Report.</h5>
+                             
+                        {% endif %}
 
 
                         
