@@ -60,7 +60,8 @@ class MemberForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super(MemberForm, self).__init__(*args, **kwargs)
-        self.fields['profile_picture'].required = False   
+        self.fields['profile_picture'].required = False
+        self.fields['upload_id'].required = False
         instance = getattr(self, 'instance', None)
         # if instance and instance.pk:
         #     self.fields['birthdate'].widget.attrs['readonly'] = True

@@ -12,7 +12,9 @@ class UserReport(models.Model):
         (APPROVED, 'Approved'),
         (REJECTED, 'Rejected')
     )
-    user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default='Anonymous')
+    
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     description = models.TextField(max_length=250, blank=True)
     location = models.CharField(max_length=250)
     upload_photovideo = models.ImageField(default='user.jpeg', upload_to='incident_report/image')
@@ -31,8 +33,6 @@ class UserReport(models.Model):
             incident_status = 'Rejected'
         return incident_status
 
-    def __str__(self):
-        return self.user.username
     
 
 class AccidentCausation(models.Model):
@@ -106,22 +106,24 @@ class IncidentGeneral(models.Model):
     )
     
     user_report = models.OneToOneField(UserReport, on_delete=models.CASCADE, primary_key=True)
-    accident_factor = models.OneToOneField(AccidentCausation, on_delete=models.CASCADE)
-    collision_type = models.OneToOneField(CollisionType, on_delete=models.CASCADE)
-    crash_type = models.OneToOneField(CrashType, on_delete=models.CASCADE)
+    accident_factor = models.OneToOneField(AccidentCausation, on_delete=models.CASCADE, blank=True, null=True)
+    collision_type = models.OneToOneField(CollisionType, on_delete=models.CASCADE, blank=True, null=True)
+    crash_type = models.OneToOneField(CrashType, on_delete=models.CASCADE, blank=True, null=True)
     weather = models.PositiveSmallIntegerField(choices=WEATHER, blank=True, null=True)
     light = models.PositiveSmallIntegerField(choices=LIGHT, blank=True, null=True)
     severity = models.PositiveSmallIntegerField(choices=SEVERITY, blank=True, null=True)
     movement_code = models.CharField(max_length=250, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    @receiver(post_save, sender=UserReport)
-    def create_user_report_general(sender, instance, created, **kwargs):
-        if created:
-            IncidentGeneral.objects.get_or_create(user_report=instance)
     
-    post_save.connect(create_user_report_general, sender=UserReport) 
+
+
+    # @receiver(post_save, sender=UserReport)
+    # def create_user_report_general(sender, instance, created, **kwargs):
+    #     if created:
+    #         IncidentGeneral.objects.create(user_report=instance)
+    
+    # post_save.connect(create_user_report_general, sender=UserReport) 
 
 class IncidentPerson(models.Model):
     GENDER = (
@@ -297,9 +299,11 @@ class IncidentMedia(models.Model):
 
     def __str__(self):
         return self.description
+    
+    
 
 class IncidentRemark(models.Model):
-    incident_general = models.ManyToManyField(IncidentGeneral, blank=True, null=True)
+    incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE, primary_key=True)
     responder =  models.CharField(max_length=250, blank=True)
     action_taken = models.TextField(max_length=250, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -307,4 +311,11 @@ class IncidentRemark(models.Model):
 
     def __str__(self):
         return self.responder
+    
+    # @receiver(post_save, sender=IncidentGeneral)
+    # def create_user_report_remark(sender, instance, created, **kwargs):
+    #     if created:
+    #         IncidentRemark.objects.create(incident_general=instance)
+    
+    # post_save.connect(create_user_report_remark, sender=IncidentGeneral) 
 
