@@ -5,7 +5,6 @@ from django.db.models.fields.related import ForeignKey, OneToOneField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import RegexValidator, MinLengthValidator
-from colorfield.fields import ColorField
 # Create your models here.
 
 class UserManager(BaseUserManager):
