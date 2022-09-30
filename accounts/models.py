@@ -1,12 +1,13 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db.models.fields.related import ForeignKey, OneToOneField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import RegexValidator, MinLengthValidator
-
-
+from colorfield.fields import ColorField
 # Create your models here.
+
 class UserManager(BaseUserManager):
     def create_user(self, first_name, middle_name, last_name, username, email, mobile_number, password=None):
         if not email:
@@ -46,7 +47,7 @@ class UserManager(BaseUserManager):
         user.is_superadmin = True
         user.save(using=self.db)
         return user
-
+        
 
 class User(AbstractBaseUser):
     MEMBER = 1
@@ -130,21 +131,18 @@ class User(AbstractBaseUser):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    birthdate = models.DateField(blank=True, null=True) 
+    birthdate = models.DateField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='users/profile_pictures', blank=True, null=True)
     upload_id = models.ImageField(upload_to='member/id', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now=True)
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.user.email
+        return self.user.username
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.get_or_create(user=instance)
-  
-post_save.connect(create_user_profile, sender=User) 
-
-
-
+    
+    
