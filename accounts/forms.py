@@ -53,6 +53,7 @@ class UserForm(forms.ModelForm):
 class MemberForm(forms.ModelForm):
     birthdate = forms.DateField(widget=DateInput(attrs={'class': 'form-control ', }))
     profile_picture = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control p-1'} ) )
+    upload_id = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control p-1'} ) )
     class Meta:
         model = UserProfile
         fields = ['birthdate', 'profile_picture']
