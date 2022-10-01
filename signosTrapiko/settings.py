@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = Path(BASE_DIR, "templates")
 
 # remove
-STATIC_DIR = Path(BASE_DIR, "static")
+# STATIC_DIR = Path(BASE_DIR, "static")
 
 
 # Quick-start development settings - unsuitable for production
