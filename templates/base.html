@@ -60,9 +60,9 @@
     
 
     <!-- Vendor Script -->
-    <script src="{% static 'js/vendor/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'js/vendor/jquery/jquery.easing.min.js' %}"></script>
-    <script src="{% static 'js/vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+    <script script type="text/javascript"  src="{% static 'js/vendor/jquery/jquery.min.js' %}"></script>
+    <script script type="text/javascript" src="{% static 'js/vendor/jquery/jquery.easing.min.js' %}"></script>
+    <script script type="text/javascript" src="{% static 'js/vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
 
     <!-- User Report Vendor Script-->
     <script src="{% static 'js/vendor/jquery.dataTables.min.js' %}"></script>
@@ -70,14 +70,15 @@
 
 
     <!-- Custom Script  -->
-    <script src="{% static 'js/sidebar.js' %}"></script>
-    <script src="{% static 'js/default.js' %}"></script>
-    <script src="{% static 'js/user_report.js' %}"></script>
+    <script script type="text/javascript" src="{% static 'js/sidebar.js' %}"></script>
+    <script script type="text/javascript" src="{% static 'js/default.js' %}"></script>
+    <script script type="text/javascript" src="{% static 'js/user_report.js' %}"></script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&callback=initAutoComplete" async defer></script>
-    <script src="{% static 'js/custom.js' %}"></script>
+    <script script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&callback=initAutoComplete" async defer></script>
+    
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
     <script>
         $("#id_accident_factor").change(function () {
             const url = $("#form_incidentgeneral").attr("data-acc-url");  // get the url of the `load_cities` view
