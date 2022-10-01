@@ -19,7 +19,7 @@ class UserReportForm(forms.ModelForm):
         widget=forms.FileInput(attrs={'class': 'form-control p-1'}))
     time = forms.TimeField(widget=TimeInput(
         attrs={'class': 'form-control'}), initial=datetime.datetime.now())
-    location = forms.CharField(widget=forms.TextInput(
+    address = forms.CharField(widget=forms.TextInput(
         attrs={'placeholder': 'Start typing...', 'required': 'required', 'class': 'form-control'}))
     description = forms.CharField(widget=forms.Textarea(
         attrs={'area': '3', 'class': 'form-control'}))
@@ -28,14 +28,27 @@ class UserReportForm(forms.ModelForm):
     # longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     class Meta:
         model = UserReport
-        fields = ['location', 'description', 'upload_photovideo']
+        fields = [ 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude']
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor
         super(UserReportForm, self).__init__(*args, **kwargs)
         # there's a `fields` property now
         self.fields['upload_photovideo'].required = False
-        self.fields['location'].widget.attrs['class'] = 'form-control'
+        self.fields['address'].widget.attrs['class'] = 'form-control'
+        self.fields['country'].widget.attrs['class'] = 'form-control'
+        self.fields['state'].widget.attrs['class'] = 'form-control'
+        self.fields['city'].widget.attrs['class'] = 'form-control'
+        self.fields['pin_code'].widget.attrs['class'] = 'form-control'
+        self.fields['latitude'].widget.attrs['class'] = 'form-control'
+        self.fields['longitude'].widget.attrs['class'] = 'form-control'
+        
+        for field in self.fields:
+            if field == 'latitude' or field == 'longitude':
+                self.fields[field].widget.attrs['readonly'] = 'readonly'
+        
+        
+        
 
     # def __init__(self, *args, **kwargs):
     #     super(UserReportForm, self).__init__(*args, **kwargs)
@@ -48,13 +61,6 @@ class IncidentGeneralForm(forms.ModelForm):
     class Meta:
         model = IncidentGeneral
         fields = '__all__'
-
-    # weather = forms.CharField(widget=forms.Select(
-    #     choices=WEATHER_CHOICE, attrs={'class': 'form-control', }))
-    # light = forms.CharField(widget=forms.Select(
-    #     choices=LIGHT_CHOICE, attrs={'class': 'form-control', }))
-    # severity = forms.CharField(widget=forms.Select(
-    #     choices=SEVERITY_CHOICE, attrs={'class': 'form-control', }))
 
     def __init__(self, *args, **kwargs):
         super(IncidentGeneralForm, self).__init__(*args, **kwargs)

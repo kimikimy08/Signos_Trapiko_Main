@@ -56,9 +56,39 @@
                 <!-- =========== LOCATION, AND DESCRIPTION-->
                         <div class="form-row">
                             <div class="form-group col-md-12">
-                                <label for="inputlocation">Location</label>
-                                {% comment %} <input type="text" class="form-control" id="inputlocation" placeholder=""> {% endcomment %}
-                                {{form.location}}
+                                <label for="inputlocation">Address</label>
+                                {{form.address}}
+                                <small class="text-muted float-right">powered by Google</small>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputlocation">Country</label>
+                                {{form.country}}
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputlocation">State</label>
+                                {{form.state}}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputlocation">City</label>
+                                {{form.city}}
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputlocation">Zip Code</label>
+                                {{form.pin_code}}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputlocation">Latitude</label>
+                                {{form.latitude}}
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputlocation">Longitude</label>
+                                {{form.longitude}}
                             </div>
                         </div>
 

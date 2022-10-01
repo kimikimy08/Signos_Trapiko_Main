@@ -78,6 +78,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'accounts.context_processors.get_google_api',
             ],
         },
     },
@@ -100,6 +101,7 @@ WSGI_APPLICATION = 'signosTrapiko.wsgi.application'
 # }
 
 DATABASES = {'default': dj_database_url.config(default='postgres://postgres:signos0805Trapiko@localhost/Signos_Trapiko_Main')}
+
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -176,3 +178,5 @@ DEFAULT_FROM_EMAIL = 'Link Technologies <linktechnologies2022@gmail.com>'
 
 # whitenoise settings
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+GOOGLE_API_KEY = 'AIzaSyCEb8HaHYUUJeeMzfTf1IfgSJrAa5S1XfM'
