@@ -1,6 +1,6 @@
 import datetime
 from django import forms
-from .models import UserReport, Incident, IncidentGeneral, AccidentCausationSub, CollisionTypeSub
+from .models import UserReport, Incident, IncidentGeneral, AccidentCausationSub, CollisionTypeSub, IncidentPerson, IncidentVehicle, IncidentRemark, IncidentMedia
 #from .validators import allow_only_images_validator
 
 
@@ -49,32 +49,6 @@ class IncidentGeneralForm(forms.ModelForm):
         model = IncidentGeneral
         fields = '__all__'
 
-    WEATHER_CHOICE = (
-        (1, 'Clear Night'),
-        (2, 'Cloudy'),
-        (3, 'Day'),
-        (4, 'Fog'),
-        (5, 'Hail'),
-        (6, 'Partially cloudy day'),
-        (7, 'Partially cloudy night'),
-        (8, 'Rain'),
-        (9, 'Rain'),
-        (10, 'Wind'),
-    )
-
-    LIGHT_CHOICE = (
-        (1, 'Dawn'),
-        (2, 'Day'),
-        (3, 'Dusk'),
-        (4, 'Night'),
-    )
-
-    SEVERITY_CHOICE = (
-        (1, 'Damage to Property'),
-        (2, 'Fatal'),
-        (3, 'Non-Fatal'),
-    )
-
     # weather = forms.CharField(widget=forms.Select(
     #     choices=WEATHER_CHOICE, attrs={'class': 'form-control', }))
     # light = forms.CharField(widget=forms.Select(
@@ -100,17 +74,80 @@ class IncidentGeneralForm(forms.ModelForm):
         if 'accident_factor' in self.data:
             try:
                 accident_factor_id = int(self.data.get('accident_factor'))
-                self.fields['accident_subcategory'].queryset = AccidentCausationSub.objects.filter(accident_factor_id=accident_factor_id).order_by('name')
+                self.fields['accident_subcategory'].queryset = AccidentCausationSub.objects.filter(accident_factor_id=accident_factor_id).order_by('accident_factor')
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty City queryset
         elif self.instance.pk:
-            self.fields['accident_subcategory'].queryset = self.instance.accident_factor.accident_subcategory_set.order_by('name')
+            self.fields['accident_subcategory'].queryset = self.instance.accident_factor.accident_subcategory_set.order_by('subcategory')
             
         if 'collision_type' in self.data:
             try:
                 collision_type_id = int(self.data.get('collision_type'))
-                self.fields['collision_subcategory'].queryset = CollisionTypeSub.objects.filter(collision_type_id=collision_type_id).order_by('name')
+                self.fields['collision_subcategory'].queryset = CollisionTypeSub.objects.filter(collision_type_id=collision_type_id).order_by('collision_type')
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty City queryset
         elif self.instance.pk:
-            self.fields['collision_subcategory'].queryset = self.instance.collision_type.collision_subcategory_set.order_by('name')
+            self.fields['collision_subcategory'].queryset = self.instance.collision_type.collision_subcategory_set.order_by('subcategory')
+
+
+class IncidentPersonForm(forms.ModelForm):
+    class Meta:
+        model = IncidentPerson
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(IncidentPersonForm, self).__init__(*args, **kwargs)
+        self.fields['incident_first_name'].widget.attrs['class'] = 'form-control'
+        self.fields['incident_middle_name'].widget.attrs['class'] = 'form-control'
+        self.fields['incident_last_name'].widget.attrs['class'] = 'form-control'
+        self.fields['incident_age'].widget.attrs['class'] = 'form-control'
+        self.fields['incident_gender'].widget.attrs['class'] = 'form-control'
+        self.fields['incident_address'].widget.attrs['class'] = 'form-control'
+        self.fields['incident_involvement'].widget.attrs['class'] = 'form-control'
+        self.fields['incident_id_presented'].widget.attrs['class'] = 'form-control'
+        self.fields['incident_id_number'].widget.attrs['class'] = 'form-control'
+        self.fields['incident_injury'].widget.attrs['class'] = 'form-control'
+        self.fields['incident_driver_error'].widget.attrs['class'] = 'form-control'
+        self.fields['incident_alcohol_drugs'].widget.attrs['class'] = 'form-control'
+        self.fields['incident_seatbelt_helmet'].widget.attrs['class'] = 'form-control'
+        
+class IncidentVehicleForm(forms.ModelForm):
+    class Meta:
+        model = IncidentVehicle
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(IncidentVehicleForm, self).__init__(*args, **kwargs)
+        self.fields['classification'].widget.attrs['class'] = 'form-control'
+        self.fields['vehicle_type'].widget.attrs['class'] = 'form-control'
+        self.fields['brand'].widget.attrs['class'] = 'form-control'
+        self.fields['plate_number'].widget.attrs['class'] = 'form-control'
+        self.fields['engine_number'].widget.attrs['class'] = 'form-control'
+        self.fields['chassis_number'].widget.attrs['class'] = 'form-control'
+        self.fields['insurance_details'].widget.attrs['class'] = 'form-control'
+        self.fields['maneuver'].widget.attrs['class'] = 'form-control'
+        self.fields['damage'].widget.attrs['class'] = 'form-control'
+        self.fields['defect'].widget.attrs['class'] = 'form-control'
+        self.fields['loading'].widget.attrs['class'] = 'form-control'
+
+class IncidentMediaForm(forms.ModelForm):
+    class Meta:
+        model = IncidentMedia
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(IncidentMediaForm, self).__init__(*args, **kwargs)
+        self.fields['description'].widget.attrs['class'] = 'form-control'
+        self.fields['incident_upload_photovideo'].widget.attrs['class'] = 'form-control'
+
+
+class IncidentRemarksForm(forms.ModelForm):
+    class Meta:
+        model = IncidentRemark
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(IncidentRemarksForm, self).__init__(*args, **kwargs)
+        self.fields['responder'].widget.attrs['class'] = 'form-control'
+        self.fields['action_taken'].widget.attrs['class'] = 'form-control'
+     

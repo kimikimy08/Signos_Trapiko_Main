@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_admin, check_role_super, check_role_member
 from incidentreport.models import UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub
 from django.contrib import messages
-from .forms import UserReportForm, IncidentGeneralForm
+from .forms import UserReportForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm
 
 
 @login_required(login_url='login')
@@ -253,6 +253,74 @@ def incident_report_general(request):
         'inc_gen_form': inc_gen_form,
     }
     return render(request, 'pages/incident_report.html', context)
+
+def incident_report_people(request):
+    if request.method == 'POST':
+        user_report_form = UserReportForm(request.POST, request.FILES)
+        inc_per_form = IncidentPersonForm(request.POST, request.FILES)
+
+    else:
+        user_report_form = UserReportForm()
+        inc_per_form = IncidentPersonForm()
+        print(user_report_form.errors)
+        print(inc_per_form.errors)
+        
+    context = {
+        'user_report_form': user_report_form,
+        'inc_per_form': inc_per_form,
+    }
+    return render(request, 'pages/incident_report_people.html', context)
+
+def incident_report_vehicle(request):
+    if request.method == 'POST':
+        user_report_form = UserReportForm(request.POST, request.FILES)
+        inc_veh_form = IncidentVehicleForm(request.POST, request.FILES)
+
+    else:
+        user_report_form = UserReportForm()
+        inc_veh_form = IncidentVehicleForm()
+        print(user_report_form.errors)
+        print(inc_veh_form.errors)
+        
+    context = {
+        'user_report_form': user_report_form,
+        'inc_veh_form': inc_veh_form,
+    }
+    return render(request, 'pages/incident_report_vehicle.html', context)
+
+def incident_report_media(request):
+    if request.method == 'POST':
+        user_report_form = UserReportForm(request.POST, request.FILES)
+        inc_med_form = IncidentMediaForm(request.POST, request.FILES)
+
+    else:
+        user_report_form = UserReportForm()
+        inc_med_form = IncidentMediaForm()
+        print(user_report_form.errors)
+        print(inc_med_form.errors)
+        
+    context = {
+        'user_report_form': user_report_form,
+        'inc_med_form': inc_med_form,
+    }
+    return render(request, 'pages/incident_report_media.html', context)
+
+def incident_report_remarks(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+    if request.method == 'POST':
+       
+        inc_rem_form = IncidentRemarksForm(request.POST, request.FILES)
+
+    else:
+        inc_rem_form = IncidentRemarksForm()
+        print(inc_rem_form.errors)
+        
+    context = {
+        'profile': profile,
+        'inc_rem_form': inc_rem_form,
+    }
+    return render(request, 'pages/incident_report_remarks.html', context)
+
 
 # AJAX
 def load_accident(request):
