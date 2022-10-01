@@ -105,10 +105,12 @@ class IncidentGeneral(models.Model):
         (3, 'Non-Fatal'),
     )
     
-    user_report = models.OneToOneField(UserReport, on_delete=models.CASCADE, primary_key=True)
-    accident_factor = models.OneToOneField(AccidentCausation, on_delete=models.CASCADE, blank=True, null=True)
-    collision_type = models.OneToOneField(CollisionType, on_delete=models.CASCADE, blank=True, null=True)
-    crash_type = models.OneToOneField(CrashType, on_delete=models.CASCADE, blank=True, null=True)
+    
+    accident_factor = models.ForeignKey(AccidentCausation, on_delete=models.SET_NULL, blank=True, null=True)
+    accident_subcategory = models.ForeignKey(AccidentCausationSub, on_delete=models.SET_NULL, blank=True, null=True)
+    collision_type = models.ForeignKey(CollisionType, on_delete=models.SET_NULL, blank=True, null=True)
+    collision_subcategory = models.ForeignKey(CollisionTypeSub, on_delete=models.SET_NULL, blank=True, null=True)
+    crash_type = models.ForeignKey(CrashType, on_delete=models.SET_NULL, blank=True, null=True)
     weather = models.PositiveSmallIntegerField(choices=WEATHER, blank=True, null=True)
     light = models.PositiveSmallIntegerField(choices=LIGHT, blank=True, null=True)
     severity = models.PositiveSmallIntegerField(choices=SEVERITY, blank=True, null=True)
@@ -174,7 +176,6 @@ class IncidentPerson(models.Model):
         (2, 'Not worn'),
         (3, 'Not worn correctly'),
     )
-    incident_general = models.ManyToManyField(IncidentGeneral, blank=True, null=True)
     incident_first_name = models.CharField(max_length=250, blank=True)
     incident_middle_name = models.CharField(max_length=250, blank=True)
     incident_last_name = models.CharField(max_length=250, blank=True)
@@ -271,8 +272,6 @@ class IncidentVehicle(models.Model):
         (4, 'Others'),
     )
 
-    
-    incident_general = models.ManyToManyField(IncidentGeneral, blank=True, null=True)
     classification = models.PositiveSmallIntegerField(choices=CLASSIFICATION, blank=True, null=True)
     vehicle_type = models.PositiveSmallIntegerField(choices=VEHICLE_TYPE, blank=True, null=True)
     brand = models.CharField(max_length=250, blank=True)
@@ -303,7 +302,6 @@ class IncidentMedia(models.Model):
     
 
 class IncidentRemark(models.Model):
-    incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE, primary_key=True)
     responder =  models.CharField(max_length=250, blank=True)
     action_taken = models.TextField(max_length=250, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -319,3 +317,14 @@ class IncidentRemark(models.Model):
     
     # post_save.connect(create_user_report_remark, sender=IncidentGeneral) 
 
+
+class Incident(models.Model):
+
+    user_report = models.OneToOneField(UserReport, on_delete=models.CASCADE, blank=True, null=True)
+    incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.SET_NULL, blank=True, null=True)
+    incident_person = models.ForeignKey(IncidentPerson, on_delete=models.SET_NULL, blank=True, null=True)
+    incident_vehicle = models.ForeignKey(IncidentVehicle, on_delete=models.SET_NULL, blank=True, null=True)
+    incident_media = models.ForeignKey(IncidentMedia, on_delete=models.SET_NULL, blank=True, null=True)
+    incident_remark = models.ForeignKey(IncidentRemark, on_delete=models.SET_NULL, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

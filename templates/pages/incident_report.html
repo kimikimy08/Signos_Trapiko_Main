@@ -66,7 +66,7 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table>
-                                    <form id="form1" action="{% url 'incident_report_general' %}" enctype="multipart/form-data" method="post">
+                                    <form id="form_incidentgeneral" action="{% url 'incident_report_general' %}" enctype="multipart/form-data" method="post" data-acc-url="{% url 'ajax_load_accident' %}">
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
                                                 <label for="inputEmail4">Date</label>
@@ -78,11 +78,13 @@
                                             </div>
                                         </div>
                                         <hr>
-
-                                        <div class="form-group">
-                                            <label for="inputAddress">Street Address</label>
-                                            {{user_report_form.location}}
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label for="inputAddress">Street Address</label>
+                                                {{user_report_form.location}}
+                                            </div>
                                         </div>
+
                                         {% comment %} <div class="form-row">
                                             <div class="form-group col-md-6">
                                                 <label for="inputState">Barangay</label>
@@ -121,79 +123,44 @@
                                         </div>
                                         <!-- ================================= -->
                                         <hr>
-                                        <div class="form-group">
-                                            <label for="inputSeverity">Severity</label>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label for="inputSeverity">Severity</label>
                                             {{inc_gen_form.severity}}
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="inputAccident">Accident Factor</label>
-                                            <select id="inputAccident" class="form-control">
-                                                <option selected>---</option>
-                                                <option>Human Error</option>
-                                                <option>Human Error (Beating the Red Light)</option>
-                                                <option>Human Error (Falling Passenger)</option>
-                                                <option>Human Error (Gutter)</option>
-                                                <option>Human Error (Lost Control) </option>
-                                                <option>Human Error (Low Side Crash)</option>
-                                                <option>Human Error (Open door)</option>
-                                                <option>Human Error (Overturned)</option>
-                                                <option>Human Error (Overshoot)</option>
-                                                <option>Human Error (Passenger Fell)</option>
-                                                <option>Human Error (Slide)</option>
-                                                <option>Mechanical Defect</option>
-                                                <option>No Accident Factor (Based on the Police Blotter Book)</option>
-                                                <option>Road Condition</option>
-                                                <option>Road Condition (Deep Hole)</option>
-                                                <option>Road Condition (Oil Spill)</option>
-                                                <option>Road Condition (Open Manhole)</option>
-                                                <option>Road Condition (Pothole)</option>
-                                                <option>Road Condition (Slippery Road)</option>
-                                                <option>Road Condition (Wet Road)</option>
-                                                <option>Under the influence of Liquor</option>
-                                                <option>Vehicle Defect</option>
-                                                <option>Vehicle Defect (Battery Problem)</option>
-                                                <option>Vehicle Defect (Detached Propeller)</option>
-                                                <option>Vehicle Defect (Detached Tire)</option>
-                                                <option>Vehicle Defect (Exploded, Flat Tire)</option>
-                                                <option>Vehicle Defect (Fire Exploded)</option>
-                                                <option>Vehicle Defect (Loss Brake)</option>
-                                            </select>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputAccident">Accident Factor</label>
+                                                {{inc_gen_form.accident_factor}}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputAccident">Accident Factor Sub Category</label>
+                                                {{inc_gen_form.accident_subcategory}}
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="inputCollision">Collision Type</label>
-                                            <select id="inputCollision" class="form-control">
-                                                <option selected>---</option>
-                                                <option>Angle Impact </option>
-                                                <option>Head On</option>
-                                                <option>Hit and Run</option>
-                                                <option>Hit and Run / Angle Impact</option>
-                                                <option>Hit and Run / Head On</option>
-                                                <option>Hit and Run / Hit Parked Vehicle</option>
-                                                <option>Hit and Run / Hit Pedestrian</option>
-                                                <option>Hit and Run / Multiple Collision</option>
-                                                <option>Hit and Run / Rear End</option>
-                                                <option>Hit and Run / Side Swipe</option>
-                                                <option>Hit Object</option>
-                                                <option>Hit Parked Vehicle</option>
-                                                <option>Hit Pedestrian</option>
-                                                <option>Multiple Collision</option>
-                                                <option>No Collision Stated (Based on the Police Blotter Book)</option>
-                                                <option>Rear End</option>
-                                                <option>Self-Accident</option>
-                                                <option>Side Swipe</option>
-                                            </select>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputAccident">Collision Type</label>
+                                                {{inc_gen_form.collision_type}}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputAccident">Collision Sub Category</label>
+                                                {{inc_gen_form.collision_subcategory}}
+                                            </div>
                                         </div>
+
+                                        
                                         <!-- ================================= -->
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
                                                 <label for="inputCrashType">Crash Type</label>
-                                                {{inc_gen_form.crash_type.crash_type}}
+                                                {{inc_gen_form.crash_type}}
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label for="inputMovement">Movement Code</label>
-                                                <input type="text" class="form-control" id="inputMovementCode"
-                                                    placeholder="---">
-                                                </select>
+                                                {{ inc_gen_form.movement_code }}
+                                               
                                             </div>
                                         </div>
                                         <!-- ================================= -->

@@ -1,8 +1,9 @@
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from accounts.models import UserProfile, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_admin, check_role_super, check_role_member
-from incidentreport.models import UserReport, IncidentGeneral, IncidentRemark
+from incidentreport.models import UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub
 from django.contrib import messages
 from .forms import UserReportForm, IncidentGeneralForm
 
@@ -252,3 +253,22 @@ def incident_report_general(request):
         'inc_gen_form': inc_gen_form,
     }
     return render(request, 'pages/incident_report.html', context)
+
+# AJAX
+def load_accident(request):
+    accident_factor_id = request.GET.get('accident_factor_id')
+    collision_type_id = request.GET.get('collision_type_id')
+    acc_subcat = AccidentCausationSub.objects.filter(accident_factor_id=accident_factor_id).all()
+    col_subcat = CollisionTypeSub.objects.filter(collision_type_id=collision_type_id).all()
+    context = {
+        'acc_subcat': acc_subcat,
+        'col_subcat': col_subcat
+    }
+    return render(request, 'incident/acc_sub_dropdown_list_options.html', context)
+    #return JsonResponse(list(acc_subcat.values('id', 'sub_category')), safe=False)
+
+def load_collision(request):
+    collision_type_id = request.GET.get('collision_type_id')
+    col_subcat = CollisionTypeSub.objects.filter(collision_type_id=collision_type_id).all()
+    #return render(request, 'incident/acc_sub_dropdown_list_options.html', {'acc_subcat': acc_subcat})
+    return JsonResponse(list(col_subcat.values('id', 'sub_category')), safe=False)

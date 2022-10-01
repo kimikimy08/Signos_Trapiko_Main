@@ -23,4 +23,7 @@ urlpatterns = [
     path('myReport/delete/<int:id>', views.my_report_delete, name='my_report_delete'),
     
     path('incidentReport/general', views.incident_report_general, name='incident_report_general'),
+    
+    path('ajax/load-accident/', views.load_accident, name='ajax_load_accident'), # AJAX
+    path('ajax/load-collision/', views.load_collision, name='ajax_load_collision'), # AJAX
 ]

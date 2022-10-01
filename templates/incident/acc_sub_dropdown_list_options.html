@@ -1,0 +1,8 @@
+<option value="">---------</option>
+{% for accsubcategory in acc_subcat %}
+<option value="{{ accsubcategory.pk }}">{{ accsubcategory.sub_category }}</option>
+{% endfor %}
+
+{% for colsubcategory in col_subcat %}
+<option value="{{ colsubcategory.pk }}">{{ colsubcategory.sub_category }}</option>
+{% endfor %}
