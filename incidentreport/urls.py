@@ -27,6 +27,7 @@ urlpatterns = [
     path('incidentReport/vehicle', views.incident_report_vehicle, name='incident_report_vehicle'),
     path('incidentReport/media', views.incident_report_media, name='incident_report_media'),
     path('incidentReport/remarks', views.incident_report_remarks, name='incident_report_remarks'),
+    path('incidentReport/formsubmission', views.multistepformsubmission.as_view(), name='multistepformsubmission'),
     
     path('ajax/load-accident/', views.load_accident, name='ajax_load_accident'), # AJAX
     path('ajax/load-collision/', views.load_collision, name='ajax_load_collision'), # AJAX

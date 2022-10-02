@@ -1,3 +1,5 @@
+import os
+from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from accounts.models import UserProfile, User
@@ -6,6 +8,8 @@ from accounts.views import check_role_admin, check_role_super, check_role_member
 from incidentreport.models import UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub
 from django.contrib import messages
 from .forms import UserReportForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm
+from formtools.wizard.views import SessionWizardView
+from django.core.files.storage import FileSystemStorage
 
 
 @login_required(login_url='login')
@@ -252,7 +256,7 @@ def incident_report_general(request):
         'user_report_form': user_report_form,
         'inc_gen_form': inc_gen_form,
     }
-    return render(request, 'pages/incident_report.html', context)
+    return render(request, 'pages/incident_report_general.html', context)
 
 def incident_report_people(request):
     if request.method == 'POST':
@@ -340,3 +344,14 @@ def load_collision(request):
     col_subcat = CollisionTypeSub.objects.filter(collision_type_id=collision_type_id).all()
     #return render(request, 'incident/acc_sub_dropdown_list_options.html', {'acc_subcat': acc_subcat})
     return JsonResponse(list(col_subcat.values('id', 'sub_category')), safe=False)
+
+class multistepformsubmission(SessionWizardView):
+    template_name = 'pages/incident_report_general.html'
+    form_list = [UserReportForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm]
+    file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'media'))
+    
+    def done(self, form_list, **kwargs):
+        form_data = [form.cleaned_data for form in form_list]
+        # IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub
+        # incident_general = IncidentGeneral(name = form_data[0][''])
+        return render(self.request, 'incident_report_home.html', {'data': form_data})
