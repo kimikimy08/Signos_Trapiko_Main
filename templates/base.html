@@ -25,17 +25,23 @@
     <!-- Custom CSS -->
     
     <link href="{% static 'css/vendor/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/m_myreports.css' %}" rel="stylesheet">
+
+    <link href=" {% static 'css/profile.css' %} " rel="stylesheet">
     
     <link href="{% static 'css/user_report.css' %}" rel="stylesheet">
-    
+    {% if '/myReport/add' == request.path or '/myReport' == request.path or  '/myReport/pending' == request.path or '/myReport/approved' == request.path or '/myReport/rejected' == request.path %}
+    <link href="{% static 'css/m_myreports.css' %}" rel="stylesheet">
+    <link href="{% static 'css/m_reports.css' %}" rel="stylesheet">
+    {% endif %}
     {% if '/superadmin/userAccounts' == request.path or '/superadmin/userAccounts/member' == request.path or '/superadmin/userAccounts/admin' == request.path or '/superadmin/userAccounts/superadmin' == request.path %}
     <link href="{% static 'css/user_account.css' %}" rel="stylesheet">
     {% endif %}
 
+    <link href=" {% static 'css/custom.css' %} " rel="stylesheet">
     
-    <link href=" {% static 'css/profile.css' %} " rel="stylesheet">
-   
+    <link href="{% static 'css/m_myreports.css' %}" rel="stylesheet">
+    <link href="{% static 'css/m_reports.css' %}" rel="stylesheet">
+    <link href="{% static 'css/user_account.css' %}" rel="stylesheet">
 
 </head>
 
@@ -51,10 +57,12 @@
     {% endblock %}
     {% include 'includes/footer.html' %}
 
+    
+
     <!-- Vendor Script -->
-    <script src="{% static 'js/vendor/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'js/vendor/jquery/jquery.easing.min.js' %}"></script>
-    <script src="{% static 'js/vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+    <script script type="text/javascript"  src="{% static 'js/vendor/jquery/jquery.min.js' %}"></script>
+    <script script type="text/javascript" src="{% static 'js/vendor/jquery/jquery.easing.min.js' %}"></script>
+    <script script type="text/javascript" src="{% static 'js/vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
 
     <!-- User Report Vendor Script-->
     <script src="{% static 'js/vendor/jquery.dataTables.min.js' %}"></script>
@@ -62,9 +70,66 @@
 
 
     <!-- Custom Script  -->
-    <script src="{% static 'js/sidebar.js' %}"></script>
-    <script src="{% static 'js/default.js' %}"></script>
-    <script src="{% static 'js/user_report.js' %}"></script>
+    <script script type="text/javascript" src="{% static 'js/sidebar.js' %}"></script>
+    <script script type="text/javascript" src="{% static 'js/default.js' %}"></script>
+    <script script type="text/javascript" src="{% static 'js/user_report.js' %}"></script>
+
+    <script script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&callback=initAutoComplete" async defer></script>
+    
+
+    <script script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
+    <script>
+        $("#id_accident_factor").change(function () {
+            const url = $("#form_incidentgeneral").attr("data-acc-url");  // get the url of the `load_cities` view
+            const accidentId = $(this).val();  // get the selected country ID from the HTML input
+    
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+                data: {
+                    'accident_factor_id': accidentId       // add the country id to the GET parameters
+                },
+                success: function (data) {  
+                    //console.log(data) // `data` is the return of the `load_cities` view function
+                    $("#id_accident_subcategory").html(data);  // replace the contents of the city input with the data that came from the server
+
+                    let html_data = '<option value="">---------</option>';
+                    data.forEach(function (accident_subcategory) {
+                        html_data += `<option value="${accident_subcategory.id}">${accident_subcategory.sub_category}</option>`
+                    });
+                    console.log(html_data);
+                    $("#id_accident_subcategory").html(html_data);
+
+                }
+            });
+    
+        });
+
+        $("#id_collision_type").change(function () {
+            const url = $("#form_incidentgeneral").attr("data-acc-url");  // get the url of the `load_cities` view
+            const collisionId = $(this).val();  // get the selected country ID from the HTML input
+    
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+                data: {
+                    'collision_type_id': collisionId       // add the country id to the GET parameters
+                },
+                success: function (data) {  
+                    //console.log(data) // `data` is the return of the `load_cities` view function
+                    $("#id_collision_subcategory").html(data);  // replace the contents of the city input with the data that came from the server
+
+                    let html_data = '<option value="">---------</option>';
+                    data.forEach(function (collision_subcategory) {
+                        html_data += `<option value="${collision_subcategory.id}">${collision_subcategory.sub_category}</option>`
+                    });
+                    console.log(html_data);
+                    $("#id_collision_subcategory").html(html_data);
+
+                }
+            });
+    
+        });
+    </script>
 
 
 

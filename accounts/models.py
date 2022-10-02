@@ -1,3 +1,5 @@
+
+
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
@@ -148,3 +150,5 @@ def create_user_profile(sender, instance, created, **kwargs):
         UserProfile.objects.get_or_create(user=instance)
   
 post_save.connect(create_user_profile, sender=User) 
+
+

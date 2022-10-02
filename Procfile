@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn signosTrapiko.wsgi
+web: waitress-serve --port=$PORT signosTrapiko.wsgi:application

@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<!-- Page Wrapper -->
+
+{% include 'includes/sa_sidebar.html' %}
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                {% include 'includes/navbar.html' %}
+                <!-- Breadcrumb  -->
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-white border mb-4 shadow rounded-0">
+                        <li class="breadcrumb-item">Manage</li>
+                        <li class="breadcrumb-item">User Accounts</li>
+                        <!-- <li class="breadcrumb-item active"><a href="#">Page</a></li> -->
+                        <li class="breadcrumb-item active" aria-current="page">All Users</li>
+                    </ol>
+                </nav>
+                <!-- End of Breadcrumb  -->
+
+
+
+                <!-- ===== INSERT CONTENT HERE  ===== -->
+
+                <!-- Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Title -->
+                    <div class="d-flex bd-highlight">
+                        <div class="pg-title p-2 flex-grow-1 bd-highlight">
+                            <h4>Incident Report</h4>
+                        </div>
+                    </div>
+
+                    <!-- User Report Table  -->
+                    <div class="card shadow mb-5 d-flex ">
+                        <!-- Top Pagination  -->
+                        <div class="card-header py-3">
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'incident_report_general' %}">General</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="{% url 'incident_report_people' %}">People</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'incident_report_vehicle' %}">Vehicle</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'incident_report_media' %}">Media</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'incident_report_remarks' %}">Remarks</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table>
+                                    <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                        data-target="#collapsePeople" aria-expanded="false"
+                                        aria-controls="collapsePeople">
+                                        <i class='bx bx-plus'></i> Add Person
+                                    </button>
+                                    <div class="collapse pt-4" id="collapsePeople">
+                                        <form>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="inputFirstName">First Name</label>
+                                                    {{inc_per_form.incident_first_name}}
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="inputMiddleName">Middle Name</label>
+                                                    {{inc_per_form.incident_middle_name}}
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="inputLastName">Last Name</label>
+                                                    {{inc_per_form.incident_last_name}}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="inputAge">Age</label>
+                                                    {{inc_per_form.incident_age}}
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="inputGender">Gender</label>
+                                                    {{inc_per_form.incident_gender}}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputAddress">Address</label>
+                                                {{inc_per_form.incident_address}}
+                                            </div>
+                                            <!-- ================================= -->
+                                            <hr>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="inputInvolvement">Involvement</label>
+                                                    {{inc_per_form.incident_involvement}}
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="inputID">ID Presented</label>
+                                                    {{inc_per_form.incident_id_presented}}
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="inputIDNumber">ID Number</label>
+                                                    {{inc_per_form.incident_id_number}}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputInjury">Injury</label>
+                                                {{inc_per_form.incident_injury}}
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputInjury">Driver Error</label>
+                                                {{inc_per_form.incident_driver_error}}
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputInjury">Alcohol / Drugs</label>
+                                                {{inc_per_form.incident_alcohol_drugs}}
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputInjury">Seat belt / Helmet </label>
+                                                {{inc_per_form.incident_seatbelt_helmet}}
+                                            </div>
+                                        </form>
+                                        <div class="modal-footer mb-3">
+                                            <input type="button" class="btn btn-secondary" data-dismiss="modal"
+                                                value="Clear">
+                                            <input type="submit" class="btn btn-primary" value="Save">
+                                        </div>
+                                    </div>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of User Report Table  -->
+
+                </div>
+                <!-- End of Page Content -->
+
+                <!-- ===== END OF CONTENT  ===== -->
+
+
+            </div>
+
+                <!-- ===== END OF CONTENT  ===== -->
+
+
+       
+            <!-- End of Main Content  -->
+
+
+            <!-- Scroll to Top-->
+            <a class="scroll-to-top rounded" href="#scroll-up">
+                <i class='bx bxs-up-arrow'></i>
+            </a>
+            <!-- End of Scroll to Top-->
+
+
+
+            {% include 'includes/alerts.html' %}
+
+            {% endblock %}
+
+
+
+
+

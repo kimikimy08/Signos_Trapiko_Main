@@ -39,8 +39,8 @@
                             <h4>User Account Management</h4>
                         </div>
                         <div class="p-2 bd-highlight">
-                            <a  class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight"
-                                data-toggle="modal" data-toggle="tooltip" data-target="#addUserModal">
+                            <a href="{% url 'super_user_account_add' %}" title ="Add User"
+                                class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight">
                                 <i class='bx bx-user-plus'></i> Add User</a>
                             <!-- <a href="#add2"
                                 class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight"
@@ -119,18 +119,38 @@
                                               
                                             </td>
                                             <td>
-                                                <a href="#" data-toggle="modal" data-target="#viewUserModal{{ users.id }}"><i class='bx bxs-folder-open'
-                                                    data-toggle="tooltip" title="View"></i></a>
-                                                <a href="#" data-toggle="modal" data-target="#editUserModal{{ users.id }}"><i class='bx bxs-edit'
-                                                        data-toggle="tooltip" title="Edit"></i></a>
-                                                
-                                                <a href="#" data-toggle="modal" data-target="#deleteModal{{ users.id }}"><i class='bx bx-trash'
+                                                <a href="{% url 'super_user_account_view' users.id  %}"><i class='bx bxs-folder-open'
+                                                    title="View"></i></a>
+                                                    <a href="#" data-toggle="modal" data-target="#deleteuserModal{{ users.id }}"><i class='bx bx-trash'
                                                         data-toggle="tooltip" title="Delete" ></i></a>
                                                         
                                             </td>
                                         </tr>
 
-                                        {% include 'includes/modals.html' %}  
+                                         <!-- Delete Modal HTML -->
+                                <div class="modal fade" id="deleteuserModal{{ users.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Delete this account?</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                            </div>
+                                        <div class="modal-body">
+                                            <h6>Do you want to delete the selected record? This process cannot be undone.</h6>
+                                        </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                
+                                    
+                                        
+                                                    <a class="btn btn-sm btn-danger" href="{% url 'super_user_account_delete' users.id %}">Delete</a>
+                                            
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 
                                        {% endfor %}
                                     </tbody>

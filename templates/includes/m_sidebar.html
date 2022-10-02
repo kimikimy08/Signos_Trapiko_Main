@@ -17,7 +17,7 @@
     <div class="sidebar-heading">Access</div>
 
     <!-- My Reports -->
-    <li class="nav-item">
+    <li class="{% if '/myReport' == request.path or '/myReport/pending' == request.path or '/myReport/approved' == request.path or '/myReport/rejected' == request.path %} nav-item active {% else %} nav-item {% endif %}">
         <a class="nav-link" href="{% url 'my_report' %}">
             <i class='bx bx-file-blank'></i>
             <span class="">My Reports</span></a>

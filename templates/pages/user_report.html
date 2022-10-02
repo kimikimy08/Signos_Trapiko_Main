@@ -101,17 +101,12 @@
                                                 <span class="badge badge-warning">{{incident.get_status}}</span>
                                                 {% elif incident.status == 2 %}
                                                 <span class="badge badge-success">{{incident.get_status}}</span>
-                                                {% else %}
+                                                {% elif incident.status == 3 %}
                                                 <span class="badge badge-danger">{{incident.get_status}}</span>
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                <a href="#" data-toggle="modal"><i class='bx bxs-folder-open'
-                                                        data-toggle="tooltip" title="View"></i></a>
-                                                <a href="#" data-toggle="modal"><i class='bx bxs-edit'
-                                                        data-toggle="tooltip" title="Edit"></i></a>
-                                                <a href="#" data-toggle="modal"><i class='bx bx-trash'
-                                                        data-toggle="tooltip" title="Delete"></i></a>
+                                               
                                             </td>
                                             
                                         </tr>
@@ -239,12 +234,7 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                <a href="#" data-toggle="modal"><i class='bx bxs-folder-open'
-                                                        data-toggle="tooltip" title="View"></i></a>
-                                                <a href="#" data-toggle="modal"><i class='bx bxs-edit'
-                                                        data-toggle="tooltip" title="Edit"></i></a>
-                                                <a href="#" data-toggle="modal"><i class='bx bx-trash'
-                                                        data-toggle="tooltip" title="Delete"></i></a>
+                                               
                                             </td>
                                             
                                         </tr>

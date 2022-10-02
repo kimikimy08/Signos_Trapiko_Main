@@ -17,5 +17,18 @@ urlpatterns = [
     path('myReport/pending', views.my_report_pending, name='my_report_pending'),
     path('myReport/approved', views.my_report_approved, name='my_report_approved'),
     path('myReport/rejected', views.my_report_rejected, name='my_report_rejected'),
-    path('myReport/delete/<incident_id>', views.my_report_delete, name='my_report_delete'),
+    path('myReport/add', views.my_report_add, name='my_report_add'),
+    path('myReport/view/<int:id>', views.my_report_view, name='my_report_view'),
+    path('myReport/edit/<int:id>', views.my_report_edit, name='my_report_edit'),
+    path('myReport/delete/<int:id>', views.my_report_delete, name='my_report_delete'),
+    
+    path('incidentReport/general', views.incident_report_general, name='incident_report_general'),
+    path('incidentReport/people', views.incident_report_people, name='incident_report_people'),
+    path('incidentReport/vehicle', views.incident_report_vehicle, name='incident_report_vehicle'),
+    path('incidentReport/media', views.incident_report_media, name='incident_report_media'),
+    path('incidentReport/remarks', views.incident_report_remarks, name='incident_report_remarks'),
+    path('incidentReport/formsubmission', views.multistepformsubmission.as_view(), name='multistepformsubmission'),
+    
+    path('ajax/load-accident/', views.load_accident, name='ajax_load_accident'), # AJAX
+    path('ajax/load-collision/', views.load_collision, name='ajax_load_collision'), # AJAX
 ]

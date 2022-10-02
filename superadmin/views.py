@@ -4,7 +4,7 @@ from accounts.models import UserProfile, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_super
 from django.contrib import messages
-from accounts.forms import UserForm, MemberForm, UserManagementForm
+from accounts.forms import UserForm, MemberForm, UserManagementForm, UserUpdateManagementForm, UserUpdateForm, ProfileMgmtUpdateForm
 from accounts.utils import send_verfication_email, send_sms, detectUser
 from django.urls import reverse
 from django.core.paginator import Paginator
@@ -20,6 +20,45 @@ def super_profile(request):
     }
     
     return render(request, 'pages/super_profile.html', context)
+
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
+def super_profile_edit(request):
+    user = User.objects.get(username = request.user.username)
+    profile = get_object_or_404(UserProfile, user=request.user)
+    if request.method == 'POST':
+        profile_form = MemberForm(request.POST  or None, request.FILES  or None, instance=profile)
+        user_form = UserUpdateForm(request.POST  or None, instance=request.user)
+        if profile_form.is_valid() and user_form.is_valid():
+            user_form.instance.username = request.user
+            # user.first_name = user_form.cleaned_data['first_name']
+            # user.middle_name = user_form.cleaned_data['middle_name']
+            # user.last_name = user_form.cleaned_data['last_name']
+            # user.username = user_form.cleaned_data['username']
+            # user.email = user_form.cleaned_data['email']
+            # user.mobile_number = user_form.cleaned_data['mobile_number']
+            # my_form = user_form.save(commit=False)
+            # my_form.username = request.user.username
+            profile_form.save()
+            user_form.save()
+            messages.success(request, 'Profile updated')
+            return redirect('super_profile')
+        else:
+            print(profile_form.errors)
+            print(user_form.errors)
+
+    else:
+        profile_form = MemberForm(instance=profile)
+        user_form = UserUpdateForm(instance=request.user, initial={"email": user.email, 
+                                                        "username": user.username})
+    context = {
+        'profile_form': profile_form,
+        'user_form' : user_form,
+        'profile': profile,
+    }
+    
+    return render(request, 'pages/super_profile_edit.html', context)
+
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
@@ -98,7 +137,7 @@ def super_user_account_add(request):
                 email = form.cleaned_data['email']
                 mobile_number = form.cleaned_data['mobile_number']
                 password = form.cleaned_data['password']
-                role = request.POST['role']
+                role = form.cleaned_data['role']
 
                 user = User(first_name=first_name, middle_name=middle_name, last_name=last_name, username=username, email=email, mobile_number=mobile_number, password=password, role=role)
                 user.save()
@@ -116,11 +155,67 @@ def super_user_account_add(request):
 
 
     else:
-        form = UserForm()
+        form = UserManagementForm()
     context = {
         'form' : form,
     }
-    return render(request, 'pages/super_user_account.html', context)
+    return render(request, 'pages/super_user_account_add.html', context)
+
+def super_user_account_view(request, id):
+    user = get_object_or_404(User, pk=id)
+    profile = get_object_or_404(UserProfile, pk=user.id)
+    context = {
+        'user': user,
+        'profile': profile,
+    }
+
+    return render(request, 'pages/super_user_account_view.html', context) 
+
+def super_user_account_edit(request, id=None):
+    user =  get_object_or_404(User, pk=id)
+    profile = get_object_or_404(UserProfile, pk=id)
+    if request.method == 'POST':
+        profile_form = ProfileMgmtUpdateForm(request.POST  or None, request.FILES  or None, instance=profile)
+        user_form = UserUpdateManagementForm(request.POST  or None,  instance=user)
+        if profile_form.is_valid() and user_form.is_valid():
+            user_form.instance.username = request.user
+            # user.first_name = user_form.cleaned_data['first_name']
+            # user.middle_name = user_form.cleaned_data['middle_name']
+            # user.last_name = user_form.cleaned_data['last_name']
+            # user.username = user_form.cleaned_data['username']
+            # user.email = user_form.cleaned_data['email']
+            # user.mobile_number = user_form.cleaned_data['mobile_number']
+            # my_form = user_form.save(commit=False)
+            # my_form.username = request.user.username
+            profile_form.save()
+            user_form.save(commit=False)
+            if user is not None and user.status == 3:
+                user.is_active = False
+                user.status = User.INACTIVE
+                user.save()
+                messages.success(request, 'Profile updated')
+                messages.success(request, 'Account is Inactive')
+                return redirect('super_user_account')
+            else:
+
+                return redirect('super_user_account')
+        else:
+            print(profile_form.errors)
+            print(user_form.errors)
+
+    else:
+        profile_form = ProfileMgmtUpdateForm(instance=profile)
+        user_form = UserUpdateManagementForm(instance=user, initial={"email": user.email, 
+                                                        "username": user.username})
+    context = {
+        'profile_form': profile_form,
+        'user_form' : user_form,
+        'profile': profile,
+        'user': user
+    }
+    
+    return render(request, 'pages/super_user_account_edit.html', context)
+
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
