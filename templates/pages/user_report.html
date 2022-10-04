@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block styles %}
+<link href="{% static 'css/user_report.css' %}" rel="stylesheet">
+<link href="{% static 'css/m_myreports.css' %}" rel="stylesheet">
+<link href="{% static 'css/m_reports.css' %}" rel="stylesheet">
+{% endblock styles %}
+
 {% block content %}
 
 
@@ -51,22 +57,23 @@
                         <div class="card-header py-3">
                             <ul class="nav nav-pills card-header-pills">
                                 <li class="nav-item">
-                                    <a class="{% if '/userReport/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report' %}">All Reports</a>
+                                    <a class="{% if '/userReport' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report' %}">All Reports</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="{% if '/userReport/pending/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report_pending' %}">Pending</a>
+                                    <a class="{% if '/userReport/pending' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report_pending' %}">Pending</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="{% if '/userReport/approved/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report_approved' %}">Approved</a>
+                                    <a class="{% if '/userReport/approved' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report_approved' %}">Approved</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="{% if '/userReport/rejected/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report_rejected' %}">Rejected</a>
+                                    <a class="{% if '/userReport/rejected' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report_rejected' %}">Rejected</a>
                                 </li>
                             </ul>
                         </div>
 
                         <div class="card-body">
                             <div class="table-responsive">
+                                {% if incidentReports %}
                                 <table class="table table-bordered table-hover text-dark" id="user_report" width="100%"
                                     style="cursor: pointer;" cellspacing="0">
 
@@ -78,6 +85,8 @@
                                             <th>Role</th>
                                             <th>Description</th>
                                             <th>Location</th>
+                                            {% comment %} <th>Accident Factor</th>
+                                            <th>Collision Type</th> {% endcomment %}
                                             <th>Date</th>
                                             <th>Time</th>
                                             <th>Status</th>
@@ -90,31 +99,67 @@
                                         {% for incident in incidentReports %}
                                         <tr>
                                             <td>{{incident.id}}</td>
-                                            <td>{{incident.user.username}}</td>
-                                            <td>{{incident.user.get_role}}</td>
-                                            <td>{{incident.description}}</td>
-                                            <td>{{incident.location}}</td>
-                                            <td>{{incident.date}}</td>
-                                            <td>{{incident.time}}</td>
+                                            <td>{{incident.user_report.user.username}}</td>
+                                            <td>{% if incident.user_report.user.role %}{{incident.user.get_role}}{% endif %}</td>
+                                            <td>{{incident.user_report.description}}</td>
+                                            <td>{{incident.user_report.address}}</td>
+                                            {% comment %} <td>{{incident__incident_general.accident_factor}}</td>
+                                            <td>{{incident.collision_type}}</td> {% endcomment %}
+                                            <td>{{incident.user_report.date}}</td>
+                                            <td>{{incident.user_report.time}}</td>
                                             <td>
-                                                {% if incident.status == 1 %}
-                                                <span class="badge badge-warning">{{incident.get_status}}</span>
-                                                {% elif incident.status == 2 %}
-                                                <span class="badge badge-success">{{incident.get_status}}</span>
-                                                {% elif incident.status == 3 %}
-                                                <span class="badge badge-danger">{{incident.get_status}}</span>
+                                                {% if incident.user_report.status == 1 %}
+                                                <span class="badge badge-warning">{{incident.user_report.get_status}}</span>
+                                                {% elif incident.user_report.status == 2 %}
+                                                <span class="badge badge-success">{{incident.user_report.get_status}}</span>
+                                                {% elif incident.user_report.status == 3 %}
+                                                <span class="badge badge-danger">{{incident.user_report.get_status}}</span>
                                                 {% endif %}
                                             </td>
                                             <td>
-                                               
+                                                <a href="{% url 'incident_report_general_view' incident.id %}"><i class='bx bxs-folder-open'
+                                                    title="View"></i></a>
+                       
+                                                        <a href="#" data-toggle="modal" data-target="#deleteuserModal{{ incident.id }}"><i class='bx bx-trash'
+                                                            data-toggle="tooltip" title="Delete" ></i></a>
                                             </td>
                                             
                                         </tr>
+                                                <!-- Delete Modal HTML -->
+                                <div class="modal fade" id="deleteuserModal{{ incident.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Delete this account?</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                            </div>
+                                        <div class="modal-body">
+                                            <h6>Do you want to delete the selected record? This process cannot be undone.</h6>
+                                        </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                
+                                    
+                                        
+                                                    <a class="btn btn-sm btn-danger" href="{% url 'user_report_delete' incident.id %}">Delete</a>
+                                            
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
                                         {% endfor %}
                                     </tbody>
                                     <!-- End of Table Body  -->
 
                                 </table>
+                                {% else %}
+
+                        <h5 class="text-center">No User Report.</h5>
+                             
+                        {% endif %}
+
                                 
                             </div>
                         </div>
@@ -179,22 +224,23 @@
                         <div class="card-header py-3">
                             <ul class="nav nav-pills card-header-pills">
                                 <li class="nav-item">
-                                    <a class="{% if '/userReports/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports' %}">All Reports</a>
+                                    <a class="{% if '/userReports' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports' %}">All Reports</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="{% if '/userReports/pending/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports_pending' %}">Pending</a>
+                                    <a class="{% if '/userReports/pending' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports_pending' %}">Pending</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="{% if '/userReports/approved/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports_approved' %}">Approved</a>
+                                    <a class="{% if '/userReports/approved' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports_approved' %}">Approved</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="{% if '/userReports/rejected/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports_rejected' %}">Rejected</a>
+                                    <a class="{% if '/userReports/rejected' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports_rejected' %}">Rejected</a>
                                 </li>
                             </ul>
                         </div>
 
                         <div class="card-body">
                             <div class="table-responsive">
+                                {% if incidentReports %}
                                 <table class="table table-bordered table-hover text-dark" id="user_report" width="100%"
                                     style="cursor: pointer;" cellspacing="0">
 
@@ -206,6 +252,8 @@
                                             <th>Role</th>
                                             <th>Description</th>
                                             <th>Location</th>
+                                            {% comment %} <th>Accident Factor</th>
+                                            <th>Collision Type</th> {% endcomment %}
                                             <th>Date</th>
                                             <th>Time</th>
                                             <th>Status</th>
@@ -218,31 +266,67 @@
                                         {% for incident in incidentReports %}
                                         <tr>
                                             <td>{{incident.id}}</td>
-                                            <td>{{incident.user.username}}</td>
-                                            <td>{{incident.user.get_role}}</td>
-                                            <td>{{incident.description}}</td>
-                                            <td>{{incident.location}}</td>
-                                            <td>{{incident.date}}</td>
-                                            <td>{{incident.time}}</td>
+                                            <td>{{incident.user_report.user.username}}</td>
+                                            <td>{% if incident.user_report.user.role %}{{incident.user.get_role}}{% endif %}</td>
+                                            <td>{{incident.user_report.description}}</td>
+                                            <td>{{incident.user_report.address}}</td>
+                                            {% comment %} <td>{{incident__incident_general.accident_factor}}</td>
+                                            <td>{{incident.collision_type}}</td> {% endcomment %}
+                                            <td>{{incident.user_report.date}}</td>
+                                            <td>{{incident.user_report.time}}</td>
                                             <td>
-                                                {% if incident.status == 1 %}
-                                                <span class="badge badge-warning">{{incident.get_status}}</span>
-                                                {% elif incident.status == 2 %}
-                                                <span class="badge badge-success">{{incident.get_status}}</span>
-                                                {% else %}
-                                                <span class="badge badge-danger">{{incident.get_status}}</span>
+                                                {% if incident.user_report.status == 1 %}
+                                                <span class="badge badge-warning">{{incident.user_report.get_status}}</span>
+                                                {% elif incident.user_report.status == 2 %}
+                                                <span class="badge badge-success">{{incident.user_report.get_status}}</span>
+                                                {% elif incident.user_report.status == 3 %}
+                                                <span class="badge badge-danger">{{incident.user_report.get_status}}</span>
                                                 {% endif %}
                                             </td>
                                             <td>
-                                               
+                                                <a href="{% url 'incident_report_general_view' incident.id %}"><i class='bx bxs-folder-open'
+                                                    title="View"></i></a>
+                       
+                                                        <a href="#" data-toggle="modal" data-target="#deleteuserModal{{ incident.id }}"><i class='bx bx-trash'
+                                                            data-toggle="tooltip" title="Delete" ></i></a>
                                             </td>
                                             
                                         </tr>
+                                                <!-- Delete Modal HTML -->
+                                <div class="modal fade" id="deleteuserModal{{ incident.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Delete this account?</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                            </div>
+                                        <div class="modal-body">
+                                            <h6>Do you want to delete the selected record? This process cannot be undone.</h6>
+                                        </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                
+                                    
+                                        
+                                                    <a class="btn btn-sm btn-danger" href="{% url 'user_report_delete' incident.id %}">Delete</a>
+                                            
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
                                         {% endfor %}
                                     </tbody>
                                     <!-- End of Table Body  -->
 
                                 </table>
+                                {% else %}
+
+                        <h5 class="text-center">No User Report.</h5>
+                             
+                        {% endif %}
+
                                 
                             </div>
                         </div>

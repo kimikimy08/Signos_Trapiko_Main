@@ -31,6 +31,12 @@ def check_role_super(user):
         return True
     else:
         raise PermissionDenied
+
+def check_role_super_admin(user):
+    if user.role == 2 or user.role == 3:
+        return True
+    else:
+        raise PermissionDenied
     
     
 # Create your views here.

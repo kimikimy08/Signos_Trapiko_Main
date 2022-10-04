@@ -47,6 +47,10 @@ class UserReportForm(forms.ModelForm):
             if field == 'latitude' or field == 'longitude':
                 self.fields[field].widget.attrs['readonly'] = 'readonly'
         
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['description'].required = False
+        
         
         
 
@@ -60,7 +64,7 @@ class UserReportForm(forms.ModelForm):
 class IncidentGeneralForm(forms.ModelForm):
     class Meta:
         model = IncidentGeneral
-        fields = '__all__'
+        fields = [ 'accident_factor', 'accident_subcategory', 'collision_type', 'collision_subcategory', 'crash_type', 'weather', 'light', 'severity', 'movement_code']
 
     def __init__(self, *args, **kwargs):
         super(IncidentGeneralForm, self).__init__(*args, **kwargs)
@@ -77,29 +81,30 @@ class IncidentGeneralForm(forms.ModelForm):
         self.fields['accident_subcategory'].queryset = AccidentCausationSub.objects.none()
         self.fields['collision_subcategory'].queryset = CollisionTypeSub.objects.none()
 
-        if 'accident_factor' in self.data:
-            try:
-                accident_factor_id = int(self.data.get('accident_factor'))
-                self.fields['accident_subcategory'].queryset = AccidentCausationSub.objects.filter(accident_factor_id=accident_factor_id).order_by('accident_factor')
-            except (ValueError, TypeError):
-                pass  # invalid input from the client; ignore and fallback to empty City queryset
-        elif self.instance.pk:
-            self.fields['accident_subcategory'].queryset = self.instance.accident_factor.accident_subcategory_set.order_by('subcategory')
+        # if 'accident_factor' in self.data:
+        #     try:
+        #         accident_factor_id = int(self.data.get('accident_factor'))
+        #         self.fields['accident_subcategory'].queryset = AccidentCausationSub.objects.filter(accident_factor_id=accident_factor_id).order_by('accident_factor')
+        #     except (ValueError, TypeError):
+        #         pass  # invalid input from the client; ignore and fallback to empty City queryset
+        # elif self.instance.pk:
+        #     self.fields['accident_subcategory'].queryset = self.instance.accident_factor.accident_subcategory_set.order_by('subcategory')
             
-        if 'collision_type' in self.data:
-            try:
-                collision_type_id = int(self.data.get('collision_type'))
-                self.fields['collision_subcategory'].queryset = CollisionTypeSub.objects.filter(collision_type_id=collision_type_id).order_by('collision_type')
-            except (ValueError, TypeError):
-                pass  # invalid input from the client; ignore and fallback to empty City queryset
-        elif self.instance.pk:
-            self.fields['collision_subcategory'].queryset = self.instance.collision_type.collision_subcategory_set.order_by('subcategory')
+        # if 'collision_type' in self.data:
+        #     try:
+        #         collision_type_id = int(self.data.get('collision_type'))
+        #         self.fields['collision_subcategory'].queryset = CollisionTypeSub.objects.filter(collision_type_id=collision_type_id).order_by('collision_type')
+        #     except (ValueError, TypeError):
+        #         pass  # invalid input from the client; ignore and fallback to empty City queryset
+        # elif self.instance.pk:
+        #     self.fields['collision_subcategory'].queryset = self.instance.collision_type.collision_subcategory_set.order_by('subcategory')
 
 
 class IncidentPersonForm(forms.ModelForm):
     class Meta:
         model = IncidentPerson
-        fields = '__all__'
+        fields = [ 'incident_first_name', 'incident_middle_name', 'incident_last_name', 'incident_age', 'incident_gender', 'incident_address',
+                  'incident_involvement', 'incident_id_presented', 'incident_id_number', 'incident_injury', 'incident_driver_error', 'incident_alcohol_drugs', 'incident_seatbelt_helmet']
 
     def __init__(self, *args, **kwargs):
         super(IncidentPersonForm, self).__init__(*args, **kwargs)
@@ -120,7 +125,8 @@ class IncidentPersonForm(forms.ModelForm):
 class IncidentVehicleForm(forms.ModelForm):
     class Meta:
         model = IncidentVehicle
-        fields = '__all__'
+        fields = [ 'classification', 'vehicle_type', 'brand', 'plate_number', 'engine_number', 'chassis_number',
+                  'insurance_details', 'maneuver', 'damage', 'defect', 'loading']
 
     def __init__(self, *args, **kwargs):
         super(IncidentVehicleForm, self).__init__(*args, **kwargs)
@@ -139,7 +145,7 @@ class IncidentVehicleForm(forms.ModelForm):
 class IncidentMediaForm(forms.ModelForm):
     class Meta:
         model = IncidentMedia
-        fields = '__all__'
+        fields = [ 'description', 'incident_upload_photovideo']
 
     def __init__(self, *args, **kwargs):
         super(IncidentMediaForm, self).__init__(*args, **kwargs)
@@ -150,7 +156,7 @@ class IncidentMediaForm(forms.ModelForm):
 class IncidentRemarksForm(forms.ModelForm):
     class Meta:
         model = IncidentRemark
-        fields = '__all__'
+        fields = [ 'responder', 'action_taken']
 
     def __init__(self, *args, **kwargs):
         super(IncidentRemarksForm, self).__init__(*args, **kwargs)

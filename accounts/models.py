@@ -92,8 +92,8 @@ class User(AbstractBaseUser):
     # required fields
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)
-    created_date= models.DateTimeField(auto_now_add=True)
-    modified_date = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
@@ -136,8 +136,8 @@ class UserProfile(models.Model):
     birthdate = models.DateField(blank=True, null=True)
     profile_picture = models.ImageField(default='user.jpeg', upload_to='users/profile_pictures')
     upload_id = models.ImageField(default='user.jpeg', upload_to='member/id')
-    created_at = models.DateTimeField(auto_now=True)
-    modified_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.user.username

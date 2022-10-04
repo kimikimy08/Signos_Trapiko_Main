@@ -9,7 +9,7 @@
             <img src="{% static 'images/faviconwhite.png' %}" alt="" srcset="">
         </div>
     </a>
-    <h3>SA</h3>
+    {% comment %} <h3>SA</h3> {% endcomment %}
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -43,7 +43,7 @@
                 <a class="{% if '/userReports/' == request.path %} collapse-item active {% else %} collapse-item{% endif %} " href="{% url 'user_reports' %}">
                     <i class='bx bx-user-voice'></i>
                     <span>User Report</span></a>
-                <a class="collapse-item" href="{% url 'incident_report_general' %}">
+                <a class="collapse-item" href="{% url 'multistepformsubmission' %}">
                     <i class='bx bxs-car-crash'></i>
                     <span>Incident Report</span></a>
                 <a class="collapse-item" href="#">

@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block styles %}
+<link href="{% static 'css/m_myreports.css' %}" rel="stylesheet">
+<link href=" {% static 'css/profile.css' %} " rel="stylesheet">
+<link href="{% static 'css/user_account.css' %}" rel="stylesheet"> 
+{% endblock styles %}
+
 {% block content %}
 
 
@@ -89,15 +95,11 @@
                                 </div>
 
                                 <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                      <label for="inputbirth">Username</label>
-                                      {{user_form.username}}
-                                    </div>
-                                     <div class="form-group col-md-6">
-                                      <label for="inputmobile">Email</label>
-                                      {{user_form.email}}
-                                    </div>
-                                </div>
+                                  <div class="form-group col-md-12">
+                                    <label for="inputbirth">Upload Profile Picture</label>
+                                    {{profile_form.profile_picture}}
+                                  </div>
+                              </div>
 
 
                          
@@ -107,7 +109,7 @@
                             <div class="card p-5">
                            
 
-                                {% comment %} <h5 class="h5"> SECURITY </h5>
+                              <h5 class="h5"> SECURITY </h5>
                                   <!-- =========== EMAIL ADDRESS AND PASSWORD -->
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
@@ -118,11 +120,11 @@
                                         <label for="inputemail" name="email">Email</label>
                                         {{user_form.email}}
                                       </div>
-                                    <div class="form-group col-md-6">
+                                    {% comment %} <div class="form-group col-md-6">
                                       <label for="inputemail mb-2"> Password </label> <br>
                                       <h6 class="h6-password">********** </h6><span class="changePass"><button type="button" class="btn-change-pass p-2" data-toggle="modal" data-target="#change-pass-Modal">Change Password</button></span> <!-- Triger the MODAL -->
-                                    </div>
-                                </div> {% endcomment %}
+                                    </div> {% endcomment %}
+                                </div> 
 
 
                                 <!--============= MODAL -->
@@ -174,16 +176,16 @@
 
 
                                  <!-- =========== CREATED AND UPDATED -->
-                                <div class="form-row">
-                                     <div class="form-group col-md-6">
-                                      <h6 class="h6">Created at</h6>
-                                      <h6 class="h6"> November 1, 2022 </h6>
-                                    </div>
-                                     <div class="form-group col-md-6">
-                                      <h6 class="h6">Last Updated </h6>
-                                      <h6 class="h6"> November 1, 2022 </h6>
-                                    </div>  
-                                </div>
+                                 <div class="form-row">
+                                  <div class="form-group col-md-6">
+                                   <h6 class="h6">Created at</h6>
+                                   <h6 class="h6"> {{profile.created_at}} </h6>
+                                 </div>
+                                  <div class="form-group col-md-6">
+                                   <h6 class="h6">Last Updated </h6>
+                                   <h6 class="h6"> {{profile.updated_at}} </h6>
+                                 </div>  
+                             </div>
                                
                          
                             </div>
