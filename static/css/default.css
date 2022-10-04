@@ -137,6 +137,7 @@ body {
 
 /* ========== END OF BUTTONS */
 
+
 /* ========== SIDEBAR & NAVBAR */
 .wrapper,
 ul .navbar-nav,
@@ -307,3 +308,9 @@ footer {
 
 /* ========== END OF FOOTER */
 
+/* ========== MAIN CONTENT */
+
+.btn-useradd{
+    text-align: right;
+}
+/* ========== END OF MAIN CONTENT */

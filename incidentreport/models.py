@@ -17,9 +17,9 @@ class UserReport(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     description = models.TextField(max_length=250, blank=True)
     address = models.CharField(max_length=250)
-    country = models.CharField(max_length=15, blank=True, null=True)
-    state = models.CharField(max_length=15, blank=True, null=True)
-    city = models.CharField(max_length=15, blank=True, null=True)
+    country = models.CharField(max_length=50, blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
+    city = models.CharField(max_length=50, blank=True, null=True)
     pin_code = models.CharField(max_length=6, blank=True, null=True)
     latitude = models.CharField(max_length=20, blank=True, null=True)
     longitude = models.CharField(max_length=20, blank=True, null=True)
@@ -111,7 +111,8 @@ class IncidentGeneral(models.Model):
         (3, 'Non-Fatal'),
     )
     
-    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, null=True, blank=True)
+    user_report = models.OneToOneField(UserReport, on_delete=models.CASCADE)
     accident_factor = models.ForeignKey(AccidentCausation, on_delete=models.SET_NULL, blank=True, null=True)
     accident_subcategory = models.ForeignKey(AccidentCausationSub, on_delete=models.SET_NULL, blank=True, null=True)
     collision_type = models.ForeignKey(CollisionType, on_delete=models.SET_NULL, blank=True, null=True)
@@ -182,6 +183,8 @@ class IncidentPerson(models.Model):
         (2, 'Not worn'),
         (3, 'Not worn correctly'),
     )
+    
+    incident_general = models.OneToOneField(IncidentGeneral, on_delete=models.CASCADE)
     incident_first_name = models.CharField(max_length=250, blank=True)
     incident_middle_name = models.CharField(max_length=250, blank=True)
     incident_last_name = models.CharField(max_length=250, blank=True)
@@ -277,7 +280,7 @@ class IncidentVehicle(models.Model):
         (3, 'Unsafe Load'),
         (4, 'Others'),
     )
-
+    incident_general = models.OneToOneField(IncidentGeneral, on_delete=models.CASCADE)
     classification = models.PositiveSmallIntegerField(choices=CLASSIFICATION, blank=True, null=True)
     vehicle_type = models.PositiveSmallIntegerField(choices=VEHICLE_TYPE, blank=True, null=True)
     brand = models.CharField(max_length=250, blank=True)
@@ -296,7 +299,7 @@ class IncidentVehicle(models.Model):
         return self.id
 
 class IncidentMedia(models.Model):
-    
+    incident_general = models.OneToOneField(IncidentGeneral, on_delete=models.CASCADE)
     description = models.TextField(max_length=250, blank=True)
     incident_upload_photovideo = models.ImageField(default='user.jpeg', upload_to='incident_report/image')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -308,6 +311,7 @@ class IncidentMedia(models.Model):
     
 
 class IncidentRemark(models.Model):
+    incident_general = models.OneToOneField(IncidentGeneral, on_delete=models.CASCADE)
     responder =  models.CharField(max_length=250, blank=True)
     action_taken = models.TextField(max_length=250, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -325,7 +329,7 @@ class IncidentRemark(models.Model):
 
 
 class Incident(models.Model):
-
+    incident_general = models.OneToOneField(IncidentGeneral, on_delete=models.CASCADE)
     user_report = models.OneToOneField(UserReport, on_delete=models.CASCADE, blank=True, null=True)
     incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.SET_NULL, blank=True, null=True)
     incident_person = models.ForeignKey(IncidentPerson, on_delete=models.SET_NULL, blank=True, null=True)
@@ -333,4 +337,4 @@ class Incident(models.Model):
     incident_media = models.ForeignKey(IncidentMedia, on_delete=models.SET_NULL, blank=True, null=True)
     incident_remark = models.ForeignKey(IncidentRemark, on_delete=models.SET_NULL, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    modified_at = models.DateTimeField(auto_now=True)

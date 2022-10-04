@@ -115,8 +115,13 @@ class UserManagementForm(forms.ModelForm):
         (1, 'Member'),
         (2, 'Admin'),
         (3, 'Super Admin')
+        
+        
     )
+        
         super(UserManagementForm, self).__init__(*args, **kwargs)
+        self.fields['role'].required = False
+        self.fields['status'].required = False
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
             self.fields['role'].widget.choices = ROLE_CHOICE_1

@@ -46,19 +46,19 @@
                         <div class="card-header py-3">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_general' %}">General</a>
+                                    <a class="nav-link" href="{% url 'incident_report_general_view' general.id %}">General</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{% url 'incident_report_people' %}">People</a>
+                                    <a class="nav-link active" href="{% url 'incident_report_people_view' general.id %}">People</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_vehicle' %}">Vehicle</a>
+                                    <a class="nav-link" href="{% url 'incident_report_vehicle_view' general.id %}">Vehicle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_media' %}">Media</a>
+                                    <a class="nav-link" href="{% url 'incident_report_media_view' general.id %}">Media</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_remarks' %}">Remarks</a>
+                                    <a class="nav-link" href="{% url 'incident_report_remarks_view' general.id %}">Remarks</a>
                                 </li>
                             </ul>
                         </div>
@@ -66,81 +66,81 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table>
-                                    <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                        data-target="#collapsePeople" aria-expanded="false"
-                                        aria-controls="collapsePeople">
-                                        <i class='bx bx-plus'></i> Add Person
-                                    </button>
-                                    <div class="collapse pt-4" id="collapsePeople">
-                                        <form>
+
+                                    
+
+                                    
+                                    
+                                        <form action="{% url 'incident_report_people_edit' general.id %}" enctype="multipart/form-data" method="post">
+                                            {% csrf_token %}
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">
                                                     <label for="inputFirstName">First Name</label>
-                                                    {{inc_per_form.incident_first_name}}
+                                                    {{person_instance.incident_first_name}}
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label for="inputMiddleName">Middle Name</label>
-                                                    {{inc_per_form.incident_middle_name}}
+                                                    {{person_instance.incident_middle_name}}
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label for="inputLastName">Last Name</label>
-                                                    {{inc_per_form.incident_last_name}}
+                                                    {{person_instance.incident_last_name}}
                                                 </div>
                                             </div>
 
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">
                                                     <label for="inputAge">Age</label>
-                                                    {{inc_per_form.incident_age}}
+                                                    {{person_instance.incident_age}}
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label for="inputGender">Gender</label>
-                                                    {{inc_per_form.incident_gender}}
+                                                    {{person_instance.incident_gender}}
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="inputAddress">Address</label>
-                                                {{inc_per_form.incident_address}}
+                                                {{person_instance.incident_address}}
                                             </div>
                                             <!-- ================================= -->
                                             <hr>
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">
                                                     <label for="inputInvolvement">Involvement</label>
-                                                    {{inc_per_form.incident_involvement}}
+                                                    {{person_instance.incident_involvement}}
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label for="inputID">ID Presented</label>
-                                                    {{inc_per_form.incident_id_presented}}
+                                                    {{person_instance.incident_id_presented}}
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label for="inputIDNumber">ID Number</label>
-                                                    {{inc_per_form.incident_id_number}}
+                                                    {{person_instance.incident_id_number}}
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="inputInjury">Injury</label>
-                                                {{inc_per_form.incident_injury}}
+                                                {{person_instance.incident_injury}}
                                             </div>
                                             <div class="form-group">
                                                 <label for="inputInjury">Driver Error</label>
-                                                {{inc_per_form.incident_driver_error}}
+                                                {{person_instance.incident_driver_error}}
                                             </div>
                                             <div class="form-group">
                                                 <label for="inputInjury">Alcohol / Drugs</label>
-                                                {{inc_per_form.incident_alcohol_drugs}}
+                                                {{person_instance.incident_alcohol_drugs}}
                                             </div>
                                             <div class="form-group">
                                                 <label for="inputInjury">Seat belt / Helmet </label>
-                                                {{inc_per_form.incident_seatbelt_helmet}}
+                                                {{person_instance.incident_seatbelt_helmet}}
                                             </div>
                                         </form>
                                         <div class="modal-footer mb-3">
                                             <input type="button" class="btn btn-secondary" data-dismiss="modal"
                                                 value="Clear">
-                                            <input type="submit" class="btn btn-primary" value="Save">
+                                                <input type="submit" class="btn btn-primary" value="Save">
                                         </div>
-                                    </div>
+                          
                                 </table>
                             </div>
                         </div>

@@ -1,12 +1,128 @@
-{% comment %} 
+{% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
 
-{% for d in data %}
 
-{% endfor %}
-            {% endblock %}
+<!-- Page Wrapper -->
+
+{% include 'includes/sa_sidebar.html' %}
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                {% include 'includes/navbar.html' %}
+                <!-- Breadcrumb  -->
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-white border mb-4 shadow rounded-0">
+                        <li class="breadcrumb-item">Manage</li>
+                        <li class="breadcrumb-item">User Accounts</li>
+                        <!-- <li class="breadcrumb-item active"><a href="#">Page</a></li> -->
+                        <li class="breadcrumb-item active" aria-current="page">All Users</li>
+                    </ol>
+                </nav>
+                <!-- End of Breadcrumb  -->
 
 
- {% endcomment %}
+
+                <!-- ===== INSERT CONTENT HERE  ===== -->
+
+                <!-- Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Title -->
+                    <div class="d-flex bd-highlight">
+                        <div class="pg-title p-2 flex-grow-1 bd-highlight">
+                            <h4>Incident Report</h4>
+                        </div>
+                    </div>
+
+                    <!-- User Report Table  -->
+                    <div class="card shadow mb-5 d-flex ">
+                        <!-- Top Pagination  -->
+                        <div class="card-header py-3">
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="">General</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="">People</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="">Vehicle</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="">Media</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="">Remarks</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="table-responsive">
+
+<form id="form_incidentgeneral"  enctype="multipart/form-data" method="post" data-acc-url="{% url 'ajax_load_accident' %}">{% csrf_token %}
+    <table>
+        {{ wizard.management_form }}
+        {% if wizard.form.forms %}
+            {{ wizard.form.management_form }}
+            {% for form in wizard.form.forms %}
+                <!-- block below accesses a customized form layout for each step -->
+                {% block form_if %}{% endblock %}
+            {% endfor %}
+        {% else %}
+            <!-- block below accesses a customized form layout for each step -->
+            <!-- using the with statement makes it possible to use the same layout used in the form_if block -->
+            {% with form=wizard.form %}
+            {% block form_else %}{% endblock %}
+            {% endwith %}
+        {% endif %}
+    </table>
+    {% if wizard.steps.prev %}
+    <button name="wizard_goto_step" value="{{ wizard.steps.first }}" class="button">first step</button>
+    <button name="wizard_goto_step" value="{{ wizard.steps.prev }}" class="button">prev step</button>
+    {% endif %}
+    <div>
+        <input type="submit" value="submit" class="button"/>
+    </div>  
+</form>
+
+</div>
+</div>
+</div>
+<!-- End of User Report Table  -->
+
+</div>
+<!-- End of Page Content -->
+
+<!-- ===== END OF CONTENT  ===== -->
+
+
+</div>
+
+<!-- ===== END OF CONTENT  ===== -->
+
+
+
+<!-- End of Main Content  -->
+
+
+<!-- Scroll to Top-->
+<a class="scroll-to-top rounded" href="#scroll-up">
+<i class='bx bxs-up-arrow'></i>
+</a>
+<!-- End of Scroll to Top-->
+
+
+
+{% include 'includes/alerts.html' %}
+
+{% endblock %}
+
 
 
