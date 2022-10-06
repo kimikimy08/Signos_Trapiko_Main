@@ -180,4 +180,4 @@ DEFAULT_FROM_EMAIL = 'Link Technologies <linktechnologies2022@gmail.com>'
 # whitenoise settings
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-GOOGLE_API_KEY = config('GOOGLE_API_KEY')
+GOOGLE_API_KEY = 'AIzaSyBDcYFcW6rYS3unFKOw5go7Q8eW-a4cQgM'

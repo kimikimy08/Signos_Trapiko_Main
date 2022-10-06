@@ -42,6 +42,7 @@ class UserReport(models.Model):
     
 
 class AccidentCausation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     category = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -60,6 +61,7 @@ class AccidentCausationSub(models.Model):
 
 
 class CollisionType(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     category = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -77,6 +79,7 @@ class CollisionTypeSub(models.Model):
         return self.sub_category
 
 class CrashType(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     crash_type = models.CharField(max_length=250, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
