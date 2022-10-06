@@ -42,6 +42,7 @@ class UserReportForm(forms.ModelForm):
         self.fields['pin_code'].widget.attrs['class'] = 'form-control'
         self.fields['latitude'].widget.attrs['class'] = 'form-control'
         self.fields['longitude'].widget.attrs['class'] = 'form-control'
+        self.fields['description'].widget.attrs['class'] = 'form-control'
         
         for field in self.fields:
             if field == 'latitude' or field == 'longitude':
@@ -145,11 +146,11 @@ class IncidentVehicleForm(forms.ModelForm):
 class IncidentMediaForm(forms.ModelForm):
     class Meta:
         model = IncidentMedia
-        fields = [ 'description', 'incident_upload_photovideo']
+        fields = [ 'media_description', 'incident_upload_photovideo']
 
     def __init__(self, *args, **kwargs):
         super(IncidentMediaForm, self).__init__(*args, **kwargs)
-        self.fields['description'].widget.attrs['class'] = 'form-control'
+        self.fields['media_description'].widget.attrs['class'] = 'form-control'
         self.fields['incident_upload_photovideo'].widget.attrs['class'] = 'form-control'
 
 

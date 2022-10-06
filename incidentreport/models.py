@@ -300,7 +300,7 @@ class IncidentVehicle(models.Model):
 
 class IncidentMedia(models.Model):
     incident_general = models.OneToOneField(IncidentGeneral, on_delete=models.CASCADE)
-    description = models.TextField(max_length=250, blank=True)
+    media_description = models.TextField(max_length=250, blank=True)
     incident_upload_photovideo = models.ImageField(default='user.jpeg', upload_to='incident_report/image')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

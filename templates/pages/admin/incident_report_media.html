@@ -1,4 +1,4 @@
-{% extends "incident_report_home.html" %}
+{% extends "incident_report_home_admin.html" %}
 
 {% block form_if %}{% block form_else %}
 {% csrf_token %}
@@ -26,7 +26,7 @@
                
                 <div class="form-group">
                     <label for="inputInsurance">Description</label>
-                    {{form.description}}
+                    {{form.media_description}}
                 </div>
             </form>
             <div class="modal-footer">

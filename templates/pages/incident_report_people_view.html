@@ -5,7 +5,9 @@
 
 
 <!-- Page Wrapper -->
-
+{% if profile.user.role == 2 %}
+{% include 'includes/a_sidebar.html' %}
+{% elif profile.user.role == 3 %}
 {% include 'includes/sa_sidebar.html' %}
 
         <!-- Content Wrapper -->
@@ -204,7 +206,7 @@
             </a>
             <!-- End of Scroll to Top-->
 
-
+{% endif %}
 
             {% include 'includes/alerts.html' %}
 
