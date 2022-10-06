@@ -1,6 +1,6 @@
 import datetime
 from django import forms
-from .models import UserReport, Incident, IncidentGeneral, AccidentCausationSub, CollisionTypeSub, IncidentPerson, IncidentVehicle, IncidentRemark, IncidentMedia
+from .models import UserReport, Incident, IncidentGeneral, AccidentCausationSub, CollisionTypeSub, IncidentPerson, IncidentVehicle, IncidentRemark, IncidentMedia, AccidentCausation, CollisionType, CollisionTypeSub, CrashType
 #from .validators import allow_only_images_validator
 
 
@@ -163,4 +163,65 @@ class IncidentRemarksForm(forms.ModelForm):
         super(IncidentRemarksForm, self).__init__(*args, **kwargs)
         self.fields['responder'].widget.attrs['class'] = 'form-control'
         self.fields['action_taken'].widget.attrs['class'] = 'form-control'
-     
+        
+class AccidentCausationForm(forms.ModelForm):
+    class Meta:
+        model = AccidentCausation
+        fields = [ 'category']
+
+    def __init__(self, *args, **kwargs):
+        super(AccidentCausationForm, self).__init__(*args, **kwargs)
+        self.fields['category'].widget.attrs['class'] = 'form-control'
+    
+    
+
+class AccidentCausationSubForm(forms.ModelForm):
+    
+    accident_factor = forms.ModelChoiceField(queryset=AccidentCausation.objects.all())
+    sub_category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control ', }))
+    
+    class Meta:
+        model = AccidentCausationSub
+        fields = [ 'accident_factor', 'sub_category']
+
+    def __init__(self, *args, **kwargs):
+        super(AccidentCausationSubForm, self).__init__(*args, **kwargs)
+        # self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
+        self.fields['sub_category'].widget.attrs['class'] = 'form-control'
+        self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
+        
+class CollisionTypeForm(forms.ModelForm):
+    class Meta:
+        model = CollisionType
+        fields = [ 'category']
+
+    def __init__(self, *args, **kwargs):
+        super(CollisionTypeForm, self).__init__(*args, **kwargs)
+        self.fields['category'].widget.attrs['class'] = 'form-control'
+    
+    
+
+class CollisionTypeSubForm(forms.ModelForm):
+    
+    collision_type = forms.ModelChoiceField(queryset=CollisionType.objects.all())
+    sub_category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control ', }))
+    
+    class Meta:
+        model = CollisionTypeSub
+        fields = [ 'collision_type', 'sub_category']
+
+    def __init__(self, *args, **kwargs):
+        super(CollisionTypeSubForm, self).__init__(*args, **kwargs)
+        # self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
+        self.fields['sub_category'].widget.attrs['class'] = 'form-control'
+        self.fields['collision_type'].widget.attrs['class'] = 'form-control'
+
+class CrashTypeForm(forms.ModelForm):
+    class Meta:
+        model = CrashType
+        fields = [ 'crash_type']
+
+    def __init__(self, *args, **kwargs):
+        super(CrashTypeForm, self).__init__(*args, **kwargs)
+        self.fields['crash_type'].widget.attrs['class'] = 'form-control'
+

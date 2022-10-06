@@ -5,9 +5,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from accounts.models import UserProfile, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_admin, check_role_super, check_role_member, check_role_super_admin
-from incidentreport.models import UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
+from incidentreport.models import UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle, AccidentCausation, CollisionType, CrashType
 from django.contrib import messages
-from .forms import UserReportForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm
+from .forms import UserReportForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm, AccidentCausationForm, AccidentCausationSubForm, CollisionTypeForm, CollisionTypeSubForm, CrashTypeForm
 from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.forms.models import construct_instance
@@ -715,3 +715,742 @@ def incident_form_admin(request):
 def incident_form_member(request):
     attWizardView = multistepformsubmission_member.as_view(FORMS1)
     return attWizardView(request)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_accident(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+
+    accident_factor = AccidentCausation.objects.all()
+    context = {
+        'accident_factor': accident_factor,
+        'profile':profile
+    }
+    return render(request, 'pages/super/accident_factor.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_accident_sub(request, id):
+    accident_factor = get_object_or_404(AccidentCausation, pk=id)
+    accident_factor_sub = AccidentCausationSub.objects.filter(accident_factor=accident_factor)
+    context = {
+        'accident_factor': accident_factor,
+        'accident_factor_sub': accident_factor_sub,
+    }
+    return render(request, 'pages/super/accident_factor_sub.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_crash(request):
+    crash_type = CrashType.objects.all()
+    context = {
+        'crash_type': crash_type,
+    }
+    return render(request, 'pages/super/crash.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_collision(request):
+    collision_type = CollisionType.objects.all()
+    context = {
+        'collision_type': collision_type,
+    }
+    return render(request, 'pages/super/collision_type.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_collision_sub(request, id):
+    collision_type = get_object_or_404(CollisionType, pk=id)
+    collision_type_sub = CollisionTypeSub.objects.filter(collision_type=collision_type)
+    context = {
+        'collision_type': collision_type,
+        'collision_type_sub': collision_type_sub,
+    }
+    return render(request, 'pages/super/collision_type_sub.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_accident_add(request):
+    if request.method == 'POST':
+        form = AccidentCausationForm(request.POST)
+        try:
+            if form.is_valid():
+                
+                category = form.cleaned_data['category']
+                
+                matching_courses = AccidentCausation.objects.filter(category=category)
+                if matching_courses.exists():
+                    messages.error(request, 'Duplicate Entries')
+                else:
+                    accident_factor = AccidentCausation(category=category)
+                    accident_factor.save()
+                    messages.success(request, 'Accident Factor Added')
+                    return redirect('attributes_builder_accident')
+                
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        form = AccidentCausationForm()
+    context = {
+        'form' : form,
+    }
+    return render(request, 'pages/super/accident_factor_add.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_accident_edit(request, id):
+    accident_factor = get_object_or_404(AccidentCausation, pk=id)
+    if request.method == 'POST':
+        form = AccidentCausationForm(request.POST or None,
+                              request.FILES or None, instance=accident_factor)
+        if form.is_valid():
+            category = form.cleaned_data['category']
+            matching_courses = AccidentCausation.objects.filter(category=category)
+            if matching_courses:
+                messages.warning(request, 'Same Entries')
+                
+            elif matching_courses.exists():
+                messages.error(request, 'Duplicate Entries')
+            else:
+                form.save()
+                messages.success(request, 'Accident Factor Updated')
+                return redirect('attributes_builder_accident')
+    else:
+        form = AccidentCausationForm(instance=accident_factor)
+    context = {
+        'form': form,
+        'accident_factor': accident_factor,
+    }
+    return render(request, 'pages/super/accident_factor_edit.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_accident_delete(request, id):
+    accident_factor = get_object_or_404(AccidentCausation, pk=id)
+    #user_report = UserReport.objects.all()
+    accident_factor.delete()
+    return redirect('attributes_builder_accident')
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_accident_add_sub(request):
+    if request.method == 'POST':
+        form = AccidentCausationSubForm(request.POST)
+        try:
+            if form.is_valid():
+                accident_factor = form.cleaned_data['accident_factor']
+                sub_category = form.cleaned_data['sub_category']
+                matching_courses = AccidentCausationSub.objects.filter(accident_factor=accident_factor,sub_category=sub_category)
+                if matching_courses:
+                    messages.warning(request, 'Same Entries')
+                    
+                elif matching_courses.exists():
+                    messages.error(request, 'Duplicate Entries')
+                else:
+                    accident_factor = AccidentCausationSub(accident_factor=accident_factor, sub_category=sub_category)
+                    accident_factor.save()
+                    messages.success(request, 'Accident Factor Subcategory Added')
+                    return redirect('attributes_builder_accident')
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        form = AccidentCausationSubForm()
+    context = {
+        'form' : form,
+    }
+    return render(request, 'pages/super/accident_factor_add_sub.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_accident_edit_sub(request, id):
+    accident_factor_sub = get_object_or_404(AccidentCausationSub, pk=id)
+    if request.method == 'POST':
+        form = AccidentCausationSubForm(request.POST or None,
+                              request.FILES or None, instance=accident_factor_sub)
+        if form.is_valid():
+            accident_factor = form.cleaned_data['accident_factor']
+            sub_category = form.cleaned_data['sub_category']
+            matching_courses = AccidentCausationSub.objects.filter(accident_factor=accident_factor,sub_category=sub_category)
+            if matching_courses:
+                messages.warning(request, 'Same Entries')
+                
+            elif matching_courses.exists():
+                messages.error(request, 'Duplicate Entries')
+            else:
+                form.save()
+                messages.success(request, 'Accident Factor Updated')
+                return redirect('attributes_builder_accident')
+    else:
+        form = AccidentCausationSubForm(instance=accident_factor_sub)
+    context = {
+        'form': form,
+        'accident_factor_sub': accident_factor_sub,
+    }
+    return render(request, 'pages/super/accident_factor_edit_sub.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_accident_delete_sub(request, id):
+    accident_factor_sub = get_object_or_404(AccidentCausationSub, pk=id)
+    #user_report = UserReport.objects.all()
+    accident_factor_sub.delete()
+    return redirect('attributes_builder_accident')
+
+# COLLISION
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_collision_add(request):
+    if request.method == 'POST':
+        form = CollisionTypeForm(request.POST)
+        try:
+            if form.is_valid():
+                
+                category = form.cleaned_data['category']
+                
+                matching_courses = CollisionType.objects.filter(category=category)
+                if matching_courses.exists():
+                    messages.error(request, 'Duplicate Entries')
+                else:
+                    accident_factor = CollisionType(category=category)
+                    accident_factor.save()
+                    messages.success(request, 'Collision Type Added')
+                    return redirect('attributes_builder_collision')
+                
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        form = CollisionTypeForm()
+    context = {
+        'form' : form,
+    }
+    return render(request, 'pages/super/collision_type_add.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_collision_edit(request, id):
+    collision_type = get_object_or_404(CollisionType, pk=id)
+    if request.method == 'POST':
+        form = CollisionTypeForm(request.POST or None,
+                              request.FILES or None, instance=collision_type)
+        if form.is_valid():
+            category = form.cleaned_data['category']
+            matching_courses = CollisionType.objects.filter(category=category)
+            if matching_courses:
+                messages.warning(request, 'Same Entries')
+                
+            elif matching_courses.exists():
+                messages.error(request, 'Duplicate Entries')
+            else:
+                form.save()
+                messages.success(request, 'Accident Factor Updated')
+                return redirect('attributes_builder_collision')
+    else:
+        form = CollisionTypeForm(instance=collision_type)
+    context = {
+        'form': form,
+        'collision_type': collision_type,
+    }
+    return render(request, 'pages/super/collision_type_edit.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_collision_delete(request, id):
+    collision_type = get_object_or_404(CollisionType, pk=id)
+    #user_report = UserReport.objects.all()
+    collision_type.delete()
+    return redirect('attributes_builder_collision')
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_collision_add_sub(request):
+    if request.method == 'POST':
+        form = CollisionTypeSubForm(request.POST)
+        try:
+            if form.is_valid():
+                collision_type = form.cleaned_data['collision_type']
+                sub_category = form.cleaned_data['sub_category']
+                matching_courses = CollisionTypeSub.objects.filter(collision_type=collision_type, sub_category=sub_category)
+                if matching_courses:
+                    messages.warning(request, 'Same Entries')
+                    
+                elif matching_courses.exists():
+                    messages.error(request, 'Duplicate Entries')
+                else:
+                    accident_factor = CollisionTypeSub(collision_type=collision_type, sub_category=sub_category)
+                    accident_factor.save()
+                    messages.success(request, 'Collision Type Subcategory Added')
+                    return redirect('attributes_builder_collision')
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        form = CollisionTypeSubForm()
+    context = {
+        'form' : form,
+    }
+    return render(request, 'pages/admin/collision_type_add_sub.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_collision_edit_sub(request, id):
+    collision_type_sub = get_object_or_404(CollisionTypeSub, pk=id)
+    if request.method == 'POST':
+        form = CollisionTypeSubForm(request.POST or None,
+                              request.FILES or None, instance=collision_type_sub)
+        if form.is_valid():
+            collision_type = form.cleaned_data['collision_type']
+            sub_category = form.cleaned_data['sub_category']
+            matching_courses = CollisionTypeSub.objects.filter(collision_type=collision_type,sub_category=sub_category)
+            if matching_courses:
+                messages.warning(request, 'Same Entries')
+                
+            elif matching_courses.exists():
+                messages.error(request, 'Duplicate Entries')
+            else:
+                form.save()
+                messages.success(request, 'Accident Factor Updated')
+                return redirect('attributes_builder_collision')
+    else:
+        form = CollisionTypeSubForm(instance=collision_type_sub)
+    context = {
+        'form': form,
+        'collision_type_sub': collision_type_sub,
+    }
+    return render(request, 'pages/super/collision_type_edit_sub.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_collision_delete_sub(request, id):
+    collision_type_sub = get_object_or_404(CollisionTypeSub, pk=id)
+    #user_report = UserReport.objects.all()
+    collision_type_sub.delete()
+    return redirect('attributes_builder_collision')
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_crash_add(request):
+    if request.method == 'POST':
+        form = CrashTypeForm(request.POST)
+        try:
+            if form.is_valid():
+                
+                crash_type = form.cleaned_data['crash_type']
+                
+                matching_courses = CrashType.objects.filter(crash_type=crash_type)
+                if matching_courses.exists():
+                    messages.error(request, 'Duplicate Entries')
+                else:
+                    accident_factor = CrashType(crash_type=crash_type)
+                    accident_factor.save()
+                    messages.success(request, 'Collision Type Added')
+                    return redirect('attributes_builder_crash')
+                
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        form = CrashTypeForm()
+    context = {
+        'form' : form,
+    }
+    return render(request, 'pages/super/crash_type_add.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_crash_edit(request, id):
+    crash_type = get_object_or_404(CrashType, pk=id)
+    if request.method == 'POST':
+        form = CrashTypeForm(request.POST or None,
+                              request.FILES or None, instance=crash_type)
+        if form.is_valid():
+            crash_types = form.cleaned_data['crash_type']
+            matching_courses = CrashType.objects.filter(crash_type=crash_types)
+            if matching_courses:
+                messages.warning(request, 'Same Entries')
+                
+            elif matching_courses.exists():
+                messages.error(request, 'Duplicate Entries')
+            else:
+                form.save()
+                messages.success(request, 'Accident Factor Updated')
+                return redirect('attributes_builder_crash')
+    else:
+        form = CrashTypeForm(instance=crash_type)
+    context = {
+        'form': form,
+        'crash_type': crash_type,
+    }
+    return render(request, 'pages/super/crash_type_edit.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def attributes_builder_crash_delete(request, id):
+    crash_type = get_object_or_404(CrashType, pk=id)
+    #user_report = UserReport.objects.all()
+    crash_type.delete()
+    return redirect('attributes_builder_crash')
+
+
+
+
+def attributes_builder_accident_admin(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+
+    accident_factor = AccidentCausation.objects.all()
+    context = {
+        'accident_factor': accident_factor,
+        'profile':profile
+    }
+    return render(request, 'pages/admin/accident_factor.html', context)
+
+def attributes_builder_accident_sub_admin(request, id):
+    accident_factor = get_object_or_404(AccidentCausation, pk=id)
+    accident_factor_sub = AccidentCausationSub.objects.filter(accident_factor=accident_factor)
+    context = {
+        'accident_factor': accident_factor,
+        'accident_factor_sub': accident_factor_sub,
+    }
+    return render(request, 'pages/admin/accident_factor_sub.html', context)
+
+def attributes_builder_crash_admin(request):
+    crash_type = CrashType.objects.all()
+    context = {
+        'crash_type': crash_type,
+    }
+    return render(request, 'pages/admin/crash.html', context)
+
+def attributes_builder_collision_admin(request):
+    collision_type = CollisionType.objects.all()
+    context = {
+        'collision_type': collision_type,
+    }
+    return render(request, 'pages/admin/collision_type.html', context)
+
+def attributes_builder_collision_sub_admin(request, id):
+    collision_type = get_object_or_404(CollisionType, pk=id)
+    collision_type_sub = CollisionTypeSub.objects.filter(collision_type=collision_type)
+    context = {
+        'collision_type': collision_type,
+        'collision_type_sub': collision_type_sub,
+    }
+    return render(request, 'pages/admin/collision_type_sub.html', context)
+
+def attributes_builder_accident_add_admin(request):
+    if request.method == 'POST':
+        form = AccidentCausationForm(request.POST)
+        try:
+            if form.is_valid():
+                
+                category = form.cleaned_data['category']
+                
+                matching_courses = AccidentCausation.objects.filter(category=category)
+                if matching_courses.exists():
+                    messages.error(request, 'Duplicate Entries')
+                else:
+                    accident_factor = AccidentCausation(category=category)
+                    accident_factor.save()
+                    messages.success(request, 'Accident Factor Added')
+                    return redirect('attributes_builder_accident_admin')
+                
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        form = AccidentCausationForm()
+    context = {
+        'form' : form,
+    }
+    return render(request, 'pages/admin/accident_factor_add.html', context)
+
+def attributes_builder_accident_edit_admin(request, id):
+    accident_factor = get_object_or_404(AccidentCausation, pk=id)
+    if request.method == 'POST':
+        form = AccidentCausationForm(request.POST or None,
+                              request.FILES or None, instance=accident_factor)
+        if form.is_valid():
+            category = form.cleaned_data['category']
+            matching_courses = AccidentCausation.objects.filter(category=category)
+            if matching_courses:
+                messages.warning(request, 'Same Entries')
+                
+            elif matching_courses.exists():
+                messages.error(request, 'Duplicate Entries')
+            else:
+                form.save()
+                messages.success(request, 'Accident Factor Updated')
+                return redirect('attributes_builder_accident_admin')
+    else:
+        form = AccidentCausationForm(instance=accident_factor)
+    context = {
+        'form': form,
+        'accident_factor': accident_factor,
+    }
+    return render(request, 'pages/admin/accident_factor_edit.html', context)
+
+def attributes_builder_accident_delete_admin(request, id):
+    accident_factor = get_object_or_404(AccidentCausation, pk=id)
+    #user_report = UserReport.objects.all()
+    accident_factor.delete()
+    return redirect('attributes_builder_accident_admin')
+
+def attributes_builder_accident_add_sub_admin(request):
+    if request.method == 'POST':
+        form = AccidentCausationSubForm(request.POST)
+        try:
+            if form.is_valid():
+                accident_factor = form.cleaned_data['accident_factor']
+                sub_category = form.cleaned_data['sub_category']
+                matching_courses = AccidentCausationSub.objects.filter(accident_factor=accident_factor,sub_category=sub_category)
+                if matching_courses:
+                    messages.warning(request, 'Same Entries')
+                    
+                elif matching_courses.exists():
+                    messages.error(request, 'Duplicate Entries')
+                else:
+                    accident_factor = AccidentCausationSub(accident_factor=accident_factor, sub_category=sub_category)
+                    accident_factor.save()
+                    messages.success(request, 'Accident Factor Subcategory Added')
+                    return redirect('attributes_builder_accident_admin')
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        form = AccidentCausationSubForm()
+    context = {
+        'form' : form,
+    }
+    return render(request, 'pages/admin/accident_factor_add_sub.html', context)
+
+def attributes_builder_accident_edit_sub_admin(request, id):
+    accident_factor_sub = get_object_or_404(AccidentCausationSub, pk=id)
+    if request.method == 'POST':
+        form = AccidentCausationSubForm(request.POST or None,
+                              request.FILES or None, instance=accident_factor_sub)
+        if form.is_valid():
+            accident_factor = form.cleaned_data['accident_factor']
+            sub_category = form.cleaned_data['sub_category']
+            matching_courses = AccidentCausationSub.objects.filter(accident_factor=accident_factor,sub_category=sub_category)
+            if matching_courses:
+                messages.warning(request, 'Same Entries')
+                
+            elif matching_courses.exists():
+                messages.error(request, 'Duplicate Entries')
+            else:
+                form.save()
+                messages.success(request, 'Accident Factor Updated')
+                return redirect('attributes_builder_accident_admin')
+    else:
+        form = AccidentCausationSubForm(instance=accident_factor_sub)
+    context = {
+        'form': form,
+        'accident_factor_sub': accident_factor_sub,
+    }
+    return render(request, 'pages/admin/accident_factor_edit_sub.html', context)
+
+def attributes_builder_accident_delete_sub_admin(request, id):
+    accident_factor_sub = get_object_or_404(AccidentCausationSub, pk=id)
+    #user_report = UserReport.objects.all()
+    accident_factor_sub.delete()
+    return redirect('attributes_builder_accident_admin')
+
+# COLLISION
+
+def attributes_builder_collision_add_admin(request):
+    if request.method == 'POST':
+        form = CollisionTypeForm(request.POST)
+        try:
+            if form.is_valid():
+                
+                category = form.cleaned_data['category']
+                
+                matching_courses = CollisionType.objects.filter(category=category)
+                if matching_courses.exists():
+                    messages.error(request, 'Duplicate Entries')
+                else:
+                    accident_factor = CollisionType(category=category)
+                    accident_factor.save()
+                    messages.success(request, 'Collision Type Added')
+                    return redirect('attributes_builder_collision_admin')
+                
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        form = CollisionTypeForm()
+    context = {
+        'form' : form,
+    }
+    return render(request, 'pages/admin/collision_type_add.html', context)
+
+def attributes_builder_collision_edit_admin(request, id):
+    collision_type = get_object_or_404(CollisionType, pk=id)
+    if request.method == 'POST':
+        form = CollisionTypeForm(request.POST or None,
+                              request.FILES or None, instance=collision_type)
+        if form.is_valid():
+            category = form.cleaned_data['category']
+            matching_courses = CollisionType.objects.filter(category=category)
+            if matching_courses:
+                messages.warning(request, 'Same Entries')
+                
+            elif matching_courses.exists():
+                messages.error(request, 'Duplicate Entries')
+            else:
+                form.save()
+                messages.success(request, 'Accident Factor Updated')
+                return redirect('attributes_builder_collision_admin')
+    else:
+        form = CollisionTypeForm(instance=collision_type)
+    context = {
+        'form': form,
+        'collision_type': collision_type,
+    }
+    return render(request, 'pages/admin/collision_type_edit.html', context)
+
+def attributes_builder_collision_delete_admin(request, id):
+    collision_type = get_object_or_404(CollisionType, pk=id)
+    #user_report = UserReport.objects.all()
+    collision_type.delete()
+    return redirect('attributes_builder_collision_admin')
+
+def attributes_builder_collision_add_sub_admin(request):
+    if request.method == 'POST':
+        form = CollisionTypeSubForm(request.POST)
+        try:
+            if form.is_valid():
+                collision_type = form.cleaned_data['collision_type']
+                sub_category = form.cleaned_data['sub_category']
+                matching_courses = CollisionTypeSub.objects.filter(collision_type=collision_type, sub_category=sub_category)
+                if matching_courses:
+                    messages.warning(request, 'Same Entries')
+                    
+                elif matching_courses.exists():
+                    messages.error(request, 'Duplicate Entries')
+                else:
+                    accident_factor = CollisionTypeSub(collision_type=collision_type, sub_category=sub_category)
+                    accident_factor.save()
+                    messages.success(request, 'Collision Type Subcategory Added')
+                    return redirect('attributes_builder_collision_admin')
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        form = CollisionTypeSubForm()
+    context = {
+        'form' : form,
+    }
+    return render(request, 'pages/admin/collision_type_add_sub_admin.html', context)
+
+def attributes_builder_collision_edit_sub_admin(request, id):
+    collision_type_sub = get_object_or_404(CollisionTypeSub, pk=id)
+    if request.method == 'POST':
+        form = CollisionTypeSubForm(request.POST or None,
+                              request.FILES or None, instance=collision_type_sub)
+        if form.is_valid():
+            collision_type = form.cleaned_data['collision_type']
+            sub_category = form.cleaned_data['sub_category']
+            matching_courses = CollisionTypeSub.objects.filter(collision_type=collision_type,sub_category=sub_category)
+            if matching_courses:
+                messages.warning(request, 'Same Entries')
+                
+            elif matching_courses.exists():
+                messages.error(request, 'Duplicate Entries')
+            else:
+                form.save()
+                messages.success(request, 'Accident Factor Updated')
+                return redirect('attributes_builder_collision_admin')
+    else:
+        form = CollisionTypeSubForm(instance=collision_type_sub)
+    context = {
+        'form': form,
+        'collision_type_sub': collision_type_sub,
+    }
+    return render(request, 'pages/admin/collision_type_edit_sub.html', context)
+
+def attributes_builder_collision_delete_sub_admin(request, id):
+    collision_type_sub = get_object_or_404(CollisionTypeSub, pk=id)
+    #user_report = UserReport.objects.all()
+    collision_type_sub.delete()
+    return redirect('attributes_builder_collision_admin')
+
+def attributes_builder_crash_add_admin(request):
+    if request.method == 'POST':
+        form = CrashTypeForm(request.POST)
+        try:
+            if form.is_valid():
+                
+                crash_type = form.cleaned_data['crash_type']
+                
+                matching_courses = CrashType.objects.filter(crash_type=crash_type)
+                if matching_courses.exists():
+                    messages.error(request, 'Duplicate Entries')
+                else:
+                    accident_factor = CrashType(crash_type=crash_type)
+                    accident_factor.save()
+                    messages.success(request, 'Collision Type Added')
+                    return redirect('attributes_builder_crash_admin')
+                
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        form = CrashTypeForm()
+    context = {
+        'form' : form,
+    }
+    return render(request, 'pages/admin/crash_type_add.html', context)
+
+def attributes_builder_crash_edit_admin(request, id):
+    crash_type = get_object_or_404(CrashType, pk=id)
+    if request.method == 'POST':
+        form = CrashTypeForm(request.POST or None,
+                              request.FILES or None, instance=crash_type)
+        if form.is_valid():
+            crash_types = form.cleaned_data['crash_type']
+            matching_courses = CrashType.objects.filter(crash_type=crash_types)
+            if matching_courses:
+                messages.warning(request, 'Same Entries')
+                
+            elif matching_courses.exists():
+                messages.error(request, 'Duplicate Entries')
+            else:
+                form.save()
+                messages.success(request, 'Accident Factor Updated')
+                return redirect('attributes_builder_crash_admin')
+    else:
+        form = CrashTypeForm(instance=crash_type)
+    context = {
+        'form': form,
+        'crash_type': crash_type,
+    }
+    return render(request, 'pages/admin/crash_type_edit.html', context)
+
+def attributes_builder_crash_delete_admin(request, id):
+    crash_type = get_object_or_404(CrashType, pk=id)
+    #user_report = UserReport.objects.all()
+    crash_type.delete()
+    return redirect('attributes_builder_crash_admin')
+

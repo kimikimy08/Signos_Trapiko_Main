@@ -31,14 +31,14 @@
     <div class="sidebar-heading">Manage</div>
 
     <!-- Reports -->
-    <li class="nav-item">
+    <li class="nav-item" id="showReports">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReports"
             aria-expanded="true" aria-controls="collapseReports">
             <i class="bx bx-collection"></i>
             <span>Reports</span>
         </a>
         <!-- Reports Sub-Menu  -->
-        <div id="collapseReports" class="collapse" data-parent="#accordionSidebar">
+        <div id="collapseReports" class="collapse show" data-parent="#accordionSidebar" data-bs-parent="#showReports">
             <div class="bg-white py-2 collapse-inner">
                 <a class="{% if '/userReports/' == request.path %} collapse-item active {% else %} collapse-item{% endif %} " href="{% url 'user_reports' %}">
                     <i class='bx bx-user-voice'></i>
@@ -58,6 +58,27 @@
         <a class="nav-link" href="{% url 'super_user_account' %}">
             <i class='bx bxs-user-detail'></i>
             <span class="">User Accounts</span></a>
+    </li>
+    <li class="nav-item" id="showAttributes">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAttributes"
+            aria-expanded="true" aria-controls="collapseReports">
+            <i class="bx bx-collection"></i>
+            <span>Attributes Builder</span>
+        </a>
+        <!-- Reports Sub-Menu  -->
+        <div id="collapseAttributes" class="collapse show" data-parent="#accordionSidebar" data-bs-parent="#showAttributes">
+            <div class="bg-white py-2 collapse-inner">
+                <a class="{% if '/userReports/' == request.path %} collapse-item active {% else %} collapse-item{% endif %} " href="{% url 'attributes_builder_accident' %}">
+                    <i class='bx bx-user-voice'></i>
+                    <span>Accident Factor</span></a>
+                <a class="collapse-item" href="{% url 'attributes_builder_collision' %}">
+                    <i class='bx bxs-car-crash'></i>
+                    <span>Collision Type</span></a>
+                <a class="collapse-item" href="{% url 'attributes_builder_crash' %}">
+                    <i class='bx bxs-file-pdf'></i>
+                    <span>Crash Type</span></a>
+            </div>
+        </div>    
     </li>
 
 
