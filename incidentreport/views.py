@@ -175,45 +175,45 @@ def my_report_delete(request, incident_id=None):
     return redirect('my_report')
 
 
-@login_required(login_url='login')
-@user_passes_test(check_role_member)
-def my_report_add(request):
+# @login_required(login_url='login')
+# @user_passes_test(check_role_member)
+# def my_report_add(request):
 
-    form = UserReportForm(request.POST, request.FILES)
-    profile = get_object_or_404(UserProfile, user=request.user)
+#     form = UserReportForm(request.POST, request.FILES)
+#     profile = get_object_or_404(UserProfile, user=request.user)
 
-    if request.method == 'POST':
-        User.objects.get(pk=request.user.pk)
-        if form.is_valid():
-            date = request.POST['date']
-            time = request.POST['time']
-            address = request.POST['address']
-            description = request.POST['description']
+#     if request.method == 'POST':
+#         User.objects.get(pk=request.user.pk)
+#         if form.is_valid():
+#             date = request.POST['date']
+#             time = request.POST['time']
+#             address = request.POST['address']
+#             description = request.POST['description']
             
             
 
-            upload_photovideo = request.FILES.get('upload_photovideo')
-            status = 1
-            # user_report = form.save(commit=False)
-            # user_report.user = get_user(request)
-            # user_report.save()
-            obj = UserReport.objects.create(user_id=request.user.pk, date=date, time=time, address=address,
-                                            description=description, upload_photovideo=upload_photovideo, status=status)
-            obj.save()
-            messages.success(request, 'User Report added successfully!')
-            return redirect('my_report')
+#             upload_photovideo = request.FILES.get('upload_photovideo')
+#             status = 1
+#             # user_report = form.save(commit=False)
+#             # user_report.user = get_user(request)
+#             # user_report.save()
+#             obj = UserReport.objects.create(user_id=request.user.pk, date=date, time=time, address=address,
+#                                             description=description, upload_photovideo=upload_photovideo, status=status)
+#             obj.save()
+#             messages.success(request, 'User Report added successfully!')
+#             return redirect('my_report')
 
-        else:
-            print(form.errors)
+#         else:
+#             print(form.errors)
 
-    else:
-        form = UserReportForm()
-    context = {
-        'form': form,
-        'profile': profile,
+#     else:
+#         form = UserReportForm()
+#     context = {
+#         'form': form,
+#         'profile': profile,
 
-    }
-    return render(request, 'pages/member_myreport_add.html', context)
+#     }
+#     return render(request, 'pages/member_myreport_add.html', context)
 
 
 def my_report_view(request, id):
@@ -374,12 +374,26 @@ FORMS = [("information", UserReportForm),
          ("media", IncidentMediaForm),
          ("remarks", IncidentRemarksForm)]
 
-TEMPLATES = {"information": "pages/incident_report_user.html",
-                "general": "pages/incident_report_general1.html",
-                "people": "pages/incident_report_people1.html",
-                "vehicle": "pages/incident_report_vehicle1.html",
-                "media": "pages/incident_report_media1.html",
-                "remarks": "pages/incident_report_remarks1.html"}
+FORMS1 = [("information", UserReportForm)]
+
+TEMPLATES = {"information": "pages/super/incident_report_user.html",
+                "general": "pages/super/incident_report_general.html",
+                "people": "pages/super/incident_report_people.html",
+                "vehicle": "pages/super/incident_report_vehicle.html",
+                "media": "pages/super/incident_report_media.html",
+                "remarks": "pages/super/incident_report_remarks.html"}
+
+
+TEMPLATES1 = {"information": "pages/admin/incident_report_user.html",
+                "general": "pages/admin/incident_report_general.html",
+                "people": "pages/admin/incident_report_people.html",
+                "vehicle": "pages/admin/incident_report_vehicle.html",
+                "media": "pages/admin/incident_report_media.html",
+                "remarks": "pages/admin/incident_report_remarks.html"}
+
+TEMPLATES2 = {"information": "pages/member/member_myreport_add.html"}
+
+
 class multistepformsubmission(SessionWizardView):
 
 
@@ -392,6 +406,7 @@ class multistepformsubmission(SessionWizardView):
     
     def done(self, form_list, **kwargs):
         # UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
+        profile = get_object_or_404(UserProfile, user=self.request.user)
         user_instance = UserReport()
         general_instance = IncidentGeneral()
         person_instance  = IncidentPerson()
@@ -409,6 +424,7 @@ class multistepformsubmission(SessionWizardView):
             media_instance = construct_instance(form, media_instance, form._meta.fields, form._meta.exclude)
             remarks_instance = construct_instance(form, remarks_instance, form._meta.fields, form._meta.exclude)
         user_instance.user = self.request.user
+        user_instance.status = 2
         user_instance.save()
         general_instance.user_report = user_instance
         general_instance.save()
@@ -420,7 +436,105 @@ class multistepformsubmission(SessionWizardView):
         media_instance.save()
         remarks_instance.incident_general = general_instance
         remarks_instance.save()
-        return HttpResponse('data saved successfully')
+        context = {
+            'profile': profile
+        }
+        return redirect('/userReports', context)
+
+class multistepformsubmission_admin(SessionWizardView):
+    
+
+    # template_name = 'pages/incident_report.html'
+    # form_list = [UserReportForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm]
+    file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'media'))
+    
+    def get_template_names(self):
+        return [TEMPLATES1[self.steps.current]]
+    
+    def done(self, form_list, **kwargs):
+        # UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
+        profile = get_object_or_404(UserProfile, user=self.request.user)
+        user_instance = UserReport()
+        general_instance = IncidentGeneral()
+        person_instance  = IncidentPerson()
+        vehicle_instance = IncidentVehicle()
+        media_instance = IncidentMedia()
+        remarks_instance = IncidentRemark()
+        #listing_instance.created_by = self.request.user
+        #listing_instance.listing_owner = self.request.user
+        #listing_instance.listing_type = 'P'
+        for form in form_list:
+            user_instance = construct_instance(form, user_instance, form._meta.fields, form._meta.exclude)
+            general_instance = construct_instance(form, general_instance, form._meta.fields, form._meta.exclude)
+            person_instance = construct_instance(form, person_instance, form._meta.fields, form._meta.exclude)
+            vehicle_instance = construct_instance(form, vehicle_instance, form._meta.fields, form._meta.exclude)
+            media_instance = construct_instance(form, media_instance, form._meta.fields, form._meta.exclude)
+            remarks_instance = construct_instance(form, remarks_instance, form._meta.fields, form._meta.exclude)
+        user_instance.user = self.request.user
+        user_instance.status = 2
+        user_instance.save()
+        general_instance.user_report = user_instance
+        general_instance.save()
+        person_instance.incident_general = general_instance
+        person_instance.save()
+        vehicle_instance.incident_general = general_instance
+        vehicle_instance.save()
+        media_instance.incident_general = general_instance
+        media_instance.save()
+        remarks_instance.incident_general = general_instance
+        remarks_instance.save()
+        context = {
+            'profile': profile
+        }
+        return redirect('/userReports', context)
+    
+class multistepformsubmission_member(SessionWizardView):
+    
+
+    # template_name = 'pages/incident_report.html'
+    # form_list = [UserReportForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm]
+    file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'media'))
+    
+    def get_template_names(self):
+        return [TEMPLATES2[self.steps.current]]
+    
+    def done(self, form_list, **kwargs):
+        # UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
+        profile = get_object_or_404(UserProfile, user=self.request.user)
+        user_instance = UserReport()
+        general_instance = IncidentGeneral()
+        person_instance  = IncidentPerson()
+        vehicle_instance = IncidentVehicle()
+        media_instance = IncidentMedia()
+        remarks_instance = IncidentRemark()
+        #listing_instance.created_by = self.request.user
+        #listing_instance.listing_owner = self.request.user
+        #listing_instance.listing_type = 'P'
+        for form in form_list:
+            user_instance = construct_instance(form, user_instance, form._meta.fields, form._meta.exclude)
+            general_instance = construct_instance(form, general_instance, form._meta.fields, form._meta.exclude)
+            person_instance = construct_instance(form, person_instance, form._meta.fields, form._meta.exclude)
+            vehicle_instance = construct_instance(form, vehicle_instance, form._meta.fields, form._meta.exclude)
+            media_instance = construct_instance(form, media_instance, form._meta.fields, form._meta.exclude)
+            remarks_instance = construct_instance(form, remarks_instance, form._meta.fields, form._meta.exclude)
+        user_instance.user = self.request.user
+        user_instance.status = 1
+        user_instance.save()
+        general_instance.user_report = user_instance
+        general_instance.save()
+        person_instance.incident_general = general_instance
+        person_instance.save()
+        vehicle_instance.incident_general = general_instance
+        vehicle_instance.save()
+        media_instance.incident_general = general_instance
+        media_instance.save()
+        remarks_instance.incident_general = general_instance
+        remarks_instance.save()
+        context = {
+            'profile': profile
+        }
+        return redirect('/incidentReport/incident', context)
+
 
 def incident_report_general_view(request, id):
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -583,3 +697,21 @@ def incident_report_people_edit(request, id=None):
     }
     
     return render(request, 'pages/incident_report_people_edit.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def incident_form_super(request):
+    attWizardView = multistepformsubmission.as_view(FORMS)
+    return attWizardView(request)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_admin)
+def incident_form_admin(request):
+    attWizardView = multistepformsubmission_admin.as_view(FORMS)
+    return attWizardView(request)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_member)
+def incident_form_member(request):
+    attWizardView = multistepformsubmission_member.as_view(FORMS1)
+    return attWizardView(request)
