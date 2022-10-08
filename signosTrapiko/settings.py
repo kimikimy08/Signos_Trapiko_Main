@@ -102,7 +102,7 @@ WSGI_APPLICATION = 'signosTrapiko.wsgi.application'
 #    }
 # }
 
-DATABASES = {'default': dj_database_url.config(default='postgres://postgres:signos0805Trapiko@localhost/Signos_Trapiko')}
+DATABASES = {'default': dj_database_url.config(default='postgres://postgres:signos0805Trapiko@localhost/Signos_Trapiko_Finals')}
 
 
 AUTH_USER_MODEL = 'accounts.User'
