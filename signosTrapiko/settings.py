@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'admins',
     'superadmin',
     'incidentreport',
+    'generate_report',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

@@ -11,7 +11,7 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = ()
 
 class CustomProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'birthdate', 'created_at')
+    list_display = ('user', 'birthdate')
     list_display_links = ('user', 'birthdate')
 
 admin.site.register(User, CustomUserAdmin)

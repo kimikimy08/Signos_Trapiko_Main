@@ -407,6 +407,7 @@ class multistepformsubmission(SessionWizardView):
     def done(self, form_list, **kwargs):
         # UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
         profile = get_object_or_404(UserProfile, user=self.request.user)
+        cleaned_data = [form.cleaned_data for form in form_list]
         user_instance = UserReport()
         general_instance = IncidentGeneral()
         person_instance  = IncidentPerson()
@@ -428,8 +429,38 @@ class multistepformsubmission(SessionWizardView):
         user_instance.save()
         general_instance.user_report = user_instance
         general_instance.save()
-        person_instance.incident_general = general_instance
-        person_instance.save()
+        for form in cleaned_data[2]:
+            # incident_first_name = form.get('incident_first_name')
+            # incident_middle_name = form.get('incident_middle_name')
+            # incident_last_name = form.get('incident_last_name')
+            # incident_age = form.get('incident_age')
+            # incident_gender = form.get('incident_gender')
+            # incident_address = form.get('incident_address')
+            # incident_involvement = form.get('incident_involvement')
+            # incident_id_presented = form.get('incident_id_presented')
+            # incident_id_number = form.get('incident_id_number')
+            # incident_injury = form.get('incident_injury')
+            # incident_driver_error = form.get('incident_driver_error')
+            # incident_alcohol_drugs = form.get('incident_alcohol_drugs')
+            # incident_seatbelt_helmet = form.get('incident_seatbelt_helmet')
+            person_instance.incident_general = general_instance
+            # data = IncidentPerson.objects.create(incident_first_name = incident_first_name,
+            #                                             incident_middle_name = incident_middle_name,
+            #                                             incident_last_name = incident_last_name,
+            #                                             incident_age = incident_age,
+            #                                             incident_gender = incident_gender,
+            #                                             incident_address = incident_address,
+            #                                             incident_involvement = incident_involvement,
+            #                                             incident_id_presented = incident_id_presented,
+            #                                             incident_id_number = incident_id_number,
+            #                                             incident_injury = incident_injury,
+            #                                             incident_driver_error = incident_driver_error,
+            #                                             incident_alcohol_drugs = incident_alcohol_drugs,
+            #                                             incident_seatbelt_helmet = incident_seatbelt_helmet,
+            #                                   )
+            # person_instance, created = data
+            person_instance.clean()
+            person_instance.save()
         vehicle_instance.incident_general = general_instance
         vehicle_instance.save()
         media_instance.incident_general = general_instance
@@ -475,6 +506,7 @@ class multistepformsubmission_admin(SessionWizardView):
         user_instance.save()
         general_instance.user_report = user_instance
         general_instance.save()
+        
         person_instance.incident_general = general_instance
         person_instance.save()
         vehicle_instance.incident_general = general_instance

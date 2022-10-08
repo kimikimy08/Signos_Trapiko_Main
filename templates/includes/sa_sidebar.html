@@ -4,9 +4,9 @@
 <ul class="navbar-nav sidebar sidebar-dark accordion fixed" id="accordionSidebar">
 
     <!-- Signos Logo-->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'home' %}">
         <div class="sidebar-brand-icon">
-            <img src="{% static 'images/faviconwhite.png' %}" alt="" srcset="">
+           <img src="{% static 'images/faviconwhite.png' %}" alt="" srcset="">
         </div>
     </a>
     <h3>SA</h3>
@@ -46,7 +46,7 @@
                 <a class="collapse-item" href="{% url 'incident_form_super' %}">
                     <i class='bx bxs-car-crash'></i>
                     <span>Incident Report</span></a>
-                <a class="collapse-item" href="#">
+                <a class="collapse-item" href="{% url 'generate_report' %}">
                     <i class='bx bxs-file-pdf'></i>
                     <span>Generate Report</span></a>
             </div>

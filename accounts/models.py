@@ -136,7 +136,6 @@ class UserProfile(models.Model):
     birthdate = models.DateField(blank=True, null=True)
     profile_picture = models.ImageField(default='user.jpeg', upload_to='users/profile_pictures')
     upload_id = models.ImageField(default='user.jpeg', upload_to='member/id')
-    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

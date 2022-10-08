@@ -70,3 +70,53 @@ function onPlaceChanged (){
     }
 
 }
+
+$("#id_general-accident_factor").change(function () {
+    const url = $("#form_incidentgeneral").attr("data-acc-url");  // get the url of the `load_cities` view
+    const accidentId = $(this).val();  // get the selected country ID from the HTML input
+
+    $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+        data: {
+            'accident_factor_id': accidentId       // add the country id to the GET parameters
+        },
+        success: function (data) {  
+            //console.log(data) // `data` is the return of the `load_cities` view function
+            $("#id_general-accident_subcategory").html(data);  // replace the contents of the city input with the data that came from the server
+
+            let html_data = '<option value="">---------</option>';
+            data.forEach(function (accident_subcategory) {
+                html_data += `<option value="${accident_subcategory.id}">${accident_subcategory.sub_category}</option>`
+            });
+            console.log(html_data);
+            $("#id_general-accident_subcategory").html(html_data);
+
+        }
+    });
+
+});
+
+$("#id_general-collision_type").change(function () {
+    const url = $("#form_incidentgeneral").attr("data-acc-url");  // get the url of the `load_cities` view
+    const collisionId = $(this).val();  // get the selected country ID from the HTML input
+
+    $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+        data: {
+            'collision_type_id': collisionId       // add the country id to the GET parameters
+        },
+        success: function (data) {  
+            //console.log(data) // `data` is the return of the `load_cities` view function
+            $("#id_general-collision_subcategory").html(data);  // replace the contents of the city input with the data that came from the server
+
+            let html_data = '<option value="">---------</option>';
+            data.forEach(function (collision_subcategory) {
+                html_data += `<option value="${collision_subcategory.id}">${collision_subcategory.sub_category}</option>`
+            });
+            console.log(html_data);
+            $("#id_general-collision_subcategory").html(html_data);
+
+        }
+    });
+
+});

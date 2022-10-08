@@ -83,13 +83,15 @@
             {% endwith %}
         {% endif %}
     </table>
+    <div class="text-center">
     {% if wizard.steps.prev %}
-    <button name="wizard_goto_step" value="{{ wizard.steps.first }}" class="button">first step</button>
-    <button name="wizard_goto_step" value="{{ wizard.steps.prev }}" class="button">prev step</button>
+    <button class="btn btn-sm btn-warning" name="wizard_goto_step" value="{{ wizard.steps.first }}">first step</button>
+    <button class="btn btn-sm btn-primary" name="wizard_goto_step" value="{{ wizard.steps.prev }}" >prev step</button>
     {% endif %}
-    <div>
-        <input type="submit" value="submit" class="button"/>
-    </div>  
+
+        <input class="btn btn-sm btn-success" type="submit" value="Submit" />
+    </div>
+    <br>
 </form>
 
 </div>

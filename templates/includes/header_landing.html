@@ -76,14 +76,18 @@
                                 <li> 
                                   <a href="{% url 'logout' %}" ><button type="button" class="btn btn-outline-primary rounded">Sign out</button></a>
                                 </li>
+                                <li>
+                                    <a href="{% url 'login' %}" ><button type="button" class="btn btn-primary rounded">Home</button></a>
+                                </li>
                                 {%else %}
                                 <li> 
                                 <a href="{% url 'login' %}" ><button type="button" class="btn btn-outline-primary rounded">Sign in</button></a>
-                              </li>
-                                {% endif %}
                                 <li>
                                     <a href="{% url 'registration' %}" ><button type="button" class="btn btn-primary rounded">Register</button></a>
                                 </li>
+                              </li>
+                                {% endif %}
+                                
                             </ul>
                         </nav>
                     </div>
