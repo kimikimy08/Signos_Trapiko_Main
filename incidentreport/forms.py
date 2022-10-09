@@ -34,7 +34,7 @@ class UserReportForm(forms.ModelForm):
         # first call parent's constructor
         super(UserReportForm, self).__init__(*args, **kwargs)
         # there's a `fields` property now
-        self.fields['upload_photovideo'].required = False
+        # self.fields['upload_photovideo'].required = False
         self.fields['address'].widget.attrs['class'] = 'form-control'
         self.fields['country'].widget.attrs['class'] = 'form-control'
         self.fields['state'].widget.attrs['class'] = 'form-control'

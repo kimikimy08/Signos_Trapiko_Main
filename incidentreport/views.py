@@ -571,6 +571,15 @@ class multistepformsubmission_member(SessionWizardView):
     def get_template_names(self):
         return [TEMPLATES2[self.steps.current]]
     
+    def form_valid(self, form):
+        try:
+            form.execute()
+            # messages.add_message(self.request, messages.SUCCESS)
+        except Exception as err:
+            messages.add_message(self.request, messages.ERROR, err.message)
+        else:
+            messages.add_message(self.request, messages.INFO, _('It worked'))
+    
     def done(self, form_list, **kwargs):
         # UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
         profile = get_object_or_404(UserProfile, user=self.request.user)
@@ -603,6 +612,7 @@ class multistepformsubmission_member(SessionWizardView):
         media_instance.save()
         remarks_instance.incident_general = general_instance
         remarks_instance.save()
+        messages.success(self.request, 'New Incident Report Added')
         context = {
             'profile': profile
         }

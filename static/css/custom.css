@@ -1,14 +1,14 @@
 @keyframes show-toast {
-    0% {bottom: -100%}
-    20% {bottom: 100px}
-    80% {bottom: 100px}
-    100% {bottom: -100%}
+    0% {bottom: -10%}
+    20% {bottom: 10px}
+    80% {bottom: 10px}
+    100% {bottom: -10%}
 }
 
 .show-notification {
     position: fixed;
-    bottom: 100%;
-    right: 20px;
+    bottom: 50%;
+    right: 50px;
     animation-name: show-toast;
     animation-duration: 8s;
     z-index: 100;

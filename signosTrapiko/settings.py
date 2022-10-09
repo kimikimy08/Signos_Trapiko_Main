@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = Path(BASE_DIR, "templates")
 
 # remove
-# STATIC_DIR = Path(BASE_DIR, "static")
+STATIC_DIR = Path(BASE_DIR, "static")
 
 
 # Quick-start development settings - unsuitable for production
@@ -102,7 +102,7 @@ DATABASES = {
    }
 }
 
-DATABASES = {'default': dj_database_url.config(default='postgres://postgres:signos0805Trapiko@localhost/Signos_Trapiko')}
+# DATABASES = {'default': dj_database_url.config(default='postgres://postgres:signos0805Trapiko@localhost/Signos_Trapiko')}
 
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -147,15 +147,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # remove
-# STATIC_URL = 'static/'
-# STATICFILES_DIRS = [
-#     STATIC_DIR,
-# ]
-# STATIC_ROOT = Path(BASE_DIR, 'staticfiles')
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
+STATIC_ROOT = Path(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = Path(BASE_DIR, 'media')
