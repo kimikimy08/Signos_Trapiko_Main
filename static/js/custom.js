@@ -79,29 +79,29 @@
 
 // }
 
-// var input = document.getElementById('id_information-address');
-// var options = {
-//     componentRestrictions: {
-//         country: 'ph'
-//     }
-// };
+var input = document.getElementById('id_information-address');
+var options = {
+    componentRestrictions: {
+        country: 'ph'
+    }
+};
 
-// var autocomplete = new google.maps.places.Autocomplete(input, options);
+var autocomplete = new google.maps.places.Autocomplete(input, options);
 
-// $(input).on('input',function(){
-// 	var str = input.value;
-//   var prefix = 'Quezon City, ';
-// 	if(str.indexOf(prefix) == 0) {
-// 		console.log(input.value);
-// 	} else {
-// 		if (prefix.indexOf(str) >= 0) {
-//     	input.value = prefix;
-//     } else {
-//   		input.value = prefix+str;
-//    }
-// 	}
+$(input).on('input',function(){
+	var str = input.value;
+  var prefix = 'Quezon City, ';
+	if(str.indexOf(prefix) == 0) {
+		console.log(input.value);
+	} else {
+		if (prefix.indexOf(str) >= 0) {
+    	input.value = prefix;
+    } else {
+  		input.value = prefix+str;
+   }
+	}
 
-// });
+});
 
 google.maps.event.addListener(autocomplete, 'place_changed', function () {
     
