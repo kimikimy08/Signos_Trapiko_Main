@@ -44,8 +44,9 @@ class UserReportForm(forms.ModelForm):
         self.fields['longitude'].widget.attrs['class'] = 'form-control'
         self.fields['description'].widget.attrs['class'] = 'form-control'
         
+        
         for field in self.fields:
-            if field == 'latitude' or field == 'longitude':
+            if field == 'latitude' or field == 'longitude' or field == 'city' or field == 'pin_code':
                 self.fields[field].widget.attrs['readonly'] = 'readonly'
         
         instance = getattr(self, 'instance', None)
