@@ -7,6 +7,10 @@ urlpatterns = [
     path('profile', views.admin_profile, name='admin_profile'),
     path('profiles/edit', views.admin_profile_edit, name='admin_profile_edit'),
     
+    path('profile/pending', views.admin_profile_pending, name='admin_profile_pending'),
+    path('profile/approved', views.admin_profile_approved, name='admin_profile_approved'),
+    path('profile/rejected', views.admin_profile_rejected, name='admin_profile_rejected'),
+    
     #path('userReport/', views.a_userReport, name='a_userReport'),
     #path('userReport/pending/', views.a_userReport_pending, name='a_userReport_pending'),
     #path('userReport/approved/', views.a_userReport_approved, name='a_userReport_approved'),
