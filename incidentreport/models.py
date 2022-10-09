@@ -1,7 +1,9 @@
+import os
 from django.db import models
 from accounts.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from PIL import Image
 
 class UserReport(models.Model):
     PENDING = 1
@@ -23,7 +25,7 @@ class UserReport(models.Model):
     pin_code = models.CharField(max_length=6, blank=True, null=True)
     latitude = models.CharField(max_length=20, blank=True, null=True)
     longitude = models.CharField(max_length=20, blank=True, null=True)
-    upload_photovideo = models.ImageField(default='user.jpeg', upload_to='incident_report/image')
+    upload_photovideo = models.FileField(upload_to='incident_report/image', blank=True, null=True)
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
     status = models.PositiveSmallIntegerField(choices=STATUS, blank=True, null=True)
@@ -38,6 +40,19 @@ class UserReport(models.Model):
         elif self.status == 3:
             incident_status = 'Rejected'
         return incident_status
+    
+    def save(self, *args, **kwargs):
+        super(UserReport, self).save(*args, **kwargs)
+        if self.upload_photovideo:
+            if  ".jpg" in self.upload_photovideo.url or ".png" in self.upload_photovideo.url:
+             #check if image exists before resize
+                img = Image.open(self.upload_photovideo.path)
+
+                if img.height > 1080 or img.width > 1920:
+                    new_height = 720
+                    new_width = int(new_height / img.height * img.width)
+                    img = img.resize((new_width, new_height))
+                    img.save(self.upload_photovideo.path)
 
     
 
@@ -309,7 +324,7 @@ class IncidentMedia(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.description
+        return self.media_description
     
     
 

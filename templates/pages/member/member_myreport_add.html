@@ -1,5 +1,7 @@
 
 
+                
+
    {% extends "incident_report_home_member.html" %}
    {% load static %}
     {% block form_if %}{% block form_else %}
@@ -22,16 +24,6 @@
                     <div class="form-group col-md-12">
                         <label for="inputSeverity">Street Address</label>
                     {{form.address}}
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="inputSeverity">Country</label>
-                    {{form.country}}
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputSeverity">State</label>
-                    {{form.state}}
                     </div>
                 </div>
                 <div class="form-row">
@@ -62,10 +54,7 @@
                 </div>
 
                 {{form.upload_photovideo}}
-
-                
-
-                <!-- ================================= -->
+      <!-- ================================= -->
                 <br>
                 {% comment %} <div class="modal-footer mb-3">
                     <input type="button" class="btn btn-secondary" data-dismiss="modal"
@@ -83,4 +72,6 @@
             </div>
         </fieldset>
     {% endblock %}{% endblock %}
+
+
 

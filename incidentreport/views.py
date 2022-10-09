@@ -130,7 +130,7 @@ def my_report(request):
         'profile': profile,
         'incidentReports': incidentReports,
     }
-    return render(request, 'pages/member_myreport.html', context)
+    return render(request, 'pages/member/member_myreport.html', context)
 
 
 @login_required(login_url='login')
@@ -142,7 +142,7 @@ def my_report_pending(request):
         'profile': profile,
         'incidentReports': incidentReports,
     }
-    return render(request, 'pages/member_myreport.html', context)
+    return render(request, 'pages/member/member_myreport.html', context)
 
 
 @login_required(login_url='login')
@@ -154,7 +154,7 @@ def my_report_approved(request):
         'profile': profile,
         'incidentReports': incidentReports,
     }
-    return render(request, 'pages/member_myreport.html', context)
+    return render(request, 'pages/member/member_myreport.html', context)
 
 
 @login_required(login_url='login')
@@ -166,7 +166,7 @@ def my_report_rejected(request):
         'profile': profile,
         'incidentReports': incidentReports,
     }
-    return render(request, 'pages/member_myreport.html', context)
+    return render(request, 'pages/member/member_myreport.html', context)
 
 
 def my_report_delete(request, incident_id=None):
@@ -222,7 +222,7 @@ def my_report_view(request, id):
         'user_report': user_report,
     }
 
-    return render(request, 'pages/member_myreport_view.html', context)
+    return render(request, 'pages/member/member_myreport_view.html', context)
 
 
 @login_required(login_url='login')
@@ -241,7 +241,7 @@ def my_report_edit(request, id):
         'form': form,
         'user_report': user_report,
     }
-    return render(request, 'pages/member_myreport_edit.html', context)
+    return render(request, 'pages/member/member_myreport_edit.html', context)
 
 
 @login_required(login_url='login')
@@ -273,19 +273,58 @@ def incident_report_general(request):
 def incident_report_people(request):
     if request.method == 'POST':
         user_report_form = UserReportForm(request.POST, request.FILES)
-        inc_per_form = IncidentPersonForm(request.POST, request.FILES)
+        person_instance = IncidentPersonForm(request.POST, request.FILES)
+        obj = get_object_or_404(UserProfile, pk=request.id)
+        try:
+            if person_instance.is_valid():
+                incident_first_name = person_instance.cleaned_data['incident_first_name']
+                incident_middle_name = person_instance.cleaned_data['incident_middle_name']
+                incident_last_name = person_instance.cleaned_data['incident_last_name']
+                incident_age = person_instance.cleaned_data['incident_age']
+                incident_gender = person_instance.cleaned_data['incident_gender']
+                incident_address = person_instance.cleaned_data['incident_address']
+                incident_id_presented = person_instance.cleaned_data['incident_id_presented']
+                incident_id_number = person_instance.cleaned_data['incident_id_number']
+                incident_injury = person_instance.cleaned_data['incident_injury']
+                incident_driver_error = person_instance.cleaned_data['incident_driver_error']
+                incident_alcohol_drugs = person_instance.cleaned_data['incident_alcohol_drugs']
+                incident_seatbelt_helmet = person_instance.cleaned_data['incident_seatbelt_helmet']
+            
+            else:
+                model = IncidentPerson(incident_general=obj, incident_first_name=incident_first_name,
+                                                    incident_middle_name=incident_middle_name,
+                                                    incident_last_name=incident_last_name,
+                                                    incident_age=incident_age,
+                                                    incident_gender=incident_gender,
+                                                    incident_address=incident_address,
+                                                    incident_id_presented=incident_id_presented,
+                                                    incident_id_number=incident_id_number,
+                                                    incident_injury=incident_injury,
+                                                    incident_driver_error=incident_driver_error,
+                                                    incident_alcohol_drugs=incident_alcohol_drugs,
+                                                    incident_seatbelt_helmet=incident_seatbelt_helmet)
+                model.save()
+                messages.success(request, 'Accident Factor Added')
+                return redirect('attributes_builder_accident')
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+            
     else:
         user_report_form = UserReportForm()
-        inc_per_form = IncidentPersonForm()
+        person_instance = IncidentPersonForm()
         print(user_report_form.errors)
-        print(inc_per_form.errors)
+        print(person_instance.errors)
         
     context = {
         'user_report_form': user_report_form,
-        'inc_per_form': inc_per_form,
+        'person_instance': person_instance,
+        
     }
-    return render(request, 'pages/incident_report_people.html', context)
+    return render(request, 'pages/super/incident_report_people.html', context)
 
+   
+    
 def incident_report_vehicle(request):
     if request.method == 'POST':
         user_report_form = UserReportForm(request.POST, request.FILES)
@@ -369,26 +408,26 @@ def load_collision(request):
 
 FORMS = [("information", UserReportForm),
         ("general", IncidentGeneralForm),
-         ("people", IncidentPersonForm),
-         ("vehicle",IncidentVehicleForm),
-         ("media", IncidentMediaForm),
+        #  ("people", IncidentPersonForm),
+        #  ("vehicle",IncidentVehicleForm),
+        #  ("media", IncidentMediaForm),
          ("remarks", IncidentRemarksForm)]
 
 FORMS1 = [("information", UserReportForm)]
 
 TEMPLATES = {"information": "pages/super/incident_report_user.html",
                 "general": "pages/super/incident_report_general.html",
-                "people": "pages/super/incident_report_people.html",
-                "vehicle": "pages/super/incident_report_vehicle.html",
-                "media": "pages/super/incident_report_media.html",
+                # "people": "pages/super/incident_report_people.html",
+                # "vehicle": "pages/super/incident_report_vehicle.html",
+                # "media": "pages/super/incident_report_media.html",
                 "remarks": "pages/super/incident_report_remarks.html"}
 
 
 TEMPLATES1 = {"information": "pages/admin/incident_report_user.html",
                 "general": "pages/admin/incident_report_general.html",
-                "people": "pages/admin/incident_report_people.html",
-                "vehicle": "pages/admin/incident_report_vehicle.html",
-                "media": "pages/admin/incident_report_media.html",
+                # "people": "pages/admin/incident_report_people.html",
+                # "vehicle": "pages/admin/incident_report_vehicle.html",
+                # "media": "pages/admin/incident_report_media.html",
                 "remarks": "pages/admin/incident_report_remarks.html"}
 
 TEMPLATES2 = {"information": "pages/member/member_myreport_add.html"}
@@ -410,9 +449,9 @@ class multistepformsubmission(SessionWizardView):
         cleaned_data = [form.cleaned_data for form in form_list]
         user_instance = UserReport()
         general_instance = IncidentGeneral()
-        person_instance  = IncidentPerson()
-        vehicle_instance = IncidentVehicle()
-        media_instance = IncidentMedia()
+        # person_instance  = IncidentPerson()
+        # vehicle_instance = IncidentVehicle()
+        # media_instance = IncidentMedia()
         remarks_instance = IncidentRemark()
         #listing_instance.created_by = self.request.user
         #listing_instance.listing_owner = self.request.user
@@ -420,16 +459,16 @@ class multistepformsubmission(SessionWizardView):
         for form in form_list:
             user_instance = construct_instance(form, user_instance, form._meta.fields, form._meta.exclude)
             general_instance = construct_instance(form, general_instance, form._meta.fields, form._meta.exclude)
-            person_instance = construct_instance(form, person_instance, form._meta.fields, form._meta.exclude)
-            vehicle_instance = construct_instance(form, vehicle_instance, form._meta.fields, form._meta.exclude)
-            media_instance = construct_instance(form, media_instance, form._meta.fields, form._meta.exclude)
+            # person_instance = construct_instance(form, person_instance, form._meta.fields, form._meta.exclude)
+            # vehicle_instance = construct_instance(form, vehicle_instance, form._meta.fields, form._meta.exclude)
+            # media_instance = construct_instance(form, media_instance, form._meta.fields, form._meta.exclude)
             remarks_instance = construct_instance(form, remarks_instance, form._meta.fields, form._meta.exclude)
         user_instance.user = self.request.user
         user_instance.status = 2
         user_instance.save()
         general_instance.user_report = user_instance
         general_instance.save()
-        for form in cleaned_data[2]:
+        # for form in cleaned_data[2]:
             # incident_first_name = form.get('incident_first_name')
             # incident_middle_name = form.get('incident_middle_name')
             # incident_last_name = form.get('incident_last_name')
@@ -443,7 +482,7 @@ class multistepformsubmission(SessionWizardView):
             # incident_driver_error = form.get('incident_driver_error')
             # incident_alcohol_drugs = form.get('incident_alcohol_drugs')
             # incident_seatbelt_helmet = form.get('incident_seatbelt_helmet')
-            person_instance.incident_general = general_instance
+            
             # data = IncidentPerson.objects.create(incident_first_name = incident_first_name,
             #                                             incident_middle_name = incident_middle_name,
             #                                             incident_last_name = incident_last_name,
@@ -459,17 +498,19 @@ class multistepformsubmission(SessionWizardView):
             #                                             incident_seatbelt_helmet = incident_seatbelt_helmet,
             #                                   )
             # person_instance, created = data
-            person_instance.clean()
-            person_instance.save()
-        vehicle_instance.incident_general = general_instance
-        vehicle_instance.save()
-        media_instance.incident_general = general_instance
-        media_instance.save()
+            # person_instance.clean()
+        # person_instance.incident_general = general_instance
+        # person_instance.save()
+        # vehicle_instance.incident_general = general_instance
+        # vehicle_instance.save()
+        # media_instance.incident_general = general_instance
+        # media_instance.save()
         remarks_instance.incident_general = general_instance
         remarks_instance.save()
         context = {
             'profile': profile
         }
+        # return redirect('/incidentReport/people', context)
         return redirect('/userReports', context)
 
 class multistepformsubmission_admin(SessionWizardView):
@@ -565,7 +606,7 @@ class multistepformsubmission_member(SessionWizardView):
         context = {
             'profile': profile
         }
-        return redirect('/incidentReport/incident', context)
+        return redirect('/myReport', context)
 
 
 def incident_report_general_view(request, id):

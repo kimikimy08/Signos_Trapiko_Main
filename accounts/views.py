@@ -1,6 +1,6 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
-from .models import User
+from .models import User, UserProfile
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.tokens import default_token_generator
@@ -10,6 +10,7 @@ import random
 from django.core.exceptions import PermissionDenied
 from .forms import UserForm, MemberForm
 from .utils import send_verfication_email, send_sms, detectUser
+from incidentreport.models import UserReport
 
 
 def check_role_member(user):
@@ -145,7 +146,15 @@ def myAccount(request):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_member)
 def member_dashboard(request):
-    return render(request, 'pages/m_Dashboard.html')
+    profile = get_object_or_404(UserProfile, user=request.user)
+    incidentReports = UserReport.objects.filter(user=request.user).order_by('-created_at')
+    incidentReports_top = UserReport.objects.filter(user=request.user).order_by('-created_at')[:4]
+    context = {
+        'profile': profile,
+        'incidentReports': incidentReports,
+        'incidentReports_top': incidentReports_top,
+    }
+    return render(request, 'pages/member/member_profile.html')
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)

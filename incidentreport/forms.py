@@ -20,7 +20,7 @@ class UserReportForm(forms.ModelForm):
     time = forms.TimeField(widget=TimeInput(
         attrs={'class': 'form-control'}), initial=datetime.datetime.now())
     address = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': 'Start typing...', 'required': 'required', 'class': 'form-control'}))
+        attrs={'required': 'required', 'class': 'form-control'}))
     description = forms.CharField(widget=forms.Textarea(
         attrs={'area': '3', 'class': 'form-control'}))
 

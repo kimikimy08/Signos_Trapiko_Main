@@ -356,4 +356,14 @@ a {
     color: #fff;
 }
 
+.photos-side{
+    height: auto;
+    max-width: 100%;
+}
+
+video {
+    max-width: 100%;
+    height: auto;
+  }
+
 /*MAIN CONTENT*/

@@ -9,7 +9,7 @@ from twilio.rest import Client
 
 def detectUser(user):
     if user.role == 1:
-        redirectUrl = 'member_dashboard'
+        redirectUrl = 'member_profile'
         return redirectUrl
     elif user.role == 2:
         redirectUrl = 'admin_dashboard'

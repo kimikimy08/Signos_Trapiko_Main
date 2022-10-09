@@ -25,6 +25,7 @@ def export_users_xls(request):
 
     alignment.horz = xlwt.Alignment.HORZ_LEFT
     alignment.vert = xlwt.Alignment.VERT_TOP
+    alignment.CENTER = xlwt.Alignment.CENTER
     style = xlwt.XFStyle() # Create Style
     style.alignment = alignment # Add Alignment to Style
  
@@ -62,7 +63,8 @@ def export_users_xls(request):
     
     # body cell name style definition
     body_style = xlwt.XFStyle()
-    body_style.font = body_font 
+    body_style.font = body_font
+    
     
     
  
@@ -97,7 +99,7 @@ def export_accidentcausation_xls(request):
     
     alignment = xlwt.Alignment()
 
-    alignment.horz = xlwt.Alignment.HORZ_LEFT
+    alignment.horz = xlwt.Alignment.HORZ_CENTER
     alignment.vert = xlwt.Alignment.VERT_TOP
     style = xlwt.XFStyle() # Create Style
     style.alignment = alignment # Add Alignment to Style
@@ -133,18 +135,20 @@ def export_accidentcausation_xls(request):
     borders.top = 1
     borders.bottom = 1
     header_style.borders = borders
+    header_style.alignment = alignment
     
     # body cell name style definition
     body_style = xlwt.XFStyle()
-    body_style.font = body_font 
+    body_style.font = body_font
+    body_style.alignment = alignment
     
     
  
-    columns = ['Accident Factor', 'Damage to Property', 'Fatal', 'Non-Fatal Injury']
+    columns = ['Accident Factor', 'Accident Factor Sub-Category', 'Damage to Property', 'Fatal', 'Non-Fatal Injury']
  
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], header_style)
-        ws.col(col_num).width = 7000
+        ws.col(col_num).width = 10000
 
         
  
@@ -159,15 +163,16 @@ def export_accidentcausation_xls(request):
 #   severity3=Count('severity', only=Q(severity=3))
 # #     )
     distinct_articles = AccidentCausation.objects.distinct('category')
-    rows = IncidentGeneral.objects.all().values_list('accident_factor__category', 'accident_subcategory')
+    rows = IncidentGeneral.objects.all().values_list('accident_factor__category', 'accident_subcategory__sub_category')
     rows = rows.annotate(
-         severity1=Count('severity', only=Q(1)),
-        severity2=Count('severity', only=Q(2)),
-        severity3=Count('severity', only=Q(3))
+        severity1=Count('severity', filter=Q(severity=1)),
+        severity2=Count('severity', filter=Q(severity=2)),
+        severity3=Count('severity', filter=Q(severity=3))
     )
     
-
-    # rows = [[x.strftime("%Y-%m-%d %H:%M") if isinstance(x, datetime.datetime) else x for x in row] for row in rows ]
+    # for item in rows:
+    #     print(item.accident_factor, item.severity1, item.severity2, item.severity3)
+    rows = [[x.strftime("%Y-%m-%d %H:%M") if isinstance(x, datetime.datetime) else x for x in row] for row in rows ]
     for row in rows:
         row_num += 1
         for col_num in range(len(row)):
