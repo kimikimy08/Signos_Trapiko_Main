@@ -9,11 +9,13 @@ urlpatterns = [
     path('userReport/pending', views.user_report_pending, name='user_report_pending'),
     path('userReport/approved', views.user_report_approved, name='user_report_approved'),
     path('userReport/rejected', views.user_report_rejected, name='user_report_rejected'),
+    # path('userReport/today', views.user_report_today, name='user_report_today'),
     
     path('userReports', views.user_reports, name='user_reports'),
     path('userReports/pending', views.user_reports_pending, name='user_reports_pending'),
     path('userReports/approved', views.user_reports_approved, name='user_reports_approved'),
     path('userReports/rejected', views.user_reports_rejected, name='user_reports_rejected'),
+    path('userReports/today', views.user_reports_today, name='user_reports_today'),
     path('userReports/delete/<int:id>', views.user_report_delete, name='user_report_delete'),
    
     

@@ -13,8 +13,7 @@ class TimeInput(forms.TimeInput):
 
 
 class UserReportForm(forms.ModelForm):
-    date = forms.DateField(widget=DateInput(
-        attrs={'class': 'form-control'}), initial=datetime.datetime.now())
+    
     upload_photovideo = forms.FileField(
         widget=forms.FileInput(attrs={'class': 'form-control p-1'}))
     time = forms.TimeField(widget=TimeInput(
@@ -28,13 +27,15 @@ class UserReportForm(forms.ModelForm):
     # longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     class Meta:
         model = UserReport
-        fields = [ 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude']
+        fields = [ 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude', 'date', 'time']
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor
         super(UserReportForm, self).__init__(*args, **kwargs)
         # there's a `fields` property now
         # self.fields['upload_photovideo'].required = False
+        self.fields['date'].widget.attrs['class'] = 'form-control'
+        self.fields['time'].widget.attrs['class'] = 'form-control'
         self.fields['address'].widget.attrs['class'] = 'form-control'
         self.fields['country'].widget.attrs['class'] = 'form-control'
         self.fields['state'].widget.attrs['class'] = 'form-control'

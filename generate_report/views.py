@@ -149,20 +149,7 @@ def export_accidentcausation_xls(request):
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], header_style)
         ws.col(col_num).width = 10000
-
         
- 
-    # Sheet body, remaining rows
-    # font_style = xlwt.XFStyle()
-    # rows1 = AccidentCausation.objects.all()
-
-#     rows = IncidentGeneral.objects.all().values('accident_factor__category')
-#     rows = rows.annotate(
-#         severity1=Count('severity', only=Q(severity=1)),
-#    severity2=Count('severity', only=Q(severity=2)),
-#   severity3=Count('severity', only=Q(severity=3))
-# #     )
-    distinct_articles = AccidentCausation.objects.distinct('category')
     rows = IncidentGeneral.objects.all().values_list('accident_factor__category', 'accident_subcategory__sub_category')
     rows = rows.annotate(
         severity1=Count('severity', filter=Q(severity=1)),

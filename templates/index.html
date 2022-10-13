@@ -13,7 +13,7 @@
 
 <!-- Page Wrapper -->
 
-{% include 'includes/sa_sidebar.html' %}
+{% include 'includes/m_sidebar.html' %}
     
 
 
@@ -44,46 +44,6 @@
                         <div class="p-2 bd-highlight">
                             <a href="#" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm bd-highlight">
                                 <i class="bx bxs-download"></i> Export</a>
-                        </div>
-                    </div>
-                    <div class="container cards mb-3">
-                        <div class="row">
-                            <div class="col-lg-3 col-sm-6">
-                                <div class="card-box bg-yellowOrange rounded shadow-sm">
-                                    <div class="inner">
-                                        <h6>Total</h6>
-                                        <h2>{{incidentReports | length}}</h2>
-                                    </div>
-                                    <a href="{%url 'user_reports' %}" class="card-box-top"></a>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-6">
-                                <div class="card-box bg-darkLightBlue rounded shadow-sm">
-                                    <div class="inner">
-                                        <h6>Today</h6>
-                                        <h2>{{incidentReports_today | length}}</h2>
-                                    </div>
-                                    <a href="{%url 'user_reports_today' %}" class="card-box-top"></a>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-6">
-                                <div class="card-box bg-darkSoftRed rounded shadow-sm">
-                                    <div class="inner">
-                                        <h6>Pending</h6>
-                                        <h2>{{incidentReports_pending| length}}</h2>
-                                    </div>
-                                    <a href=" {%url 'user_reports_pending' %} " class="card-box-top"></a>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-6">
-                                <div class="card-box bg-darkStrongCyan rounded shadow-sm">
-                                    <div class="inner">
-                                        <h6>Approved</h6>
-                                        <h2>{{incidentReports_approved | length}}</h2>
-                                    </div>
-                                    <a href="{%url 'user_reports_approved' %}" class="card-box-top"></a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -129,7 +89,46 @@
                     </div>
                     
                     <!-- Counter Cards  -->
-                    
+                    <div class="container cards mb-3">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="card-box bg-yellowOrange rounded shadow-sm">
+                                    <div class="inner">
+                                        <h6>Total</h6>
+                                        <h2>123</h2>
+                                    </div>
+                                    <a href="{%url 'user_reports' %}" class="card-box-top"></a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="card-box bg-darkLightBlue rounded shadow-sm">
+                                    <div class="inner">
+                                        <h6>Today</h6>
+                                        <h2>123</h2>
+                                    </div>
+                                    <a href="#" class="card-box-top"></a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="card-box bg-darkSoftRed rounded shadow-sm">
+                                    <div class="inner">
+                                        <h6>Pending</h6>
+                                        <h2>123</h2>
+                                    </div>
+                                    <a href=" {%url 'user_reports_pending' %} " class="card-box-top"></a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="card-box bg-darkStrongCyan rounded shadow-sm">
+                                    <div class="inner">
+                                        <h6>Approved</h6>
+                                        <h2>123</h2>
+                                    </div>
+                                    <a href="{%url 'user_reports_approved' %}" class="card-box-top"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- End of Counter Cards  -->
 
                     {% comment %} <div class="row">

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'superadmin',
     'incidentreport',
     'generate_report',
+    'dashboard'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -181,4 +182,4 @@ DEFAULT_FROM_EMAIL = 'Link Technologies <linktechnologies2022@gmail.com>'
 # whitenoise settings
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-GOOGLE_API_KEY = 'AIzaSyBDcYFcW6rYS3unFKOw5go7Q8eW-a4cQgM'
+GOOGLE_API_KEY = 'AIzaSyCKwsCOqlbQtDoubUnP0HVzUbZ6uA3QP1M'

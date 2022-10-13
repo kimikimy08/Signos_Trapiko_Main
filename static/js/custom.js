@@ -147,6 +147,9 @@ google.maps.event.addListener(autocomplete, 'place_changed', function () {
             if(place.address_components[i].types[j] == 'administrative_area_level_1'){
                 $('#id_information-state').val(place.address_components[i].long_name);
             }
+            if(place.address_components[i].types[j] == 'sublocality'){
+                $('#inputbarangay').val(place.address_components[i].long_name);
+            }
             // get city
             if(place.address_components[i].types[j] == 'locality'){
                 $('#id_information-city').val(place.address_components[i].long_name);
@@ -159,7 +162,7 @@ google.maps.event.addListener(autocomplete, 'place_changed', function () {
             }
         }
     }
-
+    
 });
 
 

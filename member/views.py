@@ -6,6 +6,9 @@ from accounts.forms import MemberForm, UserUpdateForm
 from django.contrib import messages
 from incidentreport.models import UserReport
 
+from incidentreport.models import IncidentGeneral
+
+
 # Create your views here.
 @login_required(login_url = 'login')
 @user_passes_test(check_role_member)
@@ -96,6 +99,7 @@ def member_profile_edit(request):
     }
     
     return render(request, 'pages/member/member_profile_edit.html', context)
+
 
 
 

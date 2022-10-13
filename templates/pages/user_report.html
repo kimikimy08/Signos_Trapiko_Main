@@ -227,6 +227,9 @@
                                     <a class="{% if '/userReports' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports' %}">All Reports</a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="{% if '/userReports/today' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports_today' %}">Today</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="{% if '/userReports/pending' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports_pending' %}">Pending</a>
                                 </li>
                                 <li class="nav-item">

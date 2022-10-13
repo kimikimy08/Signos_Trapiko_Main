@@ -2,11 +2,14 @@ from django.contrib import admin
 from .models import UserReport,IncidentPerson, AccidentCausation, CollisionType, CrashType,IncidentGeneral, IncidentVehicle,IncidentMedia,IncidentRemark, AccidentCausationSub, CollisionTypeSub
 
 class CustomIncidentGeneralAdmin(admin.ModelAdmin):
-    list_display = ('accident_factor', 'severity')
+    list_display = ('accident_factor', 'severity', 'user_report')
     # list_display_links = ('user', 'birthdate')
     
+class CustomUserReportAdmin(admin.ModelAdmin):
+    list_display = ('address', 'latitude', 'longitude')
+    
 # Register your models here.
-admin.site.register(UserReport)
+admin.site.register(UserReport, CustomUserReportAdmin)
 admin.site.register(AccidentCausation)
 admin.site.register(AccidentCausationSub)
 admin.site.register(CollisionType)

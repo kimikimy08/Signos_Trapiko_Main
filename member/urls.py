@@ -10,5 +10,4 @@ urlpatterns = [
     path('profile/pending', views.member_profile_pending, name='member_profile_pending'),
     path('profile/approved', views.member_profile_approved, name='member_profile_approved'),
     path('profile/rejected', views.member_profile_rejected, name='member_profile_rejected'),
-    
 ]

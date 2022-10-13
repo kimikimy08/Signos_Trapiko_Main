@@ -28,6 +28,7 @@ urlpatterns = [
     path('superadmin/', include('superadmin.urls')),
     path('', include('incidentreport.urls')),
     path('', include('generate_report.urls')),
+    path('', include('dashboard.urls')),
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

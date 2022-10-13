@@ -5,12 +5,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from accounts.models import UserProfile, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_admin, check_role_super, check_role_member, check_role_super_admin
-from incidentreport.models import UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle, AccidentCausation, CollisionType, CrashType
+from incidentreport.models import  UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle, AccidentCausation, CollisionType, CrashType
 from django.contrib import messages
 from .forms import UserReportForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm, AccidentCausationForm, AccidentCausationSubForm, CollisionTypeForm, CollisionTypeSubForm, CrashTypeForm
 from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.forms.models import construct_instance
+from datetime import datetime
 
 
 @login_required(login_url='login')
@@ -18,7 +19,7 @@ from django.forms.models import construct_instance
 def user_reports(request):
     profile = get_object_or_404(UserProfile, user=request.user)
 
-    incidentReports = IncidentGeneral.objects.all()
+    incidentReports = IncidentGeneral.objects.all().order_by('-updated_at')
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -30,7 +31,8 @@ def user_reports(request):
 @user_passes_test(check_role_super_admin)
 def user_reports_pending(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(status=1)
+
+    incidentReports = IncidentGeneral.objects.filter(user_report__status = 1).order_by('-updated_at')
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -42,7 +44,7 @@ def user_reports_pending(request):
 @user_passes_test(check_role_super_admin)
 def user_reports_approved(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(status=2)
+    incidentReports = IncidentGeneral.objects.filter(user_report__status = 2).order_by('-updated_at')
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -54,7 +56,19 @@ def user_reports_approved(request):
 @user_passes_test(check_role_super_admin)
 def user_reports_rejected(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = IncidentGeneral.objects.filter(status=3)
+    incidentReports = IncidentGeneral.objects.filter(user_report__status = 3).order_by('-updated_at')
+    context = {
+        'profile': profile,
+        'incidentReports': incidentReports,
+    }
+    return render(request, 'pages/user_report.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super_admin)
+def user_reports_today(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+    today = datetime.today().date()
+    incidentReports = IncidentGeneral.objects.filter(created_at__date=today).order_by('-updated_at')
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -75,7 +89,7 @@ def user_report_delete(request, id=None):
 def user_report(request):
     profile = get_object_or_404(UserProfile, user=request.user)
 
-    incidentReports = IncidentGeneral.objects.all()
+    incidentReports = IncidentGeneral.objects.all().order_by('-updated_at')
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -87,7 +101,7 @@ def user_report(request):
 @user_passes_test(check_role_admin)
 def user_report_pending(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(status=1)
+    incidentReports = IncidentGeneral.objects.filter(user_report__status = 1).order_by('-updated_at')
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -99,7 +113,7 @@ def user_report_pending(request):
 @user_passes_test(check_role_admin)
 def user_report_approved(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(status=2)
+    incidentReports = IncidentGeneral.objects.filter(user_report__status = 2).order_by('-updated_at')
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -111,7 +125,7 @@ def user_report_approved(request):
 @user_passes_test(check_role_admin)
 def user_report_rejected(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(status=3)
+    incidentReports = IncidentGeneral.objects.filter(user_report__status = 3).order_by('-updated_at')
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -574,6 +588,7 @@ class multistepformsubmission_member(SessionWizardView):
     def form_valid(self, form):
         try:
             form.execute()
+            
             # messages.add_message(self.request, messages.SUCCESS)
         except Exception as err:
             messages.add_message(self.request, messages.ERROR, err.message)
@@ -583,6 +598,8 @@ class multistepformsubmission_member(SessionWizardView):
     def done(self, form_list, **kwargs):
         # UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
         profile = get_object_or_404(UserProfile, user=self.request.user)
+        
+
         user_instance = UserReport()
         general_instance = IncidentGeneral()
         person_instance  = IncidentPerson()
@@ -614,7 +631,8 @@ class multistepformsubmission_member(SessionWizardView):
         remarks_instance.save()
         messages.success(self.request, 'New Incident Report Added')
         context = {
-            'profile': profile
+            'profile': profile,
+        
         }
         return redirect('/myReport', context)
 
