@@ -2,6 +2,7 @@ import os
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from accounts.models import UserProfile, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_admin, check_role_super, check_role_member, check_role_super_admin
@@ -1555,3 +1556,31 @@ def attributes_builder_crash_delete_admin(request, id):
     crash_type.delete()
     return redirect('attributes_builder_crash_admin')
 
+def multistepformexample(request):
+    return render(request,"multistepformexample.html")
+
+# def multistepformexample_save(request):
+#     if request.method!="POST":
+#         return HttpResponseRedirect(reverse("multistepformexample"))
+#     else:
+#         fname=request.POST.get("fname")
+#         lname=request.POST.get("lname")
+#         phone=request.POST.get("phone")
+#         twitter=request.POST.get("twitter")
+#         facebook=request.POST.get("facebook")
+#         gplus=request.POST.get("gplus")
+#         email=request.POST.get("email")
+#         password=request.POST.get("pass")
+#         cpass=request.POST.get("cpass")
+#         if password!=cpass:
+#             messages.error(request,"Confirm Password Doesn't Match")
+#             return HttpResponseRedirect(reverse('multistepformexample'))
+
+#         try:
+#             multistepform=MultiStepFormModel(fname=fname,lname=lname,phone=phone,twitter=twitter,facebook=facebook,gplus=gplus,email=email,password=password)
+#             multistepform.save()
+#             messages.success(request,"Data Save Successfully")
+#             return HttpResponseRedirect(reverse('multistepformexample'))
+#         except:
+#             messages.error(request,"Error in Saving Data")
+#             return HttpResponseRedirect(reverse('multistepformexample'))

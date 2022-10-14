@@ -98,4 +98,8 @@ urlpatterns = [
     path('', FormView, {'step': None}),
     path('step/<int:step>', FormView),
     path('cancel', CancelView),
+    
+    
+    path('multistepformexample', views.multistepformexample, name='multistepformexample'),
+    # path("multipleupload_save",views.multipleupload_save),
 ]
