@@ -100,6 +100,7 @@ urlpatterns = [
     path('cancel', CancelView),
     
     
-    path('multistepformexample', views.multistepformexample, name='multistepformexample'),
-    # path("multipleupload_save",views.multipleupload_save),
+    path('incidentreport', views.multistepformexample, name='multistepformexample'),
+    path('incidentreport/<int:id>', views.multistepformexample1, name='multistepformexample1'),
+    # path("multistepformexample_save",views.multistepformexample_save,  name='multistepformexample_save'),
 ]

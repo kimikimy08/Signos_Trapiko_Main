@@ -6,7 +6,7 @@ class CustomIncidentGeneralAdmin(admin.ModelAdmin):
     # list_display_links = ('user', 'birthdate')
     
 class CustomUserReportAdmin(admin.ModelAdmin):
-    list_display = ('address', 'latitude', 'longitude')
+    list_display = ('address', 'latitude', 'longitude', 'created_at')
     
 # Register your models here.
 admin.site.register(UserReport, CustomUserReportAdmin)

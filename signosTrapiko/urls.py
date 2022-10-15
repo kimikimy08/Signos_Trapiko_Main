@@ -29,6 +29,7 @@ urlpatterns = [
     path('', include('incidentreport.urls')),
     path('', include('generate_report.urls')),
     path('', include('dashboard.urls')),
+    path('', include('inbox.urls')),
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

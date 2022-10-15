@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = Path(BASE_DIR, "templates")
 
 # remove
-# STATIC_DIR = Path(BASE_DIR, "static")
+STATIC_DIR = Path(BASE_DIR, "static")
 
 
 # Quick-start development settings - unsuitable for production
@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'superadmin',
     'incidentreport',
     'generate_report',
-    'dashboard'
+    'dashboard',
+    'inbox'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -81,7 +82,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'accounts.context_processors.get_google_api'
+                'accounts.context_processors.get_google_api',
+                'inbox.context_processors.notifications'
             ],
         },
     },
@@ -93,17 +95,17 @@ WSGI_APPLICATION = 'signosTrapiko.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': config('DB_NAME'),
-#        'USER': config('DB_USER'),
-#        'PASSWORD': config('DB_PASSWORD'),
-#        'HOST': config('DB_HOST'),
-#    }
-# }
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': config('DB_NAME'),
+       'USER': config('DB_USER'),
+       'PASSWORD': config('DB_PASSWORD'),
+       'HOST': config('DB_HOST'),
+   }
+}
 
-DATABASES = {'default': dj_database_url.config(default='postgres://postgres:signos0805Trapiko@localhost/Signos_Trapiko')}
+# DATABASES = {'default': dj_database_url.config(default='postgres://postgres:signos0805Trapiko@localhost/Signos_Trapiko')}
 
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -148,15 +150,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # remove
-# STATIC_URL = 'static/'
-# STATICFILES_DIRS = [
-#     STATIC_DIR,
-# ]
-# STATIC_ROOT = Path(BASE_DIR, 'staticfiles')
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
+STATIC_ROOT = Path(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = Path(BASE_DIR, 'media')

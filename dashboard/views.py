@@ -10,6 +10,7 @@ from folium.plugins import FastMarkerCluster
 from folium.plugins import MarkerCluster
 import plotly.express as px
 from django.db.models import Count
+import numpy as np
 
 from django.http import HttpResponse
 from django.views.generic import View
@@ -83,7 +84,9 @@ def admin_dashboard(request):
     print(data2)
 
     df = pd.DataFrame(incident_general.values(
-        'user_report__latitude', 'user_report__longitude', 'accident_factor'))
+        'user_report__latitude', 'user_report__longitude'))
+    
+    # df.fillna(value=np.nan, inplace=True)
 
     # incident_vehicle = IncidentVehicle.objects.all()
     # incident_vehicle_count = incident_vehicle.count()
@@ -218,7 +221,8 @@ def superadmin_dashboard(request):
     print(data2)
 
     df = pd.DataFrame(incident_general.values(
-        'user_report__latitude', 'user_report__longitude', 'accident_factor'))
+        'user_report__latitude', 'user_report__longitude'))
+    
 
     # incident_vehicle = IncidentVehicle.objects.all()
     # incident_vehicle_count = incident_vehicle.count()
@@ -333,14 +337,15 @@ def index_map(request):
 
         html = '<strong>' + 'Address: ' + '</strong>' + str(row['user_report__address']) + ' <br>' + '<strong>' + 'Latitude: ' + '</strong>' + str(row['user_report__latitude']) + ' <br>' + \
             '<strong>' + 'Longitude: ' + '</strong>' + \
-            str(row['user_report__longitude']) + '<br>' + '<strong>' + 'Accident Factor: ' + \
-            '</strong>' + str(row['accident_factor__category']) + '<br>' + '<strong>' + 'Accident Factor Sub Category: ' + '</strong>'+ str(row['accident_subcategory__sub_category'])+ '<br>' + \
-            '<strong>' + 'Collision Type: ' + '</strong>'+ str(row['collision_type__category'])+ '<br>' + \
-            '<strong>' + 'Collision Type Sub Category: ' + '</strong>'+ str(row['collision_subcategory__sub_category'])+ '<br>'
+            str(row['user_report__longitude']) 
+            # + '<br>' + '<strong>' + 'Accident Factor: ' + \
+            # '</strong>' + str(row['accident_factor__category']) + '<br>' + '<strong>' + 'Accident Factor Sub Category: ' + '</strong>'+ str(row['accident_subcategory__sub_category'])+ '<br>' + \
+            # '<strong>' + 'Collision Type: ' + '</strong>'+ str(row['collision_type__category'])+ '<br>' + \
+            # '<strong>' + 'Collision Type Sub Category: ' + '</strong>'+ str(row['collision_subcategory__sub_category'])+ '<br>'
 
         iframe = folium.IFrame(html,
                                width=300,
-                               height=200)
+                               height=100)
 
         popup = folium.Popup(iframe,
                              max_width=300)

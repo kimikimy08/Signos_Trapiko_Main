@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 import xlwt
 from accounts.models import UserProfile, User
-from incidentreport.models import AccidentCausationSub, AccidentCausation,IncidentGeneral
+from incidentreport.models import AccidentCausationSub, AccidentCausation,IncidentGeneral, IncidentVehicle
 import pytz
 from django.db.models import Count, Sum
 from django.db.models import Q
@@ -152,9 +152,185 @@ def export_accidentcausation_xls(request):
         
     rows = IncidentGeneral.objects.all().values_list('accident_factor__category', 'accident_subcategory__sub_category')
     rows = rows.annotate(
-        severity1=Count('severity', filter=Q(severity=1)),
-        severity2=Count('severity', filter=Q(severity=2)),
-        severity3=Count('severity', filter=Q(severity=3))
+        severity1=Count('severity', filter=Q(severity='Damage to Property')),
+        severity2=Count('severity', filter=Q(severity='Fatal')),
+        severity3=Count('severity', filter=Q(severity='Non-Fatal'))
+    )
+    
+    # for item in rows:
+    #     print(item.accident_factor, item.severity1, item.severity2, item.severity3)
+    rows = [[x.strftime("%Y-%m-%d %H:%M") if isinstance(x, datetime.datetime) else x for x in row] for row in rows ]
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], body_style)
+    
+    # queryset = IncidentGeneral.objects.all().values('accident_factor')
+    # queryset = queryset.annotate(
+    #     severity1=Count('severity', only=Q(severity=1)),
+    #     severity2=Count('severity', only=Q(severity=2)),
+    #     severity3=Count('severity', only=Q(severity=3))
+    # )
+
+    # for item in queryset:
+    #     print( item.severity1, item.severity2, item.severity3)
+ 
+    wb.save(response)
+    return response
+
+def export_classification_xls(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="vehicle_classification.xls"'
+ 
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Vehicle Classification')
+    
+    alignment = xlwt.Alignment()
+
+    alignment.horz = xlwt.Alignment.HORZ_CENTER
+    alignment.vert = xlwt.Alignment.VERT_TOP
+    style = xlwt.XFStyle() # Create Style
+    style.alignment = alignment # Add Alignment to Style
+ 
+    # Sheet header, first row
+    row_num = 0
+ 
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    
+    header_font = xlwt.Font()
+
+    # Header font preferences
+    header_font.name = 'Times New Roman'
+    header_font.height = 20 * 15
+    header_font.bold = True
+
+    # Header Cells style definition
+    header_style = xlwt.XFStyle()
+    header_style.font = header_font 
+
+
+    body_font = xlwt.Font()
+
+    # Body font preferences
+    body_font.name = 'Arial'
+    body_font.italic = True
+
+
+    borders = xlwt.Borders()
+    borders.left = 1
+    borders.right = 1
+    borders.top = 1
+    borders.bottom = 1
+    header_style.borders = borders
+    header_style.alignment = alignment
+    
+    # body cell name style definition
+    body_style = xlwt.XFStyle()
+    body_style.font = body_font
+    body_style.alignment = alignment
+    
+    
+ 
+    columns = ['Vehicle Classification', 'Damage to Property', 'Fatal', 'Non-Fatal Injury']
+ 
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], header_style)
+        ws.col(col_num).width = 10000
+        
+    rows = IncidentVehicle.objects.all().values_list('classification')
+    rows = rows.annotate(
+        severity1=Count('incident_general__severity', filter=Q(incident_general__severity='Damage to Property')),
+        severity2=Count('incident_general__severity', filter=Q(incident_general__severity='Fatal')),
+        severity3=Count('incident_general__severity', filter=Q(incident_general__severity='Non-Fatal'))
+    )
+    
+    # for item in rows:
+    #     print(item.accident_factor, item.severity1, item.severity2, item.severity3)
+    rows = [[x.strftime("%Y-%m-%d %H:%M") if isinstance(x, datetime.datetime) else x for x in row] for row in rows ]
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], body_style)
+    
+    # queryset = IncidentGeneral.objects.all().values('accident_factor')
+    # queryset = queryset.annotate(
+    #     severity1=Count('severity', only=Q(severity=1)),
+    #     severity2=Count('severity', only=Q(severity=2)),
+    #     severity3=Count('severity', only=Q(severity=3))
+    # )
+
+    # for item in queryset:
+    #     print( item.severity1, item.severity2, item.severity3)
+ 
+    wb.save(response)
+    return response
+
+def export_collision_xls(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="collision_type.xls"'
+ 
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Collision Type')
+    
+    alignment = xlwt.Alignment()
+
+    alignment.horz = xlwt.Alignment.HORZ_CENTER
+    alignment.vert = xlwt.Alignment.VERT_TOP
+    style = xlwt.XFStyle() # Create Style
+    style.alignment = alignment # Add Alignment to Style
+ 
+    # Sheet header, first row
+    row_num = 0
+ 
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    
+    header_font = xlwt.Font()
+
+    # Header font preferences
+    header_font.name = 'Times New Roman'
+    header_font.height = 20 * 15
+    header_font.bold = True
+
+    # Header Cells style definition
+    header_style = xlwt.XFStyle()
+    header_style.font = header_font 
+
+
+    body_font = xlwt.Font()
+
+    # Body font preferences
+    body_font.name = 'Arial'
+    body_font.italic = True
+
+
+    borders = xlwt.Borders()
+    borders.left = 1
+    borders.right = 1
+    borders.top = 1
+    borders.bottom = 1
+    header_style.borders = borders
+    header_style.alignment = alignment
+    
+    # body cell name style definition
+    body_style = xlwt.XFStyle()
+    body_style.font = body_font
+    body_style.alignment = alignment
+    
+    
+ 
+    columns = ['Collision Type', 'Collision Type Sub-Category', 'Damage to Property', 'Fatal', 'Non-Fatal Injury']
+ 
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], header_style)
+        ws.col(col_num).width = 10000
+        
+    rows = IncidentGeneral.objects.all().values_list('collision_type__category', 'collision_subcategory__sub_category')
+    rows = rows.annotate(
+        severity1=Count('severity', filter=Q(severity='Damage to Property')),
+        severity2=Count('severity', filter=Q(severity='Fatal')),
+        severity3=Count('severity', filter=Q(severity='Non-Fatal'))
     )
     
     # for item in rows:

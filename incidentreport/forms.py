@@ -6,6 +6,7 @@ from django.forms.formsets import BaseFormSet
 
 class DateInput(forms.DateInput):
     input_type = 'date'
+    
 
 
 class TimeInput(forms.TimeInput):
@@ -33,7 +34,11 @@ class UserReportForm(forms.ModelForm):
         # first call parent's constructor
         super(UserReportForm, self).__init__(*args, **kwargs)
         # there's a `fields` property now
-        # self.fields['upload_photovideo'].required = False
+        self.fields['upload_photovideo'].required = False
+        self.fields['description'].required = False
+        self.fields['address'].required = False
+        self.fields['time'].required = False
+        
         self.fields['date'].widget.attrs['class'] = 'form-control'
         self.fields['time'].widget.attrs['class'] = 'form-control'
         self.fields['address'].widget.attrs['class'] = 'form-control'
@@ -174,7 +179,6 @@ class AccidentCausationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AccidentCausationForm, self).__init__(*args, **kwargs)
         self.fields['category'].widget.attrs['class'] = 'form-control'
-    
     
 
 class AccidentCausationSubForm(forms.ModelForm):

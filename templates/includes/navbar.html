@@ -34,19 +34,21 @@
                     <div class="input-group">
                         <input type="text" class="form-control bg-light border-0 small"
                             placeholder="Searching for ..." aria-label="Search">
+                            
                         <div class="input-group-append">
                             <button class="btn btn-darkBlue" type="button">
                                 <i class="fas fa-search fa-sm"></i>
                             </button>
                         </div>
-                    </div>
+
+                        
                 </form>
             </div>
         </li>
 
         <!-- User Photo -->
         <li class="nav-item ">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{% url 'notifications' %}">
                 <img class="img-profile rounded-circle" src="{% static 'images/user.jpeg' %}">
             </a>
         </li>

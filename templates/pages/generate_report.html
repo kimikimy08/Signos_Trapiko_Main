@@ -60,17 +60,17 @@
                           </tr>
                           <tr>
                               <td> <a href="{% url 'export_accidentcausation_xls' %}" 
-                                      class="text-dark text-decoration-none">Report #2</a></td>
+                                      class="text-dark text-decoration-none">Accident Factor vs Severity</a></td>
                           </tr>
                           <tr>
-                              <td> <a href="#selectDate" data-toggle="modal"
-                                      class="text-dark text-decoration-none">Report #3</a></td>
+                              <td> <a href="{% url 'export_classification_xls' %}" 
+                                      class="text-dark text-decoration-none">Vehicle Classification vs Severity</a></td>
                           </tr>
                           <tr>
-                              <td> <a href="#selectDate" data-toggle="modal"
-                                      class="text-dark text-decoration-none">Report #4</a></td>
+                              <td> <a href="{% url 'export_collision_xls' %}" 
+                                      class="text-dark text-decoration-none">Collision Type vs Severity</a></td>
                           </tr>
-                          <tr>
+                          {% comment %} <tr>
                               <td> <a href="#selectDate" data-toggle="modal"
                                       class="text-dark text-decoration-none">Report #5</a></td>
                           </tr>
@@ -93,7 +93,7 @@
                           <tr>
                               <td> <a href="#selectDate" data-toggle="modal"
                                       class="text-dark text-decoration-none">Report #10</a></td>
-                          </tr>
+                          </tr> {% endcomment %}
                       </tbody>
                       <!-- End of Table Body  -->
 
@@ -162,8 +162,3 @@
             {% include 'includes/alerts.html' %}
 
             {% endblock %}
-
-
-
-
-
