@@ -79,7 +79,9 @@
 
 // }
 
-var input = document.getElementById('id_information-address');
+
+
+var input = document.getElementById('id_address');
 var options = {
     componentRestrictions: {
         country: 'ph'
@@ -109,7 +111,7 @@ google.maps.event.addListener(autocomplete, 'place_changed', function () {
     
     // User did not select the prediction. Reset the input field or alert()
     if (!place.geometry){
-        document.getElementById('id_information-address').placeholder = "Start typing...";
+        document.getElementById('id_address').placeholder = "Start typing...";
     }
     else{
         // console.log('place name=>', place.name)
@@ -118,7 +120,7 @@ google.maps.event.addListener(autocomplete, 'place_changed', function () {
     // get the address components and assign them to the fields
     // console.log(place);
     var geocoder = new google.maps.Geocoder()
-    var address = document.getElementById('id_information-address').value
+    var address = document.getElementById('id_address').value
 
     geocoder.geocode({'address': address}, function(results, status){
         // console.log('results=>', results)
@@ -129,10 +131,10 @@ google.maps.event.addListener(autocomplete, 'place_changed', function () {
 
             // console.log('lat=>', latitude);
             // console.log('long=>', longitude);
-            $('#id_information-latitude').val(latitude);
-            $('#id_information-longitude').val(longitude);
+            $('#id_latitude').val(latitude);
+            $('#id_longitude').val(longitude);
 
-            $('#id_information-address').val(address);
+            $('#id_address').val(address);
         }
     })
 
@@ -147,25 +149,20 @@ google.maps.event.addListener(autocomplete, 'place_changed', function () {
             if(place.address_components[i].types[j] == 'administrative_area_level_1'){
                 $('#id_information-state').val(place.address_components[i].long_name);
             }
-            if(place.address_components[i].types[j] == 'sublocality'){
-                $('#inputbarangay').val(place.address_components[i].long_name);
-            }
             // get city
             if(place.address_components[i].types[j] == 'locality'){
-                $('#id_information-city').val(place.address_components[i].long_name);
+                $('#id_city').val(place.address_components[i].long_name);
             }
             // get pincode
             if(place.address_components[i].types[j] == 'postal_code'){
-                $('#id_information-pin_code').val(place.address_components[i].long_name);
+                $('#id_pin_code').val(place.address_components[i].long_name);
             }else{
-                $('#id_information-pin_code').val("");
+                $('#id_pin_code').val("");
             }
         }
     }
     
 });
-
-
 
 
 $("#id_general-accident_factor").change(function () {
