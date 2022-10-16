@@ -101,6 +101,6 @@ urlpatterns = [
     
     
     path('incidentreport', views.multistepformexample, name='multistepformexample'),
-    path('incidentreport/<int:id>', views.multistepformexample1, name='multistepformexample1'),
+    path('incidentreport/additional', views.multistepformexample1, name='multistepformexample1'),
     # path("multistepformexample_save",views.multistepformexample_save,  name='multistepformexample_save'),
 ]

@@ -1627,8 +1627,11 @@ def multistepformexample(request):
                 
                 incident_remarks = IncidentRemark(incident_general=incident_general,responder=responder,action_taken=action_taken)
                 incident_remarks.save()
+                
                 messages.success(request,"Data Save Successfully")
+                request.session['latest__id'] = incident_general.id
                 return redirect('multistepformexample1')
+            
         except Exception as e:
             print('invalid form')
             messages.error(request, str(e))
@@ -1652,12 +1655,13 @@ def multistepformexample(request):
     }
     return render(request,"pages/sa_incident_report.html", context)
 
-def multistepformexample1(request, id):
+def multistepformexample1(request):
     # if request.method!="POST":
-    
-
+    general_id = request.session.get('latest__id', None)
+    # incident_general = IncidentGeneral.objects.get(pk = id)
+    # incident_general = IncidentGeneral.objects.filter(id=general_id).first()
     profile = get_object_or_404(UserProfile, user=request.user)
-    incident_general = get_object_or_404(IncidentGeneral, pk=id )
+    incident_general = get_object_or_404(IncidentGeneral, pk=general_id )
     if request.method == 'POST':
         form =  UserReportForm(request.POST or None, request.FILES or None)
         form_general = IncidentGeneralForm(request.POST or None, request.FILES or None)
@@ -1666,7 +1670,7 @@ def multistepformexample1(request, id):
         form_media = IncidentMediaForm(request.POST or None, request.FILES or None)
         form_remarks = IncidentRemarksForm(request.POST or None, request.FILES or None)
         try:
-            if form_people.is_valid() or form_vehicle.is_valid() or form_media.is_valid():
+            if form_people.is_valid() and form_vehicle.is_valid() and form_media.is_valid():
                 incident_first_name=request.POST.get("incident_first_name")
                 incident_middle_name=request.POST.get("incident_middle_name")
                 incident_last_name=request.POST.get("incident_last_name")
@@ -1724,7 +1728,7 @@ def multistepformexample1(request, id):
                 
                 # incident_remarks = IncidentRemark(incident_general=incident_general,responder=responder,action_taken=action_taken)
                 # incident_remarks.save()
-                messages.success(request,"Data Save Successfully")
+                messages.success(request,"Data Save Successfully 1")
                 return redirect('multistepformexample1')
             
 
@@ -1749,8 +1753,9 @@ def multistepformexample1(request, id):
         else:
             print('invalid formd')
             print(form.errors)
-            print(form_general.errors)
-            print(form_remarks.errors)
+            print(form_people.errors)
+            print(form_vehicle.errors)
+            print(form_media.errors)
     else:
         form = UserReportForm()
         form_general = IncidentGeneralForm()

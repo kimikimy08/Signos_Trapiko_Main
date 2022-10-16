@@ -64,7 +64,7 @@
     
     <div class="row mb-5">
         <div class="col-md-12 col-md-offset-1">
-            <form id="msform" action="{% url 'multistepformexample1' incident_general.id %}" method="post">  
+            <form id="msform" action="{% url 'multistepformexample1' %}" method="post">  
                     {% csrf_token %}
                 <!-- progressbar -->
                 <ul id="progressbar">
@@ -78,7 +78,6 @@
                 <!-- ========================================================== FIELDSETS ============================================ -->
                 
                 <!-- GENERAL -->
-
                 
                 <!-- PEOPLE -->
                 <fieldset>

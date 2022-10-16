@@ -278,29 +278,29 @@ class IncidentVehicle(models.Model):
     )
     
     DAMAGE = (
-        (1, "None"),
-        (2, 'Front'),
-        (3, 'Left'),
-        (4, 'Multiple'),
-        (5, 'Rear'),
-        (6, 'Right'),
-        (7, 'Roof'),
+        ("None", "None"),
+        ('Front', 'Front'),
+        ('Left', 'Left'),
+        ('Multiple', 'Multiple'),
+        ('Rear', 'Rear'),
+        ('Right', 'Right'),
+        ('Roof', 'Roof'),
     )
     
     DEFECT = (
-        (1, "None"),
-        (2, 'Breaks'),
-        (3, 'Lights'),
-        (4, 'Multiple'),
-        (5, 'Steering'),
-        (6, 'Tires'),
+        ("None", "None"),
+        ('Breaks', 'Breaks'),
+        ('Lights', 'Lights'),
+        ('Multiple', 'Multiple'),
+        ('Steering', 'Steering'),
+        ('Tires', 'Tires'),
     )
     
     LOADING = (
-        (1, "Legal"),
-        (2, 'Overloaded'),
-        (3, 'Unsafe Load'),
-        (4, 'Others'),
+        ("Legal", "Legal"),
+        ('Overloaded', 'Overloaded'),
+        ('Unsafe Load', 'Unsafe Load'),
+        ('Others', 'Others'),
     )
     incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE)
     classification = models.CharField(choices=CLASSIFICATION, max_length=250, blank=True, null=True)
