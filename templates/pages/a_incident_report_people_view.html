@@ -5,10 +5,11 @@
 
 
 <!-- Page Wrapper -->
-{% if profile.user.role == 2 %}
-{% include 'includes/a_sidebar.html' %}
-{% elif profile.user.role == 3 %}
+{% if profile.user.role == 3 %}
 {% include 'includes/sa_sidebar.html' %}
+{% elif profile.user.role == 2 %}
+
+{% include 'includes/a_sidebar.html' %}
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -153,7 +154,7 @@
                                             {% comment %} <input type="button" class="btn btn-secondary" data-dismiss="modal"
                                                 value="Clear"> {% endcomment %}
                                             {% comment %} <input type="submit" class="btn btn-primary" value="Edit"> {% endcomment %}
-                                            <button type="button" class="btn btn-warning"> <a href="{% url 'incident_report_people_edit' general_instance.id person_instance.id %}" class="discard-link"> Edit </a></button>
+                                            <button type="button" class="btn btn-warning"> <a href="{% url 'a_incident_report_people_edit' general_instance.id person_instance.id %}" class="discard-link"> Edit </a></button>
                                         </div>
                                     </div>
                                 </table>
@@ -168,7 +169,7 @@
                 <!-- ===== END OF CONTENT  ===== -->
 
 
-            </div>
+                </div>
 
                 <!-- ===== END OF CONTENT  ===== -->
 
@@ -183,8 +184,7 @@
             </a>
             <!-- End of Scroll to Top-->
 
-{% endif %}
-
+            {% endif %}
             {% include 'includes/alerts.html' %}
 
             {% endblock %}

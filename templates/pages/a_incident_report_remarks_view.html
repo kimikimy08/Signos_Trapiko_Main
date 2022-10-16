@@ -6,7 +6,7 @@
 
 <!-- Page Wrapper -->
 
-{% include 'includes/sa_sidebar.html' %}
+{% include 'includes/a_sidebar.html' %}
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -46,19 +46,19 @@
                         <div class="card-header py-3">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
-                                    <a class="nav-link " href="{% url 'incident_report_general_view' general_instance.id %}">General</a>
+                                    <a class="nav-link " href="{% url 'a_incident_report_general_view' general_instance.id %}">General</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="">People</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_vehicle_main' general_instance.id %}">Vehicle</a>
+                                    <a class="nav-link" href="{% url 'a_incident_report_vehicle_main' general_instance.id %}">Vehicle</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="">Media</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{% url 'incident_report_remarks_view' general_instance.id %}">Remarks</a>
+                                    <a class="nav-link active" href="{% url 'a_incident_report_remarks_view' general_instance.id %}">Remarks</a>
                                 </li>
                             </ul>
                         </div>
@@ -114,7 +114,7 @@
                                     <div class="modal-footer">
                                         {% comment %} <input type="button" class="btn btn-secondary" data-dismiss="modal"
                                             value="Clear"> {% endcomment %}
-                                            <button type="button" class="btn btn-warning"> <a href="{% url 'incident_report_remarks_edit' general_instance.id %}" class="discard-link"> Edit </a></button>
+                                            <button type="button" class="btn btn-warning"> <a href="{% url 'a_incident_report_remarks_edit' general_instance.id %}" class="discard-link"> Edit </a></button>
                                     </div>
                                 </table>
                             </div>

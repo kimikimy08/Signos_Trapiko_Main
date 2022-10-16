@@ -41,7 +41,7 @@
                     </div>
 
                     <!-- User Report Table  -->
-                    <div class="card shadow mb-5 d-flex ">
+                    {% comment %} <div class="card shadow mb-5 d-flex ">
                         <!-- Top Pagination  -->
                         <div class="card-header py-3">
                             <ul class="nav nav-tabs">
@@ -49,24 +49,24 @@
                                     <a class="nav-link active" href="{% url 'incident_report_general_view' general.id %}">General</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_people_view' general.id  %}">People</a>
+                                    <a class="nav-link" href="">People</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_vehicle_view' general.id %}">Vehicle</a>
+                                    <a class="nav-link" href="">Vehicle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_media_view' general.id %}">Media</a>
+                                    <a class="nav-link" href="">Media</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_remarks_view' general.id %}">Remarks</a>
+                                    <a class="nav-link" href="">Remarks</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> {% endcomment %}
 
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table>
-                                    <form action="{% url 'incident_report_people_edit' general.id %}" enctype="multipart/form-data" method="post">
+                                    <form action="{% url 'incident_report_general_edit' general.id %}" enctype="multipart/form-data" method="post">
                                         {% csrf_token %}
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
@@ -85,7 +85,27 @@
                                                 {{user_report.address}}
                                             </div>
                                         </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputCity">City</label>
+                                                {{user_report.city}}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputZip">Zip</label>
+                                                {{user_report.pin_code}}
+                                            </div>
+                                        </div>
 
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputSeverity">Latitude</label>
+                                                {{user_report.latitude}}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputSeverity">Longitude</label>
+                                                {{user_report.longitude}}
+                                            </div>
+                                        </div>
                                         
                                         <hr>
                                         <div class="form-row">
@@ -139,6 +159,19 @@
                                                 {{ general_instance.movement_code }}
                                                
                                             </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label for="inputDescription">Description</label>
+                                            {{user_report.description}}
+                                        </div>
+                                        <!-- ================================= -->
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputCrashType">Status</label>
+                                                {{user_report.status}}
+                                            </div>
+                                            
                                         </div>
                                         <!-- ================================= -->
                                         <br>

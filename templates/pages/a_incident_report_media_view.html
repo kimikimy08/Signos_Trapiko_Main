@@ -6,7 +6,7 @@
 
 <!-- Page Wrapper -->
 
-{% include 'includes/sa_sidebar.html' %}
+{% include 'includes/a_sidebar.html' %}
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -87,7 +87,7 @@
                                         <div class="modal-footer">
                                             {% comment %} <input type="button" class="btn btn-secondary" data-dismiss="modal"
                                                 value="Cancel"> {% endcomment %}
-                                                <button type="button" class="btn btn-warning"> <a href="{% url 'incident_report_media_edit' general_instance.id media_instance.id %}" class="discard-link"> Edit </a></button>
+                                                <button type="button" class="btn btn-warning"> <a href="{% url 'a_incident_report_media_edit' general_instance.id media_instance.id %}" class="discard-link"> Edit </a></button>
               
                                 </table>
                             </div>

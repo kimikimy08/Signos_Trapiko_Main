@@ -2,7 +2,6 @@ from django.urls import path, include
 from . import views
 from accounts import views as AccountViews
 from .views_inc import FormView, CancelView
-from .views import FORMS
 
 urlpatterns = [
     path('userReport', views.user_report, name='user_report'),
@@ -34,20 +33,11 @@ urlpatterns = [
     path('incidentReport/media', views.incident_report_media, name='incident_report_media'),
     path('incidentReport/remarks', views.incident_report_remarks, name='incident_report_remarks'),
     # path('incidentReport/formsubmission', views.multistepformsubmission.as_view(FORMS), name='multistepformsubmission'),
-    path('incidentReport/formsubmissions', views.incident_form_super, name='incident_form_super'),
-    path('incidentReport/formsubmission', views.incident_form_admin, name='incident_form_admin'),
+    # path('incidentReport/formsubmissions', views.incident_form_super, name='incident_form_super'),
+    # path('incidentReport/formsubmission', views.incident_form_admin, name='incident_form_admin'),
     path('incidentReport/incident', views.incident_form_member, name='incident_form_member'),
 
-    path('incidentReport/general/view/<int:id>', views.incident_report_general_view, name='incident_report_general_view'),
-    path('incidentReport/people/view/<int:id>', views.incident_report_people_view, name='incident_report_people_view'),
-    path('incidentReport/vehicle/view/<int:id>', views.incident_report_vehicle_view, name='incident_report_vehicle_view'),
-    path('incidentReport/media/view/<int:id>', views.incident_report_media_view, name='incident_report_media_view'),
-    path('incidentReport/remarks/view/<int:id>', views.incident_report_remarks_view, name='incident_report_remarks_view'),
-    path('incidentReport/general/edit/<int:id>', views.incident_report_general_edit, name='incident_report_general_edit'),
-    path('incidentReport/people/edit/<int:id>', views.incident_report_people_edit, name='incident_report_people_edit'),
-    # path('incidentReport/vehicle/edit/<int:id>', views.incident_report_vehicle_edit, name='incident_report_vehicle_edit'),
-    # path('incidentReport/media/edit/<int:id>', views.incident_report_media_edit, name='incident_report_media_edit'),
-    # path('incidentReport/remarks/edit/<int:id>', views.incident_report_remarks_edit, name='incident_report_remarks_edit'),
+
     
     path('attributes_builder/accident_factor', views.attributes_builder_accident_admin, name='attributes_builder_accident_admin'),
     path('attributes_builder/accident_factor_sub/<int:id>', views.attributes_builder_accident_sub_admin, name='attributes_builder_accident_sub_admin'),
@@ -95,12 +85,42 @@ urlpatterns = [
     path('ajax/load-accident/', views.load_accident, name='ajax_load_accident'), # AJAX
     path('ajax/load-collision/', views.load_collision, name='ajax_load_collision'), # AJAX
     
-    path('', FormView, {'step': None}),
-    path('step/<int:step>', FormView),
-    path('cancel', CancelView),
     
     
-    path('incidentreport', views.multistepformexample, name='multistepformexample'),
-    path('incidentreport/additional', views.multistepformexample1, name='multistepformexample1'),
-    # path("multistepformexample_save",views.multistepformexample_save,  name='multistepformexample_save'),
+    path('incidentreport', views.a_incidentreports, name='a_incidentreports'),
+    path('incidentreport/additional', views.a_incidentreports_additional, name='a_incidentreports_additional'),
+    
+    
+    path('incidentreports', views.sa_incidentreports, name='sa_incidentreports'),
+    path('incidentreports/additional', views.sa_incidentreports_additional, name='sa_incidentreports_additional'),
+    
+    path('incidentReports/general/view/<int:id>', views.incident_report_general_view, name='incident_report_general_view'),
+    path('incidentReports/people/view/<int:id>', views.incident_report_people_vehicle_main, name='incident_report_people_vehicle_main'),
+    path('incidentReports/vehicle/view/<int:id>', views.incident_report_vehicle_main, name='incident_report_vehicle_main'),
+    path('incidentReports/media/view/<int:id>', views.incident_report_media_main, name='incident_report_media_main'),
+    path('incidentReports/people/view/<int:id>/<int:people_id>', views.incident_report_people_vehicle_view, name='incident_report_people_vehicle_view'),
+    path('incidentReports/vehicle/view/<int:id>/<int:vehicle_id>', views.incident_report_vehicle_view, name='incident_report_vehicle_view'),
+    path('incidentReports/media/view/<int:id>/<int:media_id>', views.incident_report_media_view, name='incident_report_media_view'),
+    path('incidentReports/remarks/view/<int:id>', views.incident_report_remarks_view, name='incident_report_remarks_view'),
+    path('incidentReports/general/edit/<int:id>', views.incident_report_general_edit, name='incident_report_general_edit'),
+    path('incidentReports/people/edit/<int:id>/<int:people_id>', views.incident_report_people_edit, name='incident_report_people_edit'),
+    path('incidentReports/vehicle/edit/<int:id>/<int:vehicle_id>', views.incident_report_vehicle_edit, name='incident_report_vehicle_edit'),
+    path('incidentReports/media/edit/<int:id>/<int:media_id>', views.incident_report_media_edit, name='incident_report_media_edit'),
+    path('incidentReports/remarks/edit/<int:id>', views.incident_report_remarks_edit, name='incident_report_remarks_edit'),
+    
+    path('incidentReport/general/view/<int:id>', views.a_incident_report_general_view, name='a_incident_report_general_view'),
+    path('incidentReport/people/view/<int:id>', views.a_incident_report_people_vehicle_main, name='a_incident_report_people_vehicle_main'),
+    path('incidentReport/vehicle/view/<int:id>', views.a_incident_report_vehicle_main, name='a_incident_report_vehicle_main'),
+    path('incidentReport/media/view/<int:id>', views.a_incident_report_media_main, name='a_incident_report_media_main'),
+    path('incidentReport/people/view/<int:id>/<int:people_id>', views.a_incident_report_people_vehicle_view, name='a_incident_report_people_vehicle_view'),
+    path('incidentReport/vehicle/view/<int:id>/<int:vehicle_id>', views.a_incident_report_vehicle_view, name='a_incident_report_vehicle_view'),
+    path('incidentReport/media/view/<int:id>/<int:media_id>', views.a_incident_report_media_view, name='a_incident_report_media_view'),
+    path('incidentReport/remarks/view/<int:id>', views.a_incident_report_remarks_view, name='a_incident_report_remarks_view'),
+    path('incidentReport/general/edit/<int:id>', views.a_incident_report_general_edit, name='a_incident_report_general_edit'),
+    path('incidentReport/people/edit/<int:id>/<int:people_id>', views.a_incident_report_people_edit, name='a_incident_report_people_edit'),
+    path('incidentReport/vehicle/edit/<int:id>/<int:vehicle_id>', views.a_incident_report_vehicle_edit, name='a_incident_report_vehicle_edit'),
+    path('incidentReport/media/edit/<int:id>/<int:media_id>', views.a_incident_report_media_edit, name='a_incident_report_media_edit'),
+    path('incidentReport/remarks/edit/<int:id>', views.a_incident_report_remarks_edit, name='a_incident_report_remarks_edit'),
+    
+
 ]

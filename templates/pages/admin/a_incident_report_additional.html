@@ -39,7 +39,7 @@
     <div id="wrapper">
 
             <!-- Start of Sidebar -->
-            {% include 'includes/sa_sidebar.html' %}
+            {% include 'includes/a_sidebar.html' %}
             <!-- End of Sidebar -->
 
             <!-- Content Wrapper -->
@@ -64,7 +64,7 @@
     
     <div class="row mb-5">
         <div class="col-md-12 col-md-offset-1">
-            <form id="msform" action="{% url 'multistepformexample1' %}" method="post">  
+            <form id="msform" action="{% url 'a_incidentreports_additional' %}" method="post">  
                     {% csrf_token %}
                 <!-- progressbar -->
                 <ul id="progressbar">

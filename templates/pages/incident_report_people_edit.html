@@ -43,7 +43,7 @@
                     <!-- User Report Table  -->
                     <div class="card shadow mb-5 d-flex ">
                         <!-- Top Pagination  -->
-                        <div class="card-header py-3">
+                        {% comment %} <div class="card-header py-3">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'incident_report_general_view' general.id %}">General</a>
@@ -61,7 +61,7 @@
                                     <a class="nav-link" href="{% url 'incident_report_remarks_view' general.id %}">Remarks</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> {% endcomment %}
 
                         <div class="card-body">
                             <div class="table-responsive">
@@ -71,7 +71,7 @@
 
                                     
                                     
-                                        <form action="{% url 'incident_report_people_edit' general.id %}" enctype="multipart/form-data" method="post">
+                                        <form action="{% url 'incident_report_people_edit' general.id people.id %}" enctype="multipart/form-data" method="post">
                                             {% csrf_token %}
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">
@@ -134,13 +134,13 @@
                                                 <label for="inputInjury">Seat belt / Helmet </label>
                                                 {{person_instance.incident_seatbelt_helmet}}
                                             </div>
-                                        </form>
+                                      
                                         <div class="modal-footer mb-3">
                                             <input type="button" class="btn btn-secondary" data-dismiss="modal"
                                                 value="Clear">
                                                 <input type="submit" class="btn btn-primary" value="Save">
                                         </div>
-                          
+                                    </form>
                                 </table>
                             </div>
                         </div>

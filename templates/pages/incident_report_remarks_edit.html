@@ -40,56 +40,58 @@
                         </div>
                     </div>
 
-                    <!-- Incident Report  -->
+                    <!-- User Report Table  -->
                     <div class="card shadow mb-5 d-flex ">
                         <!-- Top Pagination  -->
-                        <div class="card-header py-3">
+                        {% comment %} <div class="card-header py-3">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_general' %}">General</a>
+                                    <a class="nav-link active" href="{% url 'incident_report_general_view' general_instance.id %}">General</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_people' %}">People</a>
+                                    <a class="nav-link" href="">People</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_vehicle' %}">Vehicle</a>
+                                    <a class="nav-link" href="">Vehicle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_media' %}">Media</a>
+                                    <a class="nav-link" href="">Media</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{% url 'incident_report_remarks' %}">Remarks</a>
+                                    <a class="nav-link" href="">Remarks</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> {% endcomment %}
 
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table>
-                                    <form>
+                                    <form action="{% url 'incident_report_remarks_edit' general.id %}" enctype="multipart/form-data" method="post">
+                                        {% csrf_token %}
                                         <div class="form-group">
-                                            <label for="inputEncodersEmail">Encoder's Email</label>
-                                            {{profile.user.username}}
+                                            <strong>Encoder's Email: </strong>
+                                            {{userreport.user.email}}
                                         </div>
                                         <div class="form-group">
                                             <label for="inputTFTTM">TFTTM First Responder Name</label>
-                                            {{inc_rem_form.responder}}
+                                            {{remarks_instance.responder}}
                                         </div>
                                         <div class="form-group">
                                             <label for="inputActionsTaken">Actions Taken</label>
-                                            {{inc_rem_form.action_taken}}
+                                            {{remarks_instance.action_taken}}
                                         </div>
-                                    </form>
-                                    <div class="modal-footer">
+                                    
+                                    <div class="modal-footer mb-3">
                                         <input type="button" class="btn btn-secondary" data-dismiss="modal"
                                             value="Clear">
                                         <input type="submit" class="btn btn-primary" value="Save">
                                     </div>
+                                </form>
                                 </table>
                             </div>
-                        </div>
+                        </div>  
                     </div>
-                    <!-- End of Incident  -->
+                    <!-- End of User Report Table  -->
 
                 </div>
                 <!-- End of Page Content -->
@@ -117,8 +119,3 @@
             {% include 'includes/alerts.html' %}
 
             {% endblock %}
-
-
-
-
-

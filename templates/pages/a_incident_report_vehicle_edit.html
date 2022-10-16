@@ -6,7 +6,7 @@
 
 <!-- Page Wrapper -->
 
-{% include 'includes/sa_sidebar.html' %}
+{% include 'includes/a_sidebar.html' %}
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -43,32 +43,32 @@
                     <!-- User Report Table  -->
                     <div class="card shadow mb-5 d-flex ">
                         <!-- Top Pagination  -->
-                        <div class="card-header py-3">
+                        {% comment %} <div class="card-header py-3">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_general' %}">General</a>
+                                    <a class="nav-link" href="{% url 'a_incident_report_general' %}">General</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_people' %}">People</a>
+                                    <a class="nav-link" href="{% url 'a_incident_report_people' %}">People</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{% url 'incident_report_vehicle' %}">Vehicle</a>
+                                    <a class="nav-link active" href="{% url 'a_incident_report_vehicle' %}">Vehicle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_media' %}">Media</a>
+                                    <a class="nav-link" href="{% url 'a_incident_report_media' %}">Media</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_remarks' %}">Remarks</a>
+                                    <a class="nav-link" href="{% url 'a_incident_report_remarks' %}">Remarks</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> {% endcomment %}
 
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table>
                                    
                                     
-                                        <form action="{% url 'incident_report_vehicle_edit' general.id vehicle.id %}" enctype="multipart/form-data" method="post">
+                                        <form action="{% url 'a_incident_report_vehicle_edit' general.id vehicle.id %}" enctype="multipart/form-data" method="post">
                                             {% csrf_token %}
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">

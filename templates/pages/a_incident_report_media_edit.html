@@ -6,7 +6,7 @@
 
 <!-- Page Wrapper -->
 
-{% include 'includes/sa_sidebar.html' %}
+{% include 'includes/a_sidebar.html' %}
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -46,19 +46,19 @@
                         {% comment %} <div class="card-header py-3">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
-                                    <a class="nav-link " href="{% url 'incident_report_general_view' general_instance.id %}">General</a>
+                                    <a class="nav-link" href="{% url 'incident_report_general' %}">General</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_people_view' general_instance.id  %}">People</a>
+                                    <a class="nav-link" href="{% url 'incident_report_people' %}">People</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_vehicle_view' general_instance.id %}">Vehicle</a>
+                                    <a class="nav-link" href="{% url 'incident_report_vehicle' %}">Vehicle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{% url 'incident_report_media_view' general_instance.id %}">Media</a>
+                                    <a class="nav-link active" href="{% url 'incident_report_media' %}">Media</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_remarks_view' general_instance.id %}">Remarks</a>
+                                    <a class="nav-link" href="{% url 'incident_report_remarks' %}">Remarks</a>
                                 </li>
                             </ul>
                         </div> {% endcomment %}
@@ -66,29 +66,31 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-12">
-                                            <strong>Upload Photo: </strong>
-                                            {% if media_instance.incident_upload_photovideo != None %}
-                                            <img style="max-width: 500px; height: auto;" src="{{media_instance.incident_upload_photovideo.url}}" alt="Profile Picture">
-                                    
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-12">
-                                            <strong>Description: </strong>
-                                            {% if media_instance.description != None %}
-                                            {{media_instance.description}}
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
+                                   
+                                        <form action="{% url 'a_incident_report_media_edit' general.id media.id %}" enctype="multipart/form-data" method="post">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label>Upload Photo</label>
+                                                <div class="input-group mb-3">
+                                                    <div class="custom-file">
+                                                        
+                                                        {{media_instance.incident_upload_photovideo}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           
+                                            <div class="form-group">
+                                                <label for="inputInsurance">Description</label>
+                                                {{media_instance.media_description}}
+                                            </div>
+                                        
                                         <div class="modal-footer">
-                                            {% comment %} <input type="button" class="btn btn-secondary" data-dismiss="modal"
-                                                value="Cancel"> {% endcomment %}
-                                                <button type="button" class="btn btn-warning"> <a href="{% url 'incident_report_media_edit' general_instance.id media_instance.id %}" class="discard-link"> Edit </a></button>
-              
+                                            <input type="button" class="btn btn-secondary" data-dismiss="modal"
+                                                value="Cancel">
+                                            <input type="submit" class="btn btn-primary" value="Save">
+                                      
+                                    </form>
+                                    </div>
                                 </table>
                             </div>
                         </div>

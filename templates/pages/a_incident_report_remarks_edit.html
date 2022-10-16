@@ -40,25 +40,25 @@
                         </div>
                     </div>
 
-                    <!-- Incident Report  -->
+                    <!-- User Report Table  -->
                     <div class="card shadow mb-5 d-flex ">
                         <!-- Top Pagination  -->
                         {% comment %} <div class="card-header py-3">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
-                                    <a class="nav-link " href="{% url 'incident_report_general_view' general_instance.id %}">General</a>
+                                    <a class="nav-link active" href="{% url 'incident_report_general_view' general_instance.id %}">General</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_people_view' general_instance.id  %}">People</a>
+                                    <a class="nav-link" href="">People</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_vehicle_view' general_instance.id %}">Vehicle</a>
+                                    <a class="nav-link" href="">Vehicle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{% url 'incident_report_media_view' general_instance.id %}">Media</a>
+                                    <a class="nav-link" href="">Media</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_remarks_view' general_instance.id %}">Remarks</a>
+                                    <a class="nav-link" href="">Remarks</a>
                                 </li>
                             </ul>
                         </div> {% endcomment %}
@@ -66,34 +66,32 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-12">
-                                            <strong>Upload Photo: </strong>
-                                            {% if media_instance.incident_upload_photovideo != None %}
-                                            <img style="max-width: 500px; height: auto;" src="{{media_instance.incident_upload_photovideo.url}}" alt="Profile Picture">
+                                    <form action="{% url 'a_incident_report_remarks_edit' general.id %}" enctype="multipart/form-data" method="post">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <strong>Encoder's Email: </strong>
+                                            {{userreport.user.email}}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputTFTTM">TFTTM First Responder Name</label>
+                                            {{remarks_instance.responder}}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputActionsTaken">Actions Taken</label>
+                                            {{remarks_instance.action_taken}}
+                                        </div>
                                     
-                                            {% endif %}
-                                        </div>
+                                    <div class="modal-footer mb-3">
+                                        <input type="button" class="btn btn-secondary" data-dismiss="modal"
+                                            value="Clear">
+                                        <input type="submit" class="btn btn-primary" value="Save">
                                     </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-12">
-                                            <strong>Description: </strong>
-                                            {% if media_instance.description != None %}
-                                            {{media_instance.description}}
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                        <div class="modal-footer">
-                                            {% comment %} <input type="button" class="btn btn-secondary" data-dismiss="modal"
-                                                value="Cancel"> {% endcomment %}
-                                                <button type="button" class="btn btn-warning"> <a href="{% url 'incident_report_media_edit' general_instance.id media_instance.id %}" class="discard-link"> Edit </a></button>
-              
+                                </form>
                                 </table>
                             </div>
-                        </div>
+                        </div>  
                     </div>
-                    <!-- End of Incident Report  -->
+                    <!-- End of User Report Table  -->
 
                 </div>
                 <!-- End of Page Content -->
@@ -121,8 +119,3 @@
             {% include 'includes/alerts.html' %}
 
             {% endblock %}
-
-
-
-
-

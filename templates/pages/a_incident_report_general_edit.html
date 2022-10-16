@@ -6,7 +6,7 @@
 
 <!-- Page Wrapper -->
 
-{% include 'includes/sa_sidebar.html' %}
+{% include 'includes/a_sidebar.html' %}
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -41,122 +41,109 @@
                     </div>
 
                     <!-- User Report Table  -->
-                    <div class="card shadow mb-5 d-flex ">
+                    {% comment %} <div class="card shadow mb-5 d-flex ">
                         <!-- Top Pagination  -->
                         <div class="card-header py-3">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{% url 'incident_report_general_view' general_instance.id %}">General</a>
+                                    <a class="nav-link active" href="{% url 'incident_report_general_view' general.id %}">General</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_people_vehicle_main' general_instance.id %}">People</a>
+                                    <a class="nav-link" href="">People</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_vehicle_main' general_instance.id %}">Vehicle</a>
+                                    <a class="nav-link" href="">Vehicle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_media_main' general_instance.id %}">Media</a>
+                                    <a class="nav-link" href="">Media</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_remarks_view' general_instance.id %}">Remarks</a>
+                                    <a class="nav-link" href="">Remarks</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> {% endcomment %}
 
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table>
-                             
+                                    <form action="{% url 'a_incident_report_general_edit' general.id %}" enctype="multipart/form-data" method="post">
+                                        {% csrf_token %}
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
-                                                <strong>Date and Time: </strong>
-                                                {{general_instance.user_report.date}} 
+                                                <label for="inputEmail4">Date</label>
+                                                {{user_report.date}}
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <strong>Time: </strong>
-                                                {{general_instance.user_report.time}}
+                                                <label for="inputPassword4">Time</label>
+                                                {{user_report.time}}
                                             </div>
                                         </div>
                                         <hr>
                                         <div class="form-row">
                                             <div class="form-group col-md-12">
-                                                <strong>Street Address: </strong>
-                                                {{general_instance.user_report.address}}
+                                                <label for="inputAddress">Street Address</label>
+                                                {{user_report.address}}
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
-                                                <strong>City: </strong>
-                                                {{general_instance.user_report.city}}
+                                                <label for="inputCity">City</label>
+                                                {{user_report.city}}
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <strong>Zip: </strong>
-                                                {{general_instance.user_report.pin_code}}
+                                                <label for="inputZip">Zip</label>
+                                                {{user_report.pin_code}}
                                             </div>
                                         </div>
 
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
-                                                <strong>Latitude: </strong>
-                                                {{general_instance.user_report.latitude}}
+                                                <label for="inputSeverity">Latitude</label>
+                                                {{user_report.latitude}}
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <strong>Longitude: </strong>
-                                                {{general_instance.user_report.longitude}}
+                                                <label for="inputSeverity">Longitude</label>
+                                                {{user_report.longitude}}
                                             </div>
                                         </div>
                                         
                                         <hr>
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
-                                                <strong>Weather: </strong>
-                                                {% if general_instance.get_weather_display != None %}
-                                                {{general_instance.get_weather_display}}
-                                                {% endif %}
+                                                <label for="inputWeather">Weather</label>
+                                                {{general_instance.weather}}
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <strong>Light: </strong>
-                                                {% if general_instance.get_light_display != None %}
-                                                {{general_instance.get_light_display}}
-                                                {% endif %}
+                                                <label for="inputLight">Light</label>
+                                                {{general_instance.light}}
                                             </div>
                                         </div>
                                         <!-- ================================= -->
                                         <hr>
                                         <div class="form-row">
                                             <div class="form-group col-md-12">
-                                                <strong>Severity: </strong>
-                                                {% if general_instance.get_severity_display != None %}
-                                            {{general_instance.get_severity_display}}
-                                            {% endif %}
+                                                <label for="inputSeverity">Severity</label>
+                                            {{general_instance.severity}}
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
-                                                <strong>Accident Factor: </strong>
-                                                {% if general_instance.accident_factor != None %}
+                                                <label for="inputAccident">Accident Factor</label>
                                                 {{general_instance.accident_factor}}
-                                                {% endif %}
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <strong>Accident Factor Sub Category: </strong>
-                                                {% if general_instance.accident_subcategory != None %}
+                                                <label for="inputAccident">Accident Factor Sub Category</label>
                                                 {{general_instance.accident_subcategory}}
-                                                {% endif %}
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
-                                                <strong>Collision Type: </strong>
-                                                {% if general_instance.collision_type != None %}
+                                                <label for="inputAccident">Collision Type</label>
                                                 {{general_instance.collision_type}}
-                                                {% endif %}
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <strong>Collision Sub Category: </strong>
-                                                {% if general_instance.collision_subcategory != None %}
+                                                <label for="inputAccident">Collision Sub Category</label>
                                                 {{general_instance.collision_subcategory}}
-                                                {% endif %}
                                             </div>
                                         </div>
 
@@ -164,54 +151,54 @@
                                         <!-- ================================= -->
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
-                                                <strong>Crash Type: </strong>
-                                                {% if general_instance.crash_type != None %}
+                                                <label for="inputCrashType">Crash Type</label>
                                                 {{general_instance.crash_type}}
-                                                {% endif %}
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <strong>Movement Code: </strong>
-                                                {% if general_instance.movement_code != None %}
-                                                {{general_instance.movement_code}}
-                                                {% endif %}
+                                                <label for="inputMovement">Movement Code</label>
+                                                {{ general_instance.movement_code }}
                                                
                                             </div>
                                         </div>
-                                    <div class="form-row">
+
                                         <div class="form-group col-md-12">
-                                            <strong>Description: </strong>
-                                            {{general_instance.user_report.description}}
+                                            <label for="inputDescription">Description</label>
+                                            {{user_report.description}}
                                         </div>
-                                    </div>
                                         <!-- ================================= -->
-                                        {% comment %} <div class="form-row">
+                                        <div class="form-row">
                                             <div class="form-group col-md-6">
                                                 <label for="inputCrashType">Status</label>
-                                                {{general_instance.user_report.status}}
+                                                {{user_report.status}}
                                             </div>
                                             
-                                        </div> {% endcomment %}
+                                        </div>
                                         <!-- ================================= -->
                                         <br>
                                         <div class="modal-footer mb-3">
-                                            <button type="button" class="btn btn-warning"> <a href="{% url 'incident_report_general_edit' general_instance.id %}" class="discard-link"> Edit </a></button>
+                                            <input type="button" class="btn btn-secondary" data-dismiss="modal"
+                                                value="Clear">
+                                            <input type="submit" class="btn btn-primary" value="Save">
                                         </div>
-                                    </table>
-                                    </div>
-                              
+                                    </form>
+                                </table>
                             </div>
                         </div>
                     </div>
                     <!-- End of User Report Table  -->
 
-              
+                </div>
                 <!-- End of Page Content -->
-          
+
                 <!-- ===== END OF CONTENT  ===== -->
 
-            
-        
-    
+
+            </div>
+
+                <!-- ===== END OF CONTENT  ===== -->
+
+
+       
             <!-- End of Main Content  -->
 
 

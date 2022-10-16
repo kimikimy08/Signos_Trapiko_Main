@@ -28,7 +28,7 @@ class UserReportForm(forms.ModelForm):
     # longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     class Meta:
         model = UserReport
-        fields = [ 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude', 'date', 'time']
+        fields = [ 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude', 'date', 'time', 'status']
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor
@@ -49,6 +49,7 @@ class UserReportForm(forms.ModelForm):
         self.fields['latitude'].widget.attrs['class'] = 'form-control'
         self.fields['longitude'].widget.attrs['class'] = 'form-control'
         self.fields['description'].widget.attrs['class'] = 'form-control'
+        self.fields['status'].widget.attrs['class'] = 'form-control'
         
         
         for field in self.fields:
@@ -89,23 +90,23 @@ class IncidentGeneralForm(forms.ModelForm):
         self.fields['accident_subcategory'].queryset = AccidentCausationSub.objects.none()
         self.fields['collision_subcategory'].queryset = CollisionTypeSub.objects.none()
 
-        if 'accident_factor' in self.data:
-            try:
-                accident_factor_id = int(self.data.get('accident_factor'))
-                self.fields['accident_subcategory'].queryset = AccidentCausationSub.objects.filter(accident_factor_id=accident_factor_id).order_by('accident_factor')
-            except (ValueError, TypeError):
-                pass  # invalid input from the client; ignore and fallback to empty City queryset
-        elif self.instance.pk:
-            self.fields['accident_subcategory'].queryset = self.instance.accident_factor.accident_subcategory_set.order_by('subcategory')
+        # if 'accident_factor' in self.data:
+        #     try:
+        #         accident_factor_id = int(self.data.get('accident_factor'))
+        #         self.fields['accident_subcategory'].queryset = AccidentCausationSub.objects.filter(accident_factor_id=accident_factor_id).order_by('accident_factor')
+        #     except (ValueError, TypeError):
+        #         pass  # invalid input from the client; ignore and fallback to empty City queryset
+        # elif self.instance.pk:
+        #     self.fields['accident_subcategory'].queryset = self.instance.accident_factor.accident_subcategory_set.order_by('subcategory')
             
-        if 'collision_type' in self.data:
-            try:
-                collision_type_id = int(self.data.get('collision_type'))
-                self.fields['collision_subcategory'].queryset = CollisionTypeSub.objects.filter(collision_type_id=collision_type_id).order_by('collision_type')
-            except (ValueError, TypeError):
-                pass  # invalid input from the client; ignore and fallback to empty City queryset
-        elif self.instance.pk:
-            self.fields['collision_subcategory'].queryset = self.instance.collision_type.collision_subcategory_set.order_by('subcategory')
+        # if 'collision_type' in self.data:
+        #     try:
+        #         collision_type_id = int(self.data.get('collision_type'))
+        #         self.fields['collision_subcategory'].queryset = CollisionTypeSub.objects.filter(collision_type_id=collision_type_id).order_by('collision_type')
+        #     except (ValueError, TypeError):
+        #         pass  # invalid input from the client; ignore and fallback to empty City queryset
+        # elif self.instance.pk:
+        #     self.fields['collision_subcategory'].queryset = self.instance.collision_type.collision_subcategory_set.order_by('subcategory')
 
 
 class IncidentPersonForm(forms.ModelForm):

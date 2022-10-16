@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'incidentreport',
     'generate_report',
     'dashboard',
-    'inbox'
+    
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -83,7 +83,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'accounts.context_processors.get_google_api',
-                'inbox.context_processors.notifications'
             ],
         },
     },

@@ -6,7 +6,7 @@
 
 <!-- Page Wrapper -->
 
-{% include 'includes/sa_sidebar.html' %}
+{% include 'includes/a_sidebar.html' %}
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -43,94 +43,104 @@
                     <!-- User Report Table  -->
                     <div class="card shadow mb-5 d-flex ">
                         <!-- Top Pagination  -->
-                        <div class="card-header py-3">
+                        {% comment %} <div class="card-header py-3">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_general' %}">General</a>
+                                    <a class="nav-link" href="{% url 'incident_report_general_view' general.id %}">General</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_people' %}">People</a>
+                                    <a class="nav-link active" href="{% url 'incident_report_people_view' general.id %}">People</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{% url 'incident_report_vehicle' %}">Vehicle</a>
+                                    <a class="nav-link" href="{% url 'incident_report_vehicle_view' general.id %}">Vehicle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_media' %}">Media</a>
+                                    <a class="nav-link" href="{% url 'incident_report_media_view' general.id %}">Media</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'incident_report_remarks' %}">Remarks</a>
+                                    <a class="nav-link" href="{% url 'incident_report_remarks_view' general.id %}">Remarks</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> {% endcomment %}
 
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table>
-                                   
+
                                     
-                                        <form action="{% url 'incident_report_vehicle_edit' general.id vehicle.id %}" enctype="multipart/form-data" method="post">
+
+                                    
+                                    
+                                        <form action="{% url 'a_incident_report_people_edit' general.id people.id %}" enctype="multipart/form-data" method="post">
                                             {% csrf_token %}
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">
-                                                    <label for="inputClassification">Classification</label>
-                                                    {{vehicle_instance.classification}}
+                                                    <label for="inputFirstName">First Name</label>
+                                                    {{person_instance.incident_first_name}}
                                                 </div>
                                                 <div class="form-group col-md-4">
-                                                    <label for="inputVehicle">Vehicle Type</label>
-                                                    {{vehicle_instance.vehicle_type}}
+                                                    <label for="inputMiddleName">Middle Name</label>
+                                                    {{person_instance.incident_middle_name}}
                                                 </div>
                                                 <div class="form-group col-md-4">
-                                                    <label for="inputMake">Make / Brand</label>
-                                                    {{vehicle_instance.brand}}
+                                                    <label for="inputLastName">Last Name</label>
+                                                    {{person_instance.incident_last_name}}
                                                 </div>
                                             </div>
 
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">
-                                                    <label for="inputPlateNumber">Plate Number</label>
-                                                    {{vehicle_instance.plate_number}}
+                                                    <label for="inputAge">Age</label>
+                                                    {{person_instance.incident_age}}
                                                 </div>
                                                 <div class="form-group col-md-4">
-                                                    <label for="inputEngineNumber">Engine Number</label>
-                                                    {{vehicle_instance.engine_number}}
+                                                    <label for="inputGender">Gender</label>
+                                                    {{person_instance.incident_gender}}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputAddress">Address</label>
+                                                {{person_instance.incident_address}}
+                                            </div>
+                                            <!-- ================================= -->
+                                            <hr>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="inputInvolvement">Involvement</label>
+                                                    {{person_instance.incident_involvement}}
                                                 </div>
                                                 <div class="form-group col-md-4">
-                                                    <label for="inputChassisNumber">Chassis Number</label>
-                                                    {{vehicle_instance.chassis_number}}
+                                                    <label for="inputID">ID Presented</label>
+                                                    {{person_instance.incident_id_presented}}
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="inputIDNumber">ID Number</label>
+                                                    {{person_instance.incident_id_number}}
                                                 </div>
                                             </div>
-
                                             <div class="form-group">
-                                                <label for="inputInsurance">Insurance Details</label>
-                                                {{vehicle_instance.insurance_details}}
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="inputManeuver">Maneuver</label>
-                                                {{vehicle_instance.maneuver}}
+                                                <label for="inputInjury">Injury</label>
+                                                {{person_instance.incident_injury}}
                                             </div>
                                             <div class="form-group">
-                                                <label for="inputDamage">Damage</label>
-                                                {{vehicle_instance.damage}}
+                                                <label for="inputInjury">Driver Error</label>
+                                                {{person_instance.incident_driver_error}}
                                             </div>
                                             <div class="form-group">
-                                                <label for="inputDefect">Defect</label>
-                                                {{vehicle_instance.defect}}
+                                                <label for="inputInjury">Alcohol / Drugs</label>
+                                                {{person_instance.incident_alcohol_drugs}}
                                             </div>
                                             <div class="form-group">
-                                                <label for="inputLoading">Loading</label>
-                                                {{vehicle_instance.loading}}
+                                                <label for="inputInjury">Seat belt / Helmet </label>
+                                                {{person_instance.incident_seatbelt_helmet}}
                                             </div>
-                                            </div>
-
-                                            <br>
-                                            <div class="modal-footer mb-3">
-                                                <input type="button" class="btn btn-secondary" data-dismiss="modal"
-                                                    value="Clear">
+                                      
+                                        <div class="modal-footer mb-3">
+                                            <input type="button" class="btn btn-secondary" data-dismiss="modal"
+                                                value="Clear">
                                                 <input type="submit" class="btn btn-primary" value="Save">
-                                            </div>
-                                        </form>
-
-                                  
+                                        </div>
+                                    </form>
                                 </table>
                             </div>
                         </div>
