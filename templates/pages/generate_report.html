@@ -60,39 +60,27 @@
                           </tr>
                           <tr>
                               <td> <a href="{% url 'export_accidentcausation_xls' %}" 
-                                      class="text-dark text-decoration-none">Accident Factor vs Severity</a></td>
+                                      class="text-dark text-decoration-none">Accident Factor vs Severity (XLS) </a></td>
                           </tr>
                           <tr>
                               <td> <a href="{% url 'export_classification_xls' %}" 
-                                      class="text-dark text-decoration-none">Vehicle Classification vs Severity</a></td>
+                                      class="text-dark text-decoration-none">Vehicle Classification vs Severity (XLS)</a></td>
                           </tr>
                           <tr>
                               <td> <a href="{% url 'export_collision_xls' %}" 
-                                      class="text-dark text-decoration-none">Collision Type vs Severity</a></td>
+                                      class="text-dark text-decoration-none">Collision Type vs Severity (XLS)</a></td>
                           </tr>
                           <tr>
-                              <td> <a href="{% url 'generateinvoice' %}"
-                                      class="text-dark text-decoration-none">Report #5</a></td>
+                              <td> <a href="{% url 'generateinvoice_accident' %}"
+                                      class="text-dark text-decoration-none">Accident Factor vs Severity (PDF)</a></td>
                           </tr>
                           <tr>
-                              <td> <a href="#selectDate" data-toggle="modal"
-                                      class="text-dark text-decoration-none">Report #6</a></td>
+                              <td> <a href="{% url 'generateinvoice_vehicle' %}" 
+                                      class="text-dark text-decoration-none">Vehicle Classification vs Severity (PDF)</a></td>
                           </tr>
                           <tr>
-                              <td> <a href="#selectDate" data-toggle="modal"
-                                      class="text-dark text-decoration-none">Report #7</a></td>
-                          </tr>
-                          <tr>
-                              <td> <a href="#selectDate" data-toggle="modal"
-                                      class="text-dark text-decoration-none">Report #8</a></td>
-                          </tr>
-                          <tr>
-                              <td> <a href="#selectDate" data-toggle="modal"
-                                      class="text-dark text-decoration-none">Report #9</a></td>
-                          </tr>
-                          <tr>
-                              <td> <a href="#selectDate" data-toggle="modal"
-                                      class="text-dark text-decoration-none">Report #10</a></td>
+                              <td> <a href="{% url 'generateinvoice_collision' %}"
+                                      class="text-dark text-decoration-none">Collision Type vs Severity (PDF)</a></td>
                           </tr>
                       </tbody>
                       <!-- End of Table Body  -->

@@ -373,25 +373,112 @@ def render_to_pdf(template_src, context_dict={}):
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return None
 
-class GenerateInvoice(View):
+class GenerateInvoiceAccident(View):
     def get(self, request, *args, **kwargs):
         try:
-            incident_general = IncidentGeneral.objects.filter(user_report__status = 2).distinct('accident_factor')   #you can filter using order_id as well
+            # incident_general_accident = IncidentGeneral.objects.filter(user_report__status = 2).values('accident_factor__category').annotate(Count('severity'), filter=Q(severity='Damage to Property'))
+            incident_general_accident = IncidentGeneral.objects.filter(user_report__status = 2)
+            incident_general_accident1 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Fatal' ).annotate(Count('severity'))
+            incident_general_accident2 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Damage to Property' ).annotate(Count('severity'))
+            incident_general_accident3 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Non-Fatal' ).annotate(Count('severity'))
+            incident_general_classification = IncidentGeneral.objects.filter(user_report__status = 2, severity="Damage to Property").distinct('accident_factor')
+            incident_general_collision = IncidentGeneral.objects.filter(user_report__status = 2, severity="Damage to Property").distinct('accident_factor') #you can filter using order_id as well
+            
         except:
             return HttpResponse("505 Not Found")
         data = {
-            'incident_general': incident_general,
-
+            'incident_general_accident': incident_general_accident,
+            'incident_general_classification': incident_general_classification,
+            'incident_general_collision': incident_general_collision,
+            'incident_general_accident1': incident_general_accident1,
+            'incident_general_accident2': incident_general_accident2,
+            'incident_general_accident3': incident_general_accident3,
+            # 'amount': order_db.total_amount,
         }
-        pdf = render_to_pdf('pages/generate_report_pdf.html', data)
+        pdf = render_to_pdf('pages/generate_report_pdf_accident.html', data)
         #return HttpResponse(pdf, content_type='application/pdf')
 
         # force download
         if pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
-            filename = "Accident Causation" #%(data['incident_general.id'])
+            filename = "Accident_Causation.pdf" #%(data['incident_general.id'])
             content = "inline; filename='%s'" %(filename)
+            #download = request.GET.get("download")
+            #if download:
+            content = "attachment; filename=%s" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
+    
+class GenerateInvoiceCollision(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            # incident_general_accident = IncidentGeneral.objects.filter(user_report__status = 2).values('accident_factor__category').annotate(Count('severity'), filter=Q(severity='Damage to Property'))
+            incident_general_collision = IncidentGeneral.objects.filter(user_report__status = 2)
+            incident_general_collision1 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Fatal' ).annotate(Count('severity'))
+            incident_general_collision2 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Damage to Property' ).annotate(Count('severity'))
+            incident_general_collision3 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Non-Fatal' ).annotate(Count('severity'))
+            incident_general_classification = IncidentGeneral.objects.filter(user_report__status = 2, severity="Damage to Property").distinct('accident_factor')
+           
+            
+        except:
+            return HttpResponse("505 Not Found")
+        data = {
+            'incident_general_collision': incident_general_collision,
+            'incident_general_classification': incident_general_classification,
+            'incident_general_collision': incident_general_collision,
+            'incident_general_collision1': incident_general_collision1,
+            'incident_general_collision2': incident_general_collision2,
+            'incident_general_collision3': incident_general_collision3,
+            # 'amount': order_db.total_amount,
+        }
+        pdf = render_to_pdf('pages/generate_report_pdf_collision.html', data)
+        #return HttpResponse(pdf, content_type='application/pdf')
 
+        # force download
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Collision_Type.pdf" #%(data['incident_general.id'])
+            content = "inline; filename='%s'" %(filename)
+            #download = request.GET.get("download")
+            #if download:
+            content = "attachment; filename=%s" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
+    
+class GenerateInvoiceVehicle(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            # incident_general_accident = IncidentGeneral.objects.filter(user_report__status = 2).values('accident_factor__category').annotate(Count('severity'), filter=Q(severity='Damage to Property'))
+            incident_vehicle = IncidentVehicle.objects.filter(incident_general__user_report__status = 2)
+            incident_vehicle1 = IncidentVehicle.objects.filter(incident_general__user_report__status = 2,incident_general__severity='Fatal' ).annotate(Count('incident_general__severity'))
+            incident_vehicle2 = IncidentVehicle.objects.filter(incident_general__user_report__status = 2,incident_general__severity='Damage to Property' ).annotate(Count('incident_general__severity'))
+            incident_vehicle3 = IncidentVehicle.objects.filter(incident_general__user_report__status = 2,incident_general__severity='Non-Fatal' ).annotate(Count('incident_general__severity'))
+            # incident_general_classification = IncidentGeneral.objects.filter(user_report__status = 2, severity="Damage to Property").distinct('accident_factor')
+           
+            
+        except:
+            return HttpResponse("505 Not Found")
+        data = {
+            'incident_vehicle': incident_vehicle,
+            # 'incident_general_classification': incident_general_classification,
+            'incident_vehicle1': incident_vehicle1,
+            'incident_vehicle2': incident_vehicle2,
+            'incident_vehicle3': incident_vehicle3,
+            # 'incident_general_collision3': incident_general_collision3,
+            # 'amount': order_db.total_amount,
+        }
+        pdf = render_to_pdf('pages/generate_report_pdf_vehicle.html', data)
+        #return HttpResponse(pdf, content_type='application/pdf')
+
+        # force download
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Vehicle_Classification.pdf" #%(data['incident_general.id'])
+            content = "inline; filename='%s'" %(filename)
+            #download = request.GET.get("download")
+            #if download:
             content = "attachment; filename=%s" %(filename)
             response['Content-Disposition'] = content
             return response

@@ -8,5 +8,7 @@ urlpatterns = [
     path('generate_report/export_accidentcausation_xls', views.export_accidentcausation_xls, name='export_accidentcausation_xls'),
     path('generate_report/export_classification_xls', views.export_classification_xls, name='export_classification_xls'),
     path('generate_report/export_collision_xls', views.export_collision_xls, name='export_collision_xls'),
-    path('generateinvoice/', views.GenerateInvoice.as_view(), name = 'generateinvoice'),
+    path('generateinvoice/', views.GenerateInvoiceAccident.as_view(), name = 'generateinvoice_accident'),
+    path('generateinvoicecollision/', views.GenerateInvoiceCollision.as_view(), name = 'generateinvoice_collision'),
+    path('generateinvoicevehicle/', views.GenerateInvoiceVehicle.as_view(), name = 'generateinvoice_vehicle'),
 ]  
