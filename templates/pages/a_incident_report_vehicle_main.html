@@ -106,13 +106,13 @@
                                                 <a href="{% url 'a_incident_report_vehicle_view' general_instance.id vehicle.id %}"><i class='bx bxs-folder-open'
                                                     title="View"></i></a>
                        
-                                                        <a href="#" data-toggle="modal" data-target="#deleteuserModal{{ incident.id }}"><i class='bx bx-trash'
+                                                        <a href="#" data-toggle="modal" data-target="#deleteuserModal{{ vehicle.id }}"><i class='bx bx-trash'
                                                             data-toggle="tooltip" title="Delete" ></i></a>
                                             </td>
                                             
                                         </tr>
                                                 <!-- Delete Modal HTML -->
-                                <div class="modal fade" id="deleteuserModal{{ incident.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
+                                <div class="modal fade" id="deleteuserModal{{ vehicle.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -129,7 +129,7 @@
                                                 
                                     
                                         
-                                                    <a class="btn btn-sm btn-danger" href="">Delete</a>
+                                                    <a class="btn btn-sm btn-danger" href="{% url 'admin_user_report_vehicle_delete' vehicle.id %}">Delete</a>
                                             
                                                 </div>
                                         </div>

@@ -1,14 +1,20 @@
 import datetime
+from django.conf import settings
 from django.shortcuts import render  
 from django.http import HttpResponse 
 from django.contrib.auth.models import User
+from django.views import View
 import xlwt
 from accounts.models import UserProfile, User
 from incidentreport.models import AccidentCausationSub, AccidentCausation,IncidentGeneral, IncidentVehicle
 import pytz
 from django.db.models import Count, Sum
 from django.db.models import Q
-
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+import os
 
 # Create your views here.
 def generate_report(request):
@@ -353,3 +359,40 @@ def export_collision_xls(request):
  
     wb.save(response)
     return response
+
+def fetch_resources(uri, rel):
+    path = os.path.join(uri.replace(settings.STATIC_URL, ""))
+    return path
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result, link_callback=fetch_resources)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+class GenerateInvoice(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            incident_general = IncidentGeneral.objects.filter(user_report__status = 2).distinct('accident_factor')   #you can filter using order_id as well
+        except:
+            return HttpResponse("505 Not Found")
+        data = {
+            'incident_general': incident_general,
+
+        }
+        pdf = render_to_pdf('pages/generate_report_pdf.html', data)
+        #return HttpResponse(pdf, content_type='application/pdf')
+
+        # force download
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Accident Causation" #%(data['incident_general.id'])
+            content = "inline; filename='%s'" %(filename)
+
+            content = "attachment; filename=%s" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")

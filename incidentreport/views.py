@@ -1938,6 +1938,8 @@ def a_incidentreports_additional(request):
     }
     return render(request,"pages/admin/a_incident_report_additional.html", context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def incident_report_general_view(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -1959,6 +1961,8 @@ def incident_report_general_view(request, id):
 
     return render(request, 'pages/incident_report_general_view.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def incident_report_general_edit(request, id=None):
     userreport =  get_object_or_404(UserReport, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
@@ -2010,6 +2014,8 @@ def incident_report_remarks_view(request, id):
 
     return render(request, 'pages/incident_report_remarks_view.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def incident_report_remarks_view(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2032,6 +2038,8 @@ def incident_report_remarks_view(request, id):
 
     return render(request, 'pages/incident_report_remarks_view.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def incident_report_people_vehicle_main(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2055,6 +2063,8 @@ def incident_report_people_vehicle_main(request, id):
 
     return render(request, 'pages/incident_report_people_vehicle_main.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def incident_report_people_vehicle_view(request, id, people_id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2075,6 +2085,8 @@ def incident_report_people_vehicle_view(request, id, people_id):
 
     return render(request, 'pages/incident_report_people_view.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def incident_report_vehicle_main(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2098,6 +2110,8 @@ def incident_report_vehicle_main(request, id):
 
     return render(request, 'pages/incident_report_vehicle_main.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def incident_report_media_main(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2141,6 +2155,8 @@ def incident_report_vehicle_view(request, id, vehicle_id):
 
     return render(request, 'pages/incident_report_vehicle_view.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def incident_report_media_view(request, id, media_id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2161,6 +2177,8 @@ def incident_report_media_view(request, id, media_id):
 
     return render(request, 'pages/incident_report_media_view.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def incident_report_general_edit(request, id=None):
     userreport =  get_object_or_404(UserReport, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
@@ -2190,6 +2208,8 @@ def incident_report_general_edit(request, id=None):
     
     return render(request, 'pages/incident_report_general_edit.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def incident_report_remarks_edit(request, id=None):
     userreport =  get_object_or_404(UserReport, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
@@ -2219,6 +2239,8 @@ def incident_report_remarks_edit(request, id=None):
     
     return render(request, 'pages/incident_report_remarks_edit.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def incident_report_people_edit(request, id=None, people_id=None):
     userreport =  get_object_or_404(UserReport, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
@@ -2249,6 +2271,8 @@ def incident_report_people_edit(request, id=None, people_id=None):
     
     return render(request, 'pages/incident_report_people_edit.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def incident_report_vehicle_edit(request, id=None, vehicle_id=None):
     userreport =  get_object_or_404(UserReport, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
@@ -2279,6 +2303,8 @@ def incident_report_vehicle_edit(request, id=None, vehicle_id=None):
     
     return render(request, 'pages/incident_report_vehicle_edit.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def incident_report_media_edit(request, id=None, media_id=None):
     userreport =  get_object_or_404(UserReport, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
@@ -2312,7 +2338,8 @@ def incident_report_media_edit(request, id=None, media_id=None):
 
 
 
-
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_general_view(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2334,6 +2361,8 @@ def a_incident_report_general_view(request, id):
 
     return render(request, 'pages/a_incident_report_general_view.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_general_edit(request, id=None):
     userreport =  get_object_or_404(UserReport, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
@@ -2363,6 +2392,8 @@ def a_incident_report_general_edit(request, id=None):
     
     return render(request, 'pages/a_incident_report_general_edit.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_remarks_view(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2385,6 +2416,8 @@ def a_incident_report_remarks_view(request, id):
 
     return render(request, 'pages/a_incident_report_remarks_view.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_remarks_view(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2407,6 +2440,8 @@ def a_incident_report_remarks_view(request, id):
 
     return render(request, 'pages/a_incident_report_remarks_view.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_people_vehicle_main(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2430,6 +2465,8 @@ def a_incident_report_people_vehicle_main(request, id):
 
     return render(request, 'pages/a_incident_report_people_vehicle_main.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_people_vehicle_view(request, id, people_id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2450,6 +2487,8 @@ def a_incident_report_people_vehicle_view(request, id, people_id):
 
     return render(request, 'pages/a_incident_report_people_view.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_vehicle_main(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2473,6 +2512,8 @@ def a_incident_report_vehicle_main(request, id):
 
     return render(request, 'pages/a_incident_report_vehicle_main.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_media_main(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2496,6 +2537,8 @@ def a_incident_report_media_main(request, id):
 
     return render(request, 'pages/a_incident_report_media_main.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_vehicle_view(request, id, vehicle_id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2516,6 +2559,8 @@ def a_incident_report_vehicle_view(request, id, vehicle_id):
 
     return render(request, 'pages/a_incident_report_vehicle_view.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_media_view(request, id, media_id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
@@ -2536,6 +2581,8 @@ def a_incident_report_media_view(request, id, media_id):
 
     return render(request, 'pages/a_incident_report_media_view.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_general_edit(request, id=None):
     userreport =  get_object_or_404(UserReport, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
@@ -2565,6 +2612,8 @@ def a_incident_report_general_edit(request, id=None):
     
     return render(request, 'pages/a_incident_report_general_edit.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_remarks_edit(request, id=None):
     userreport =  get_object_or_404(UserReport, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
@@ -2594,6 +2643,8 @@ def a_incident_report_remarks_edit(request, id=None):
     
     return render(request, 'pages/a_incident_report_remarks_edit.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_people_edit(request, id=None, people_id=None):
     userreport =  get_object_or_404(UserReport, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
@@ -2624,6 +2675,8 @@ def a_incident_report_people_edit(request, id=None, people_id=None):
     
     return render(request, 'pages/a_incident_report_people_edit.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_vehicle_edit(request, id=None, vehicle_id=None):
     userreport =  get_object_or_404(UserReport, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
@@ -2654,6 +2707,8 @@ def a_incident_report_vehicle_edit(request, id=None, vehicle_id=None):
     
     return render(request, 'pages/a_incident_report_vehicle_edit.html', context)
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
 def a_incident_report_media_edit(request, id=None, media_id=None):
     userreport =  get_object_or_404(UserReport, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
@@ -2683,4 +2738,49 @@ def a_incident_report_media_edit(request, id=None, media_id=None):
     }
     
     return render(request, 'pages/a_incident_report_media_edit.html', context)
+
+
+
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
+def super_user_report_people_delete(request, id):
+    user_report = get_object_or_404(IncidentPerson, pk=id)
+    user_report.delete()
+    return redirect('user_reports')
+
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
+def super_user_report_vehicle_delete(request, id):
+    user_report = get_object_or_404(IncidentVehicle, pk=id)
+    user_report.delete()
+    return redirect('user_reports')
+
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
+def super_user_report_media_delete(request, id):
+    user_report = get_object_or_404(IncidentMedia, pk=id)
+    user_report.delete()
+    return redirect('user_reports')
+
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
+def admin_user_report_people_delete(request, id):
+    user_report = get_object_or_404(IncidentPerson, pk=id)
+    user_report.delete()
+    return redirect('user_reports')
+
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
+def admin_user_report_vehicle_delete(request, id):
+    user_report = get_object_or_404(IncidentVehicle, pk=id)
+    user_report.delete()
+    return redirect('user_reports')
+
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
+def admin_user_report_media_delete(request, id):
+    user_report = get_object_or_404(IncidentMedia, pk=id)
+    user_report.delete()
+    return redirect('user_reports')
+
 
