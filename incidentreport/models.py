@@ -134,7 +134,7 @@ class IncidentGeneral(models.Model):
     )
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, null=True, blank=True)
-    user_report = models.OneToOneField(UserReport, on_delete=models.CASCADE)
+    user_report = models.OneToOneField(UserReport, on_delete=models.CASCADE, null=True, blank=True)
     accident_factor = models.ForeignKey(AccidentCausation, on_delete=models.SET_NULL, blank=True, null=True)
     accident_subcategory = models.ForeignKey(AccidentCausationSub, on_delete=models.SET_NULL, blank=True, null=True)
     collision_type = models.ForeignKey(CollisionType, on_delete=models.SET_NULL, blank=True, null=True)
@@ -206,7 +206,7 @@ class IncidentPerson(models.Model):
         ('Not worn correctly', 'Not worn correctly'),
     )
     
-    incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE)
+    incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE, null=True, blank=True)
     incident_first_name = models.CharField(max_length=250, blank=True)
     incident_middle_name = models.CharField(max_length=250, blank=True)
     incident_last_name = models.CharField(max_length=250, blank=True)
@@ -302,7 +302,7 @@ class IncidentVehicle(models.Model):
         ('Unsafe Load', 'Unsafe Load'),
         ('Others', 'Others'),
     )
-    incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE)
+    incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE, null=True, blank=True)
     classification = models.CharField(choices=CLASSIFICATION, max_length=250, blank=True, null=True)
     vehicle_type = models.CharField(choices=VEHICLE_TYPE, max_length=250, blank=True, null=True)
     brand = models.CharField(max_length=250, blank=True)
@@ -321,7 +321,7 @@ class IncidentVehicle(models.Model):
         return self.id
 
 class IncidentMedia(models.Model):
-    incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE)
+    incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE, null=True, blank=True)
     media_description = models.TextField(max_length=250, blank=True)
     incident_upload_photovideo = models.ImageField(default='user.jpeg', upload_to='incident_report/image')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -333,7 +333,7 @@ class IncidentMedia(models.Model):
     
 
 class IncidentRemark(models.Model):
-    incident_general = models.OneToOneField(IncidentGeneral, on_delete=models.CASCADE)
+    incident_general = models.OneToOneField(IncidentGeneral, on_delete=models.CASCADE, null=True, blank=True)
     responder =  models.CharField(max_length=250, blank=True)
     action_taken = models.TextField(max_length=250, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

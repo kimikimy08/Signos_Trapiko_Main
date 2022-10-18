@@ -14,6 +14,8 @@ from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.forms.models import construct_instance
 from datetime import datetime
+from .resources import UserReportResource, IncidentGeneraltResource, IncidentRemarkResources, IncidentPeopleResources, IncidentVehicleResources
+from tablib import Dataset
 
 
 @login_required(login_url='login')
@@ -22,9 +24,11 @@ def user_reports(request):
     profile = get_object_or_404(UserProfile, user=request.user)
 
     incidentReports = IncidentGeneral.objects.all().order_by('-updated_at')
+    userReport = UserReport.objects.all().order_by('-updated_at')
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
+        'userReport': userReport
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -2782,5 +2786,51 @@ def admin_user_report_media_delete(request, id):
     user_report = get_object_or_404(IncidentMedia, pk=id)
     user_report.delete()
     return redirect('user_reports')
+
+def simple_upload(request):
+    if request.method == 'POST':
+        user_resource = UserReportResource()
+        incident_general = IncidentGeneraltResource()
+        incident_remark = IncidentRemarkResources()
+        dataset = Dataset()
+        new_userreport = request.FILES['myfile']
+
+        imported_data = dataset.load(new_userreport.read(),format='xls')
+        #print(imported_data)
+        for data in imported_data:
+            value = UserReport(user=request.user, date=data[0], description=data[1], address=data[2], latitude=data[3], longitude=data[4], status=data[5])
+            value1= IncidentGeneral(user=request.user, weather=data[6],
+                                    light=data[7], severity=data[8], movement_code=data[9])
+            value2 = IncidentRemark(responder=data[10], action_taken=data[11])
+            value.save()
+            value1.save()
+            value2.save()
+            print(data[1])
+    return render(request, 'input.html')
+
+
+def simple_upload_additional(request):
+    if request.method == 'POST':
+        incident_people = IncidentPeopleResources()
+        incident_vehicle = IncidentVehicleResources()
+        dataset = Dataset()
+        new_userreport = request.FILES['myfile']
+
+        imported_data = dataset.load(new_userreport.read(),format='xls')
+        #print(imported_data)
+        for data in imported_data:
+            value = IncidentPerson(incident_first_name=data[0],
+                                    incident_middle_name=data[1], incident_last_name=data[2], incident_age=data[3], incident_gender=data[4],
+                                    incident_address=data[5], incident_involvement=data[6], incident_id_presented=data[7], incident_id_number=data[8],
+                                    incident_injury=data[9], incident_driver_error=data[10], incident_alcohol_drugs=data[11], incident_seatbelt_helmet=data[12])
+            value1 = IncidentVehicle(classification=data[13],
+                                    vehicle_type=data[14], brand=data[15], plate_number=data[16],
+                                    engine_number=data[17], chassis_number=data[18], insurance_details=data[19], maneuver=data[20],
+                                    damage=data[21], defect=data[22], loading=data[23])
+                                    
+            value.save()
+            value1.save()
+            print(data[1])
+    return render(request, 'input_additional.html')
 
 

@@ -11,4 +11,5 @@ urlpatterns = [
     path('generateinvoice/', views.GenerateInvoiceAccident.as_view(), name = 'generateinvoice_accident'),
     path('generateinvoicecollision/', views.GenerateInvoiceCollision.as_view(), name = 'generateinvoice_collision'),
     path('generateinvoicevehicle/', views.GenerateInvoiceVehicle.as_view(), name = 'generateinvoice_vehicle'),
+     
 ]  

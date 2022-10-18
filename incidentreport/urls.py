@@ -129,4 +129,6 @@ urlpatterns = [
     path('incidentReport/vehicle/delete/<int:id>/', views.admin_user_report_vehicle_delete, name='admin_user_report_vehicle_delete'),
     path('incidentReport/media/delete/<int:id>/', views.admin_user_report_media_delete, name='admin_user_report_media_delete'),
 
+    path('import/userreport/', views.simple_upload, name='simple_upload'),
+    path('import/additional/', views.simple_upload_additional, name='simple_upload_additional'),
 ]
