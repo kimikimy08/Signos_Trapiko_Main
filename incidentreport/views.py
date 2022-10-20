@@ -16,6 +16,7 @@ from django.forms.models import construct_instance
 from datetime import datetime
 from .resources import UserReportResource, IncidentGeneraltResource, IncidentRemarkResources, IncidentPeopleResources, IncidentVehicleResources
 from tablib import Dataset
+from django.core.paginator import Paginator
 
 
 @login_required(login_url='login')
@@ -145,7 +146,10 @@ def user_report_rejected(request):
 @user_passes_test(check_role_member)
 def my_report(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(user=request.user)
+    incidentReports = UserReport.objects.filter(user=request.user).order_by('-created_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     if request.method == 'POST':
         for i in incidentReports:
             x = request.POST.get(str(i.id))
@@ -156,7 +160,7 @@ def my_report(request):
         return redirect('my_report')
     context = {
         'profile': profile,
-        'incidentReports': incidentReports,
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/member/member_myreport.html', context)
 

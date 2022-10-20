@@ -189,6 +189,54 @@
             </div>
             <!-- End of User Report Table  -->
 
+
+            <!--Pagination-->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+        {% if incidentReports.has_previous %}
+            <li class="page-item">
+            <a class="page-link" href="?page={{ incidentReports.previous_page_number }}">Previous</a>
+          </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+          </li>
+        {% endif %}
+
+        {% if incidentReports.number|add:'-4' > 1 %}
+            <li class="page-item"><a class="page-link" href="?page={{ incidentReports.number|add:'-5' }}">&hellip;</a></li>
+        {% endif %}
+
+        {% for i in incidentReports.paginator.page_range %}
+            {% if incidentReports.number == i %}
+                <li class="page-item active" aria-current="page">
+              <span class="page-link">
+                {{ i }}
+                <span class="sr-only">(current)</span>
+              </span>
+            </li>
+            {% elif i > incidentReports.number|add:'-5' and i < incidentReports.number|add:'5' %}
+                 <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if incidentReports.paginator.num_pages > incidentReports.number|add:'4' %}
+           <li class="page-item"><a class="page-link" href="?page={{ incidentReports.number|add:'5' }}">&hellip;</a></li>
+        {% endif %}
+
+        {% if incidentReports.has_next %}
+            <li class="page-item">
+            <a class="page-link" href="?page={{ incidentReports.next_page_number }}">Next</a>
+          </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+    <!--end of Pagination-->
+
         </div>
         <!-- End of Page Content -->
 
@@ -214,5 +262,8 @@
 
 {% endblock %}
 
+
+
+<!-- User Report Vendor Script-->
 
 

@@ -44,9 +44,25 @@
             <!-- User Report Table  -->
             <div class="card shadow p-5">
                 <!-- Top Pagination  -->
-                     {% if user_report.upload_photovideo %}         
-                    <img src="{{user_report.upload_photovideo.url}}" class="viewReport-img mb-4">
-                    {% endif %}
+                {% if user_report.upload_photovideo %}
+                {% if  ".jpg" in inc_top.upload_photovideo.url or ".png" in inc_top.upload_photovideo.url %}
+                            <div style="padding-bottom: 5px; padding-top: 5px" >
+                            <img src="{{user_report.upload_photovideo.url}}" alt="Profile Picture" class="photos-side">
+                        </div>
+                            {% else %}
+                            
+                            <div style="padding-bottom: 5px; padding-top: 5px" >
+                            <video controls>
+                                <source src={{user_report.upload_photovideo.url}} type="video/mp4">
+                              Your browser does not support the video tag.
+                              </video>
+                            </div>
+                            {% comment %} <a src="{{incident.upload_photovideo.url}}"> {% endcomment %}
+                            {% endif %} 
+
+                
+               
+                {% endif %}
                         <table>
                             <tr>
                                 <td style = "width: 200px;"> <p class = "padding-title"><strong>Date and Time</strong></p></td>
