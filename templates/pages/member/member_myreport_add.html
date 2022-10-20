@@ -92,11 +92,14 @@
 <script>
     var date = new Date();
      date.setDate(date.getDate()-14);
+     var date1 = new Date();
+     date1.setDate(date1.getDate()+0);
     $('.datepickstart').datepicker({
      autoclose: true,
      todayHighlight: true,
      format: 'mm/dd/yyyy',
-      startDate: date
+      startDate: date,
+      endDate: date1
     });
 </script>
 

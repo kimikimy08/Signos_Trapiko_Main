@@ -108,12 +108,7 @@ google.maps.event.addListener(autocomplete, 'place_changed', function () {
     var place = autocomplete.getPlace();
     
     // User did not select the prediction. Reset the input field or alert()
-    if (!place.geometry){
-        document.getElementById('id_information-address').placeholder = "Start typing...";
-    }
-    else{
-        // console.log('place name=>', place.name)
-    }
+    
 
     // get the address components and assign them to the fields
     // console.log(place);

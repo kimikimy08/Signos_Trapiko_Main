@@ -64,8 +64,8 @@ class UserReportForm(forms.ModelForm):
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
             self.fields['description'].required = False
-        
-        
+            self.fields['date'].widget.attrs['readonly'] = 'readonly'
+            self.fields['time'].widget.attrs['readonly'] = 'readonly'
         
 
     # def __init__(self, *args, **kwargs):

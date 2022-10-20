@@ -267,12 +267,12 @@ def my_report_edit(request, id):
                               request.FILES or None, instance=user_report)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Report details successfully updated')
             return redirect('my_report')
-        messages.success(request, 'Report details successfully updated')
         
     else:
         form = UserReportForm(instance=user_report)
-        messages.error(request, 'Report details unsuccessfully updated')
+        # messages.error(request, 'Report details unsuccessfully updated')
     context = {
         'form': form,
         'user_report': user_report,
