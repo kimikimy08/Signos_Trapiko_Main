@@ -136,8 +136,11 @@
                                     <td>
                                         <a href="{% url 'my_report_view' incident.id %}"><i class='bx bxs-folder-open'
                                                 data-toggle="tooltip" title="View"></i></a>
+                                                {% if incident.status == 2 %} 
+                                                {% else %}     
                                                 <a href="#" data-toggle="modal" data-target="#deleteModal{{ incident.id }}"><i class='bx bx-trash'
                                                     data-toggle="tooltip" title="Delete" ></i></a>
+                                                    {% endif %}
                                     </td>
                                 </tr>
 
