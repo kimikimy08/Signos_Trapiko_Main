@@ -9,6 +9,7 @@
     {% endblock styles %}
     {% block form_if %}{% block form_else %}
     {% csrf_token %}
+
         <fieldset>
             <div>
                 <div class="form-row">
@@ -57,6 +58,11 @@
                 </div>
 
                 {{form.upload_photovideo}}
+                <ul class="error-list" style="font-size: 10px; padding-left: 0px;">
+                  
+                    <li style="color:red">{{form.errors}}</li>
+                  
+                </ul>
       <!-- ================================= -->
                 <br>
                 {% comment %} <div class="modal-footer mb-3">

@@ -3,6 +3,7 @@ from django import forms
 from .models import UserReport, Incident, IncidentGeneral, AccidentCausationSub, CollisionTypeSub, IncidentPerson, IncidentVehicle, IncidentRemark, IncidentMedia, AccidentCausation, CollisionType, CollisionTypeSub, CrashType
 #from .validators import allow_only_images_validator
 from django.forms.formsets import BaseFormSet
+from accounts.validators import allow_only_images_validator, allow_only_images_video_validator
 
 class DateInput(forms.DateInput):
     input_type = 'date'
@@ -16,7 +17,7 @@ class TimeInput(forms.TimeInput):
 class UserReportForm(forms.ModelForm):
     
     upload_photovideo = forms.FileField(
-        widget=forms.FileInput(attrs={'class': 'form-control p-1'}))
+        widget=forms.FileInput(attrs={'class': 'form-control p-1'}), validators=[allow_only_images_video_validator])
     time = forms.TimeField(widget=TimeInput(
         attrs={'class': 'form-control'}), initial=datetime.datetime.now())
     address = forms.CharField(widget=forms.TextInput(

@@ -84,6 +84,7 @@
                     <div class="table-responsive">
                         <form id="form1" action="{% url 'my_report' %}" enctype="multipart/form-data" method="post">
                         {% csrf_token %}
+                        
                         {% if incidentReports %}
                         <div class="modal-footer">
                      

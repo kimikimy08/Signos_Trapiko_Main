@@ -4,6 +4,7 @@ from accounts.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from PIL import Image
+from django.core.validators import FileExtensionValidator
 
 
 # class Barangay_district(models.Model):

@@ -120,7 +120,7 @@ def super_user_account(request):
         'page_obj':page_obj
     }
     print(context)
-    return render(request, 'pages/super_user_account.html', context)
+    return render(request, 'pages/super/super_user_account.html', context)
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
@@ -136,7 +136,7 @@ def super_user_account_member(request):
         'page_obj':page_obj
     }
     print(context)
-    return render(request, 'pages/super_user_account.html', context)
+    return render(request, 'pages/super/super_user_account.html', context)
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
@@ -152,7 +152,7 @@ def super_user_account_admin(request):
         'page_obj':page_obj
     }
     print(context)
-    return render(request, 'pages/super_user_account.html', context)
+    return render(request, 'pages/super/super_user_account.html', context)
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
@@ -167,7 +167,7 @@ def super_user_account_superadmin(request):
         'user': user,
         'page_obj':page_obj
     }
-    return render(request, 'pages/super_user_account.html', context)
+    return render(request, 'pages/super/super_user_account.html', context)
 
 def super_user_account_add(request):
     if request.method == 'POST':
@@ -204,7 +204,7 @@ def super_user_account_add(request):
     context = {
         'form' : form,
     }
-    return render(request, 'pages/super_user_account_add.html', context)
+    return render(request, 'pages/super/super_user_account_add.html', context)
 
 def super_user_account_view(request, id):
     user = get_object_or_404(User, pk=id)
@@ -214,7 +214,7 @@ def super_user_account_view(request, id):
         'profile': profile,
     }
 
-    return render(request, 'pages/super_user_account_view.html', context) 
+    return render(request, 'pages/super/super_user_account_view.html', context) 
 
 def super_user_account_edit(request, id=None):
     user =  get_object_or_404(User, pk=id)
@@ -259,7 +259,7 @@ def super_user_account_edit(request, id=None):
         'user': user
     }
     
-    return render(request, 'pages/super_user_account_edit.html', context)
+    return render(request, 'pages/super/super_user_account_edit.html', context)
 
 
 @login_required(login_url = 'login')

@@ -157,6 +157,7 @@ def my_report(request):
             if str(x) == 'on':
                 b = UserReport.objects.get(id=i.id)
                 b.delete()
+            messages.success(request, 'Report details successfully deleted')
         return redirect('my_report')
     context = {
         'profile': profile,
@@ -201,10 +202,10 @@ def my_report_rejected(request):
     return render(request, 'pages/member/member_myreport.html', context)
 
 
-def my_report_delete(request, incident_id=None):
-    incidentReports = UserReport.objects.get(pk=incident_id)
-    incidentReports.delete()
-    return redirect('my_report')
+# def my_report_delete(request, incident_id=None):
+#     incidentReports = UserReport.objects.get(pk=incident_id)
+#     incidentReports.delete()
+#     return redirect('my_report')
 
 
 # @login_required(login_url='login')
@@ -267,8 +268,11 @@ def my_report_edit(request, id):
         if form.is_valid():
             form.save()
             return redirect('my_report')
+        messages.success(request, 'Report details successfully updated')
+        
     else:
         form = UserReportForm(instance=user_report)
+        messages.error(request, 'Report details unsuccessfully updated')
     context = {
         'form': form,
         'user_report': user_report,
@@ -285,6 +289,7 @@ def my_report_delete(request, id):
     incident_remark.delete()
     incident_general.delete()
     user_report.delete()
+    messages.success(request, 'Report details successfully deleted')
     return redirect('my_report')
 
 
@@ -606,12 +611,13 @@ class multistepformsubmission_member(SessionWizardView):
     def form_valid(self, form):
         try:
             form.execute()
+            # messages.add_message(self.request, messages.SUCCESS, ('Report details successfully added'))
             
             # messages.add_message(self.request, messages.SUCCESS)
         except Exception as err:
             messages.add_message(self.request, messages.ERROR, err.message)
         else:
-            messages.add_message(self.request, messages.INFO, _('It worked'))
+            messages.add_message(self.request, messages.INFO, ('It worked'))
     
     def done(self, form_list, **kwargs):
         # UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
@@ -649,7 +655,7 @@ class multistepformsubmission_member(SessionWizardView):
         
         # Notification.objects.create(to_user=self.request, userreport=self.user_report, notification_type='application', created_by=self.user, extra_id=general_instance.id)
         
-        messages.success(self.request, 'New Incident Report Added')
+        messages.success(self.request, 'Report details successfully added')
         context = {
             'profile': profile,
         
