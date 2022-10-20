@@ -154,6 +154,13 @@
                                                 {% endif %}
                                                             </div>
                                             </div>
+
+                                            <div class="form-row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="inputCrashType">Status</label>
+                                                    {{form.status}}
+                                                </div>
+                                            </div>
                                     </table>
                                     <div class="text-right mb-1">
                                         <button type="button"> <a href="{% url 'my_report' %}" class="save-myreports-btn discard-link"> Cancel </a></button>

@@ -14,6 +14,67 @@ class TimeInput(forms.TimeInput):
     input_type = 'time'
 
 
+class UserReportForm1(forms.ModelForm):
+    
+    upload_photovideo = forms.FileField(
+        widget=forms.FileInput(attrs={'class': 'form-control p-1'}), validators=[allow_only_images_video_validator])
+    time = forms.TimeField(widget=TimeInput(
+        attrs={'class': 'form-control'}), initial=datetime.datetime.now())
+    address = forms.CharField(widget=forms.TextInput(
+        attrs={'required': 'required', 'class': 'form-control'}))
+    description = forms.CharField(widget=forms.Textarea(
+        attrs={'area': '3', 'class': 'form-control'}))
+
+    # latitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+    # longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+    class Meta:
+        model = UserReport
+        fields = [ 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude', 'date', 'time', 'status']
+        
+        # widgets = {
+        #     'date': DateInput(),
+        # }
+
+    def __init__(self, *args, **kwargs):
+        # first call parent's constructor
+        super(UserReportForm1, self).__init__(*args, **kwargs)
+        # there's a `fields` property now
+        self.fields['upload_photovideo'].required = False
+        self.fields['description'].required = False
+        self.fields['address'].required = False
+        self.fields['time'].required = False
+        
+        self.fields['date'].widget.attrs['class'] = 'form-control datepickstart'
+        self.fields['time'].widget.attrs['class'] = 'form-control'
+        self.fields['address'].widget.attrs['class'] = 'form-control'
+        self.fields['country'].widget.attrs['class'] = 'form-control'
+        self.fields['state'].widget.attrs['class'] = 'form-control'
+        self.fields['city'].widget.attrs['class'] = 'form-control'
+        self.fields['pin_code'].widget.attrs['class'] = 'form-control'
+        self.fields['latitude'].widget.attrs['class'] = 'form-control'
+        self.fields['longitude'].widget.attrs['class'] = 'form-control'
+        self.fields['description'].widget.attrs['class'] = 'form-control'
+        self.fields['status'].widget.attrs['class'] = 'form-control'
+        self.fields['date'].widget.attrs['autocomplete'] = 'off'
+        
+        for field in self.fields:
+            if field == 'latitude' or field == 'longitude' or field == 'city' or field == 'pin_code':
+                self.fields[field].widget.attrs['readonly'] = 'readonly'
+        
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['description'].required = False
+            self.fields['date'].widget.attrs['readonly'] = 'readonly'
+            self.fields['time'].widget.attrs['readonly'] = 'readonly'
+            self.fields['status'].widget.attrs['disabled'] = 'disabled'
+
+    # def __init__(self, *args, **kwargs):
+    #     super(UserReportForm, self).__init__(*args, **kwargs)
+        # for field in self.fields:
+        #     if field == 'latitude' or field == 'longitude':
+        #         self.fields[field].widget.attrs['readonly'] = 'readonly'
+
+
 class UserReportForm(forms.ModelForm):
     
     upload_photovideo = forms.FileField(
@@ -66,14 +127,7 @@ class UserReportForm(forms.ModelForm):
             self.fields['description'].required = False
             self.fields['date'].widget.attrs['readonly'] = 'readonly'
             self.fields['time'].widget.attrs['readonly'] = 'readonly'
-        
-
-    # def __init__(self, *args, **kwargs):
-    #     super(UserReportForm, self).__init__(*args, **kwargs)
-        # for field in self.fields:
-        #     if field == 'latitude' or field == 'longitude':
-        #         self.fields[field].widget.attrs['readonly'] = 'readonly'
-
+            
 
 class IncidentGeneralForm(forms.ModelForm):
     class Meta:

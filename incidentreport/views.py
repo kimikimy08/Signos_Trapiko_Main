@@ -9,7 +9,7 @@ from accounts.views import check_role_admin, check_role_super, check_role_member
 from incidentreport.models import  UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle, AccidentCausation, CollisionType, CrashType
 from django.contrib import messages
 
-from .forms import UserReportForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm, AccidentCausationForm, AccidentCausationSubForm, CollisionTypeForm, CollisionTypeSubForm, CrashTypeForm
+from .forms import UserReportForm, UserReportForm1, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm, AccidentCausationForm, AccidentCausationSubForm, CollisionTypeForm, CollisionTypeSubForm, CrashTypeForm
 from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.forms.models import construct_instance
@@ -263,7 +263,7 @@ def my_report_view(request, id):
 def my_report_edit(request, id):
     user_report = get_object_or_404(UserReport, pk=id)
     if request.method == 'POST':
-        form = UserReportForm(request.POST or None,
+        form = UserReportForm1(request.POST or None,
                               request.FILES or None, instance=user_report)
         if form.is_valid():
             form.save()
@@ -271,7 +271,7 @@ def my_report_edit(request, id):
             return redirect('my_report')
         
     else:
-        form = UserReportForm(instance=user_report)
+        form = UserReportForm1(instance=user_report)
         # messages.error(request, 'Report details unsuccessfully updated')
     context = {
         'form': form,
@@ -450,7 +450,7 @@ def load_collision(request):
 #         #  ("media", IncidentMediaForm),
 #          ("remarks", IncidentRemarksForm)]
 
-FORMS1 = [("information", UserReportForm)]
+FORMS1 = [("information", UserReportForm1)]
 
 # TEMPLATES = {"information": "pages/super/incident_report_user.html",
 #                 "general": "pages/super/incident_report_general.html",
