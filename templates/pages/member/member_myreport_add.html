@@ -4,6 +4,9 @@
 
    {% extends "incident_report_home_member.html" %}
    {% load static %}
+   {% block styles %}
+   <link href=" {% static 'css/datepicker.css' %} " rel="stylesheet"> 
+    {% endblock styles %}
     {% block form_if %}{% block form_else %}
     {% csrf_token %}
         <fieldset>
@@ -72,6 +75,27 @@
             </div>
         </fieldset>
     {% endblock %}{% endblock %}
+
+    {% block scripts %}
+    
+
+<!-- Include formset plugin - including jQuery dependency -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.css"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+
+<script>
+    var date = new Date();
+     date.setDate(date.getDate()-14);
+    $('.datepickstart').datepicker({
+     autoclose: true,
+     todayHighlight: true,
+     format: 'mm/dd/yyyy',
+      startDate: date
+    });
+</script>
+
+
+{% endblock scripts %}
 
 
 

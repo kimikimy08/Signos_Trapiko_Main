@@ -146,6 +146,14 @@ def user_report_rejected(request):
 def my_report(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incidentReports = UserReport.objects.filter(user=request.user)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = UserReport.objects.get(id=i.id)
+                b.delete()
+        return redirect('my_report')
     context = {
         'profile': profile,
         'incidentReports': incidentReports,

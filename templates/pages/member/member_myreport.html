@@ -82,14 +82,21 @@
 
                 <div class="card-body">
                     <div class="table-responsive">
+                        <form id="form1" action="{% url 'my_report' %}" enctype="multipart/form-data" method="post">
+                        {% csrf_token %}
                         {% if incidentReports %}
+                        <div class="modal-footer">
+                     
+                                <input type="submit" class="btn btn-sm btn-danger" value="Bulk Delete">
+                            </div>
+                    
                         <table class="table table-bordered table-hover text-dark" id="user_report" width="100%"
                             style="cursor: pointer;" cellspacing="0">
 
                             <!-- Table Header  -->
                             <thead>
                                 <tr>
-                                    <th>Report ID</th>
+                                    <th></th>
                                     <th>Description</th>
                                     <th>Address</th>
                                     <th>Date</th>
@@ -105,7 +112,13 @@
         
                            
                                 <tr>
-                                    <td>{{incident.id}}</td>
+                                    {% if incident.status == 2 %}
+                                    <td>
+                                        {% comment %} <input type="checkbox" name="{{incident.id}}" id="check" disabled> {% endcomment %}
+                                    </td>
+                                    {% else %}
+                                    <td><input type="checkbox" name="{{incident.id}}" id="check"></td>
+                                    {% endif %}
                                     <td>{{incident.description}}</td>
                                     <td>{{incident.address}}</td>
                                     <td>{{incident.date}}</td>
@@ -161,14 +174,14 @@
                             </tbody>
                             <!-- End of Table Body  -->
                         </table>
-
+                   
                         {% else %}
 
                         <h5 class="text-center">No User Report.</h5>
                              
                         {% endif %}
 
-
+                    </form>
                         
 
                     </div>
@@ -200,4 +213,6 @@
         {% include 'includes/alerts_frame.html' %}
 
 {% endblock %}
+
+
 

@@ -29,6 +29,10 @@ class UserReportForm(forms.ModelForm):
     class Meta:
         model = UserReport
         fields = [ 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude', 'date', 'time', 'status']
+        
+        # widgets = {
+        #     'date': DateInput(),
+        # }
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor
@@ -39,7 +43,7 @@ class UserReportForm(forms.ModelForm):
         self.fields['address'].required = False
         self.fields['time'].required = False
         
-        self.fields['date'].widget.attrs['class'] = 'form-control'
+        self.fields['date'].widget.attrs['class'] = 'form-control datepickstart'
         self.fields['time'].widget.attrs['class'] = 'form-control'
         self.fields['address'].widget.attrs['class'] = 'form-control'
         self.fields['country'].widget.attrs['class'] = 'form-control'
@@ -50,7 +54,7 @@ class UserReportForm(forms.ModelForm):
         self.fields['longitude'].widget.attrs['class'] = 'form-control'
         self.fields['description'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['class'] = 'form-control'
-        
+        self.fields['date'].widget.attrs['autocomplete'] = 'off'
         
         for field in self.fields:
             if field == 'latitude' or field == 'longitude' or field == 'city' or field == 'pin_code':
