@@ -80,13 +80,21 @@
 
                         <div class="card-body">
                             <div class="table-responsive">
+                                <form id="form1" action="{% url 'super_user_account' %}" enctype="multipart/form-data" method="post">
+                                    {% csrf_token %}
+                                    
+                                    {% if page_obj %}
+                                    <div class="modal-footer">
+                                 
+                                            <input type="submit" class="btn btn-sm btn-danger" value="Bulk Delete">
+                                        </div>
                                 <table class="table table-bordered table-hover text-dark" id="user_report" width="100%"
                                     style="cursor: pointer;" cellspacing="0">
 
                                     <!-- Table Header  -->
                                     <thead>
                                         <tr>
-                                            <th>User ID</th>
+                                            <th></th>
                                             <th>Username</th>
                                             <th>First Name</th>
                                             <th>Middle Name</th>
@@ -105,7 +113,7 @@
                                         {% for users in page_obj %}
                 
                                         <tr>
-                                            <td>{{users.id}}</td>
+                                            <td><input type="checkbox" name="{{users.id}}" id="check"></td>
                                             <td>{{users.username}}</td>
                                             <td>{{users.first_name}}</td>
                                             <td>{{users.middle_name}}</td>
@@ -168,6 +176,12 @@
                                     <!-- End of Table Body  -->
 
                                 </table>
+                                {% else %}
+
+                                <h5 class="text-center">No User Added.</h5>
+                                     
+                                {% endif %}
+                            </form>
                             </div>
                         </div>
                     </div>
@@ -175,6 +189,7 @@
                    
 
          <!--Pagination-->
+         {% if page_obj %}
          <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
@@ -219,6 +234,7 @@
             {% endif %}
           </ul>
         </nav>
+        {% endif %}
         <!--end of Pagination-->
 
                 </div>
@@ -239,7 +255,7 @@
 
 
 
-            {% include 'includes/alerts.html' %}
+            {% include 'includes/alerts_frame.html' %}
 
             {% endblock %}
 

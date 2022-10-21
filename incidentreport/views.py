@@ -23,12 +23,22 @@ from django.core.paginator import Paginator
 @user_passes_test(check_role_super_admin)
 def user_reports(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-
-    incidentReports = IncidentGeneral.objects.all().order_by('-updated_at')
+    incidentReports = IncidentGeneral.objects.filter(user_report__isnull=False).order_by('-updated_at')
     userReport = UserReport.objects.all().order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.user_report_id))
+            print(x)
+            if str(x) == 'on':
+                b = UserReport.objects.get(id=i.user_report_id)
+                b.delete()
+                messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentReports': incidentReports,
+        'incidentReports': page_obj,
         'userReport': userReport
     }
     return render(request, 'pages/user_report.html', context)
@@ -40,9 +50,22 @@ def user_reports_pending(request):
     profile = get_object_or_404(UserProfile, user=request.user)
 
     incidentReports = IncidentGeneral.objects.filter(user_report__status = 1).order_by('-updated_at')
+    userReport = UserReport.objects.all().order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.user_report_id))
+            print(x)
+            if str(x) == 'on':
+                b = UserReport.objects.get(id=i.user_report_id)
+                b.delete()
+                messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentReports': incidentReports,
+        'incidentReports': page_obj,
+        'userReport': userReport
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -52,9 +75,20 @@ def user_reports_pending(request):
 def user_reports_approved(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incidentReports = IncidentGeneral.objects.filter(user_report__status = 2).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.user_report_id))
+            print(x)
+            if str(x) == 'on':
+                b = UserReport.objects.get(id=i.user_report_id)
+                b.delete()
+                messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentReports': incidentReports,
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -64,9 +98,20 @@ def user_reports_approved(request):
 def user_reports_rejected(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incidentReports = IncidentGeneral.objects.filter(user_report__status = 3).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.user_report_id))
+            print(x)
+            if str(x) == 'on':
+                b = UserReport.objects.get(id=i.user_report_id)
+                b.delete()
+                messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentReports': incidentReports,
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -76,9 +121,20 @@ def user_reports_today(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     today = datetime.today().date()
     incidentReports = IncidentGeneral.objects.filter(created_at__date=today).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.user_report_id))
+            print(x)
+            if str(x) == 'on':
+                b = UserReport.objects.get(id=i.user_report_id)
+                b.delete()
+                messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentReports': incidentReports,
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -794,8 +850,20 @@ def attributes_builder_accident(request):
     profile = get_object_or_404(UserProfile, user=request.user)
 
     accident_factor = AccidentCausation.objects.all()
+    paginator = Paginator(accident_factor, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in accident_factor:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = AccidentCausation.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'Accident Factor successfully deleted')
+        return redirect('attributes_builder_accident')
     context = {
-        'accident_factor': accident_factor,
+        'accident_factor': page_obj,
         'profile':profile
     }
     return render(request, 'pages/super/accident_factor.html', context)
@@ -805,9 +873,21 @@ def attributes_builder_accident(request):
 def attributes_builder_accident_sub(request, id):
     accident_factor = get_object_or_404(AccidentCausation, pk=id)
     accident_factor_sub = AccidentCausationSub.objects.filter(accident_factor=accident_factor)
+    paginator = Paginator(accident_factor_sub, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in accident_factor_sub:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = AccidentCausationSub.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'Accident Facor Sub-category successfully deleted')
+        return redirect('attributes_builder_accident')
     context = {
         'accident_factor': accident_factor,
-        'accident_factor_sub': accident_factor_sub,
+        'accident_factor_sub': page_obj,
     }
     return render(request, 'pages/super/accident_factor_sub.html', context)
 
@@ -815,8 +895,20 @@ def attributes_builder_accident_sub(request, id):
 @user_passes_test(check_role_super)
 def attributes_builder_crash(request):
     crash_type = CrashType.objects.all()
+    paginator = Paginator(crash_type, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in crash_type:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = CrashType.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'Crash Type successfully deleted')
+        return redirect('attributes_builder_crash')
     context = {
-        'crash_type': crash_type,
+        'crash_type': page_obj,
     }
     return render(request, 'pages/super/crash.html', context)
 
@@ -824,8 +916,19 @@ def attributes_builder_crash(request):
 @user_passes_test(check_role_super)
 def attributes_builder_collision(request):
     collision_type = CollisionType.objects.all()
+    paginator = Paginator(collision_type, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in collision_type:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = CollisionType.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'Collision Type successfully deleted')
     context = {
-        'collision_type': collision_type,
+        'collision_type': page_obj,
     }
     return render(request, 'pages/super/collision_type.html', context)
 
@@ -834,9 +937,20 @@ def attributes_builder_collision(request):
 def attributes_builder_collision_sub(request, id):
     collision_type = get_object_or_404(CollisionType, pk=id)
     collision_type_sub = CollisionTypeSub.objects.filter(collision_type=collision_type)
+    paginator = Paginator(collision_type_sub, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in collision_type_sub:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = CollisionTypeSub.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'Collision Type Sub-category successfully deleted')
     context = {
         'collision_type': collision_type,
-        'collision_type_sub': collision_type_sub,
+        'collision_type_sub': page_obj,
     }
     return render(request, 'pages/super/collision_type_sub.html', context)
 
@@ -852,7 +966,8 @@ def attributes_builder_accident_add(request):
                 
                 matching_courses = AccidentCausation.objects.filter(category=category)
                 if matching_courses.exists():
-                    messages.error(request, 'Duplicate Entries')
+                    messages.error(request, 'You already entered the same accident factor subcategory')
+                    return redirect('attributes_builder_accident')
                 else:
                     accident_factor = AccidentCausation(category=category)
                     accident_factor.save()
@@ -882,10 +997,12 @@ def attributes_builder_accident_edit(request, id):
             category = form.cleaned_data['category']
             matching_courses = AccidentCausation.objects.filter(category=category)
             if matching_courses:
-                messages.warning(request, 'Same Entries')
+                messages.error(request, 'You already entered the same accident factor subcategory')
+                return redirect('attributes_builder_accident')
                 
             elif matching_courses.exists():
-                messages.error(request, 'Duplicate Entries')
+                messages.error(request, 'You already entered the same accident factor subcategory')
+                return redirect('attributes_builder_accident')
             else:
                 form.save()
                 messages.success(request, 'Accident Factor Updated')
@@ -917,10 +1034,12 @@ def attributes_builder_accident_add_sub(request):
                 sub_category = form.cleaned_data['sub_category']
                 matching_courses = AccidentCausationSub.objects.filter(accident_factor=accident_factor,sub_category=sub_category)
                 if matching_courses:
-                    messages.warning(request, 'Same Entries')
+                    messages.error(request, 'You already entered the same accident factor subcategory')
+                    return redirect('attributes_builder_accident_add_sub')
                     
                 elif matching_courses.exists():
                     messages.error(request, 'Duplicate Entries')
+                    messages.error(request, 'You already entered the same accident factor subcategory')
                 else:
                     accident_factor = AccidentCausationSub(accident_factor=accident_factor, sub_category=sub_category)
                     accident_factor.save()
@@ -950,10 +1069,12 @@ def attributes_builder_accident_edit_sub(request, id):
             sub_category = form.cleaned_data['sub_category']
             matching_courses = AccidentCausationSub.objects.filter(accident_factor=accident_factor,sub_category=sub_category)
             if matching_courses:
-                messages.warning(request, 'Same Entries')
+                messages.error(request, 'You already entered the same accident factor subcategory')
+                return redirect('attributes_builder_accident')
                 
             elif matching_courses.exists():
-                messages.error(request, 'Duplicate Entries')
+                messages.error(request, 'You already entered the same accident factor subcategory')
+                return redirect('attributes_builder_accident')
             else:
                 form.save()
                 messages.success(request, 'Accident Factor Updated')
@@ -972,6 +1093,7 @@ def attributes_builder_accident_delete_sub(request, id):
     accident_factor_sub = get_object_or_404(AccidentCausationSub, pk=id)
     #user_report = UserReport.objects.all()
     accident_factor_sub.delete()
+    messages.error(request, 'Accident Factor Sub-category has been successfully deleted')
     return redirect('attributes_builder_accident')
 
 # COLLISION
@@ -987,7 +1109,8 @@ def attributes_builder_collision_add(request):
                 
                 matching_courses = CollisionType.objects.filter(category=category)
                 if matching_courses.exists():
-                    messages.error(request, 'Duplicate Entries')
+                    messages.error(request, 'You already entered the same collision type')
+                    return redirect('attributes_builder_collision')
                 else:
                     accident_factor = CollisionType(category=category)
                     accident_factor.save()
@@ -1017,10 +1140,12 @@ def attributes_builder_collision_edit(request, id):
             category = form.cleaned_data['category']
             matching_courses = CollisionType.objects.filter(category=category)
             if matching_courses:
-                messages.warning(request, 'Same Entries')
+                messages.error(request, 'You already entered the same collision type')
+                return redirect('attributes_builder_collision')
                 
             elif matching_courses.exists():
-                messages.error(request, 'Duplicate Entries')
+                messages.error(request, 'You already entered the same collision type')
+                return redirect('attributes_builder_collision')
             else:
                 form.save()
                 messages.success(request, 'Accident Factor Updated')
@@ -1052,10 +1177,12 @@ def attributes_builder_collision_add_sub(request):
                 sub_category = form.cleaned_data['sub_category']
                 matching_courses = CollisionTypeSub.objects.filter(collision_type=collision_type, sub_category=sub_category)
                 if matching_courses:
-                    messages.warning(request, 'Same Entries')
+                    messages.error(request, 'You already entered the same collision type sub-category')
+                    return redirect('attributes_builder_collision')
                     
                 elif matching_courses.exists():
-                    messages.error(request, 'Duplicate Entries')
+                    messages.error(request, 'You already entered the same collision type sub-category')
+                    return redirect('attributes_builder_collision')
                 else:
                     accident_factor = CollisionTypeSub(collision_type=collision_type, sub_category=sub_category)
                     accident_factor.save()
@@ -1071,7 +1198,7 @@ def attributes_builder_collision_add_sub(request):
     context = {
         'form' : form,
     }
-    return render(request, 'pages/admin/collision_type_add_sub.html', context)
+    return render(request, 'pages/super/collision_type_add_sub.html', context)
 
 @login_required(login_url='login')
 @user_passes_test(check_role_super)
@@ -1085,10 +1212,12 @@ def attributes_builder_collision_edit_sub(request, id):
             sub_category = form.cleaned_data['sub_category']
             matching_courses = CollisionTypeSub.objects.filter(collision_type=collision_type,sub_category=sub_category)
             if matching_courses:
-                messages.warning(request, 'Same Entries')
+                messages.error(request, 'You already entered the same collision type sub-category')
+                return redirect('attributes_builder_collision')
                 
             elif matching_courses.exists():
-                messages.error(request, 'Duplicate Entries')
+                messages.error(request, 'You already entered the same collision type sub-category')
+                return redirect('attributes_builder_collision')
             else:
                 form.save()
                 messages.success(request, 'Accident Factor Updated')
@@ -1121,7 +1250,8 @@ def attributes_builder_crash_add(request):
                 
                 matching_courses = CrashType.objects.filter(crash_type=crash_type)
                 if matching_courses.exists():
-                    messages.error(request, 'Duplicate Entries')
+                    messages.error(request, 'You already entered the same crash type')
+                    return redirect('attributes_builder_crash')
                 else:
                     accident_factor = CrashType(crash_type=crash_type)
                     accident_factor.save()
@@ -1151,13 +1281,15 @@ def attributes_builder_crash_edit(request, id):
             crash_types = form.cleaned_data['crash_type']
             matching_courses = CrashType.objects.filter(crash_type=crash_types)
             if matching_courses:
-                messages.warning(request, 'Same Entries')
+                messages.error(request, 'You already entered the same crash type')
+                return redirect('attributes_builder_crash')
                 
             elif matching_courses.exists():
-                messages.error(request, 'Duplicate Entries')
+                messages.error(request, 'You already entered the same crash type')
+                return redirect('attributes_builder_crash')
             else:
                 form.save()
-                messages.success(request, 'Accident Factor Updated')
+                messages.success(request, 'Crash Type Updated')
                 return redirect('attributes_builder_crash')
     else:
         form = CrashTypeForm(instance=crash_type)
@@ -1183,8 +1315,20 @@ def attributes_builder_accident_admin(request):
     profile = get_object_or_404(UserProfile, user=request.user)
 
     accident_factor = AccidentCausation.objects.all()
+    paginator = Paginator(accident_factor, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in accident_factor:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = AccidentCausation.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'Accident Factor successfully deleted')
+        return redirect('attributes_builder_accident_admin')
     context = {
-        'accident_factor': accident_factor,
+        'accident_factor': page_obj,
         'profile':profile
     }
     return render(request, 'pages/admin/accident_factor.html', context)
@@ -1194,9 +1338,21 @@ def attributes_builder_accident_admin(request):
 def attributes_builder_accident_sub_admin(request, id):
     accident_factor = get_object_or_404(AccidentCausation, pk=id)
     accident_factor_sub = AccidentCausationSub.objects.filter(accident_factor=accident_factor)
+    paginator = Paginator(accident_factor_sub, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in accident_factor_sub:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = AccidentCausationSub.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'Accident Facor Sub-category successfully deleted')
+        return redirect('attributes_builder_accident_admin')
     context = {
         'accident_factor': accident_factor,
-        'accident_factor_sub': accident_factor_sub,
+        'accident_factor_sub': page_obj,
     }
     return render(request, 'pages/admin/accident_factor_sub.html', context)
 
@@ -1204,8 +1360,20 @@ def attributes_builder_accident_sub_admin(request, id):
 @user_passes_test(check_role_admin)
 def attributes_builder_crash_admin(request):
     crash_type = CrashType.objects.all()
+    paginator = Paginator(crash_type, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in crash_type:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = CrashType.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'Crash Type successfully deleted')
+        return redirect('attributes_builder_crash_admin')
     context = {
-        'crash_type': crash_type,
+        'crash_type': page_obj,
     }
     return render(request, 'pages/admin/crash.html', context)
 
@@ -1213,8 +1381,20 @@ def attributes_builder_crash_admin(request):
 @user_passes_test(check_role_admin)
 def attributes_builder_collision_admin(request):
     collision_type = CollisionType.objects.all()
+    paginator = Paginator(collision_type, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in collision_type:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = CollisionType.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'Collision Type successfully deleted')
+            return redirect('attributes_builder_collision_admin')
     context = {
-        'collision_type': collision_type,
+        'collision_type': page_obj,
     }
     return render(request, 'pages/admin/collision_type.html', context)
 
@@ -1223,9 +1403,21 @@ def attributes_builder_collision_admin(request):
 def attributes_builder_collision_sub_admin(request, id):
     collision_type = get_object_or_404(CollisionType, pk=id)
     collision_type_sub = CollisionTypeSub.objects.filter(collision_type=collision_type)
+    paginator = Paginator(collision_type_sub, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in collision_type_sub:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = CollisionTypeSub.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'Collision Type Sub-category successfully deleted')
+            return redirect('attributes_builder_collision_admin')
     context = {
         'collision_type': collision_type,
-        'collision_type_sub': collision_type_sub,
+        'collision_type_sub': page_obj,
     }
     return render(request, 'pages/admin/collision_type_sub.html', context)
 
@@ -1241,7 +1433,8 @@ def attributes_builder_accident_add_admin(request):
                 
                 matching_courses = AccidentCausation.objects.filter(category=category)
                 if matching_courses.exists():
-                    messages.error(request, 'Duplicate Entries')
+                    messages.error(request, 'You already entered the same accident factor')
+                    return redirect('attributes_builder_accident_admin')
                 else:
                     accident_factor = AccidentCausation(category=category)
                     accident_factor.save()
@@ -1271,10 +1464,13 @@ def attributes_builder_accident_edit_admin(request, id):
             category = form.cleaned_data['category']
             matching_courses = AccidentCausation.objects.filter(category=category)
             if matching_courses:
-                messages.warning(request, 'Same Entries')
+                messages.error(request, 'You already entered the same accident factor')
+                return redirect('attributes_builder_accident_admin')
+                
                 
             elif matching_courses.exists():
-                messages.error(request, 'Duplicate Entries')
+                messages.error(request, 'You already entered the same accident factor')
+                return redirect('attributes_builder_accident_admin')
             else:
                 form.save()
                 messages.success(request, 'Accident Factor Updated')
@@ -1306,10 +1502,12 @@ def attributes_builder_accident_add_sub_admin(request):
                 sub_category = form.cleaned_data['sub_category']
                 matching_courses = AccidentCausationSub.objects.filter(accident_factor=accident_factor,sub_category=sub_category)
                 if matching_courses:
-                    messages.warning(request, 'Same Entries')
+                    messages.error(request, 'You already entered the same accident factor sub-category')
+                    return redirect('attributes_builder_accident_admin')
                     
                 elif matching_courses.exists():
-                    messages.error(request, 'Duplicate Entries')
+                    messages.error(request, 'You already entered the same accident factor sub-category')
+                    return redirect('attributes_builder_accident_admin')
                 else:
                     accident_factor = AccidentCausationSub(accident_factor=accident_factor, sub_category=sub_category)
                     accident_factor.save()
@@ -1339,10 +1537,12 @@ def attributes_builder_accident_edit_sub_admin(request, id):
             sub_category = form.cleaned_data['sub_category']
             matching_courses = AccidentCausationSub.objects.filter(accident_factor=accident_factor,sub_category=sub_category)
             if matching_courses:
-                messages.warning(request, 'Same Entries')
+                messages.error(request, 'You already entered the same accident factor sub-category')
+                return redirect('attributes_builder_accident_admin')
                 
             elif matching_courses.exists():
-                messages.error(request, 'Duplicate Entries')
+                messages.error(request, 'You already entered the same accident factor sub-category')
+                return redirect('attributes_builder_accident_admin')
             else:
                 form.save()
                 messages.success(request, 'Accident Factor Updated')
@@ -1376,7 +1576,8 @@ def attributes_builder_collision_add_admin(request):
                 
                 matching_courses = CollisionType.objects.filter(category=category)
                 if matching_courses.exists():
-                    messages.error(request, 'Duplicate Entries')
+                    messages.error(request, 'You already entered the same collision type')
+                    return redirect('attributes_builder_collision_admin')
                 else:
                     accident_factor = CollisionType(category=category)
                     accident_factor.save()
@@ -1406,10 +1607,12 @@ def attributes_builder_collision_edit_admin(request, id):
             category = form.cleaned_data['category']
             matching_courses = CollisionType.objects.filter(category=category)
             if matching_courses:
-                messages.warning(request, 'Same Entries')
+                messages.error(request, 'You already entered the same collision type')
+                return redirect('attributes_builder_collision_admin')
                 
             elif matching_courses.exists():
-                messages.error(request, 'Duplicate Entries')
+                messages.error(request, 'You already entered the same collision type')
+                return redirect('attributes_builder_collision_admin')
             else:
                 form.save()
                 messages.success(request, 'Accident Factor Updated')
@@ -1441,10 +1644,12 @@ def attributes_builder_collision_add_sub_admin(request):
                 sub_category = form.cleaned_data['sub_category']
                 matching_courses = CollisionTypeSub.objects.filter(collision_type=collision_type, sub_category=sub_category)
                 if matching_courses:
-                    messages.warning(request, 'Same Entries')
+                    messages.error(request, 'You already entered the same collision type sub-category')
+                    return redirect('attributes_builder_collision_admin')
                     
                 elif matching_courses.exists():
-                    messages.error(request, 'Duplicate Entries')
+                    messages.error(request, 'You already entered the same collision type sub-category')
+                    return redirect('attributes_builder_collision_admin')
                 else:
                     accident_factor = CollisionTypeSub(collision_type=collision_type, sub_category=sub_category)
                     accident_factor.save()
@@ -1460,7 +1665,7 @@ def attributes_builder_collision_add_sub_admin(request):
     context = {
         'form' : form,
     }
-    return render(request, 'pages/admin/collision_type_add_sub_admin.html', context)
+    return render(request, 'pages/admin/collision_type_add_sub.html', context)
 
 @login_required(login_url='login')
 @user_passes_test(check_role_admin)
@@ -1474,10 +1679,12 @@ def attributes_builder_collision_edit_sub_admin(request, id):
             sub_category = form.cleaned_data['sub_category']
             matching_courses = CollisionTypeSub.objects.filter(collision_type=collision_type,sub_category=sub_category)
             if matching_courses:
-                messages.warning(request, 'Same Entries')
+                messages.error(request, 'You already entered the same collision type sub-category')
+                return redirect('attributes_builder_collision_admin')
                 
             elif matching_courses.exists():
-                messages.error(request, 'Duplicate Entries')
+                messages.error(request, 'You already entered the same collision type sub-category')
+                return redirect('attributes_builder_collision_admin')
             else:
                 form.save()
                 messages.success(request, 'Accident Factor Updated')
@@ -1510,7 +1717,8 @@ def attributes_builder_crash_add_admin(request):
                 
                 matching_courses = CrashType.objects.filter(crash_type=crash_type)
                 if matching_courses.exists():
-                    messages.error(request, 'Duplicate Entries')
+                    messages.error(request, 'You already entered the same crash type')
+                    return redirect('attributes_builder_collision_admin')
                 else:
                     accident_factor = CrashType(crash_type=crash_type)
                     accident_factor.save()
@@ -1540,13 +1748,15 @@ def attributes_builder_crash_edit_admin(request, id):
             crash_types = form.cleaned_data['crash_type']
             matching_courses = CrashType.objects.filter(crash_type=crash_types)
             if matching_courses:
-                messages.warning(request, 'Same Entries')
+                messages.error(request, 'You already entered the same crash type')
+                return redirect('attributes_builder_collision_admin')
                 
             elif matching_courses.exists():
-                messages.error(request, 'Duplicate Entries')
+                messages.error(request, 'You already entered the same crash type')
+                return redirect('attributes_builder_collision_admin')
             else:
                 form.save()
-                messages.success(request, 'Accident Factor Updated')
+                messages.success(request, 'Crash Type Updated')
                 return redirect('attributes_builder_crash_admin')
     else:
         form = CrashTypeForm(instance=crash_type)
@@ -2371,6 +2581,7 @@ def a_incident_report_general_view(request, id):
     vehicle_instance = IncidentVehicle.objects.all()
     media_instance = IncidentMedia.objects.all()
     remarks_instance = IncidentRemark.objects.all()
+    print(general_instance)
     context = {
         'user_report': user_report,
         'general_instance': general_instance,
@@ -2385,9 +2596,10 @@ def a_incident_report_general_view(request, id):
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
-def a_incident_report_general_edit(request, id=None):
+def a_incident_report_general_edit(request, id):
     userreport =  get_object_or_404(UserReport, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
+    print(general)
     if request.method == 'POST':
         general_instance = IncidentGeneralForm(request.POST  or None, request.FILES  or None, instance=general)
         user_report = UserReportForm(request.POST  or None, request.FILES  or None,  instance=userreport)
@@ -2405,6 +2617,7 @@ def a_incident_report_general_edit(request, id=None):
     else:
         general_instance = IncidentGeneralForm(instance=general)
         user_report = UserReportForm(instance=userreport)
+    print(general)
     context = {
         'general_instance': general_instance,
         'user_report' : user_report,

@@ -60,13 +60,22 @@
 
                 <div class="card-body">
                     <div class="table-responsive">
+                        {% if accident_factor %}
+                        <form id="form1" action="{% url 'attributes_builder_accident_admin' %}" enctype="multipart/form-data" method="post">
+                            {% csrf_token %}
+                            
+                            
+                            <div class="modal-footer">
+                         
+                                    <input type="submit" class="btn btn-sm btn-danger" value="Bulk Delete">
+                                </div>
                         <table class="table table-bordered table-hover text-dark" id="user_report" width="100%"
                             style="cursor: pointer;" cellspacing="0">
 
                             <!-- Table Header  -->
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th></th>
                                     <th>Accident Factor</th>
                                     <th>Created Date</th>
                                     <th>Modified Date</th>
@@ -78,7 +87,7 @@
                             <tbody>
                                 {% for accident_factors in accident_factor %}
                                 <tr>
-                                    <td>{{accident_factors.id}}</td>
+                                    <td><input type="checkbox" name="{{accident_factors.id}}" id="check"></td>
                                     <td>{{accident_factors}}</td>
                                     <td>{{accident_factors.created_at}}</td>
                                     <td>{{accident_factors.updated_at}}</td>
@@ -125,27 +134,66 @@
                             <!-- End of Table Body  -->
 
                         </table>
+                        {% else %}
+
+                        <h5 class="text-center">No Accident Factor Added.</h5>
+                             
+                        
+
+                    </form>
+                    {% endif %}
                     </div>
                 </div>
             </div>
             <!-- End of User Report Table  -->
-            <div class="pagination">
-                <span class="step-links">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1">&laquo; first</a>
-                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                    {% endif %}
-            
-                    <span class="current">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                    </span>
-            
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">next</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                    {% endif %}
-                </span>
-            </div>
+              <!--Pagination-->
+              {% if accident_factor %}
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+        {% if accident_factor.has_previous %}
+            <li class="page-item">
+            <a class="page-link" href="?page={{ accident_factor.previous_page_number }}">Previous</a>
+          </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+          </li>
+        {% endif %}
+
+        {% if accident_factor.number|add:'-4' > 1 %}
+            <li class="page-item"><a class="page-link" href="?page={{ accident_factor.number|add:'-5' }}">&hellip;</a></li>
+        {% endif %}
+
+        {% for i in accident_factor.paginator.page_range %}
+            {% if accident_factor.number == i %}
+                <li class="page-item active" aria-current="page">
+              <span class="page-link">
+                {{ i }}
+                <span class="sr-only">(current)</span>
+              </span>
+            </li>
+            {% elif i > accident_factor.number|add:'-5' and i < accident_factor.number|add:'5' %}
+                 <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if accident_factor.paginator.num_pages > accident_factor.number|add:'4' %}
+           <li class="page-item"><a class="page-link" href="?page={{ accident_factor.number|add:'5' }}">&hellip;</a></li>
+        {% endif %}
+
+        {% if accident_factor.has_next %}
+            <li class="page-item">
+            <a class="page-link" href="?page={{ accident_factor.next_page_number }}">Next</a>
+          </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+    <!--end of Pagination-->
         </div>
         <!-- End of Page Content -->
          </div>
@@ -159,7 +207,7 @@
 <!-- End of Scroll to Top-->
 
 
-{% include 'includes/alerts.html' %}
+{% include 'includes/alerts_frame.html' %}
 
 
 {% endblock %}

@@ -88,14 +88,21 @@
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                {% if incidentReports %}
+                                <form id="form1" action="{% url 'user_reports' %}" enctype="multipart/form-data" method="post">
+                                    {% csrf_token %}
+                                    
+                                    {% if incidentReports %}
+                                    <div class="modal-footer">
+                                 
+                                            <input type="submit" class="btn btn-sm btn-danger" value="Bulk Delete">
+                                        </div>
                                 <table class="table table-bordered table-hover text-dark" id="user_report" width="100%"
                                     style="cursor: pointer;" cellspacing="0">
 
                                     <!-- Table Header  -->
                                     <thead>
                                         <tr>
-                                            <th>Report ID</th>
+                                            <th></th>
                                             <th>Username</th>
                                             <th>Role</th>
                                             <th>Description</th>
@@ -114,7 +121,14 @@
                                         {% for incident in incidentReports %}
                                         {% if incident.user_report.user.username %}
                                         <tr>
-                                            <td>{{incident.id}}</td>
+                                            {% if incident.user_report.status == 2 %}
+                                            <td>
+                                                {% comment %} <input type="checkbox" name="{{incident.id}}" id="check" disabled> {% endcomment %}
+                                            </td>
+                                            {% else %}
+                                            <td><input type="checkbox" name="{{incident.user_report.id}}" id="check"></td>
+                                            {% endif %}
+                                           
                                             <td>{{incident.user_report.user.username}}</td>
                                             <td>{% if incident.user_report.user.role %}{{incident.user_report.user.get_role}}{% endif %}</td>
                                             <td>{{incident.user_report.description}}</td>
@@ -135,9 +149,12 @@
                                             <td>
                                                 <a href="{% url 'a_incident_report_general_view' incident.id %}"><i class='bx bxs-folder-open'
                                                     title="View"></i></a>
-                       
-                                                        <a href="#" data-toggle="modal" data-target="#deleteuserModal{{ incident.id }}"><i class='bx bx-trash'
-                                                            data-toggle="tooltip" title="Delete" ></i></a>
+                                                    {% if incident.user_report.status == 2 %} 
+                                                {% else %}     
+                                                <a href="#" data-toggle="modal" data-target="#deleteModal{{ incident.id }}"><i class='bx bx-trash'
+                                                    data-toggle="tooltip" title="Delete" ></i></a>
+                                                    {% endif %}
+                                           
                                             </td>
                                             
                                         </tr>
@@ -173,9 +190,10 @@
                                 </table>
                                 {% else %}
 
-                        <h5 class="text-center">No User Report.</h5>
-                             
-                        {% endif %}
+                                <h5 class="text-center">No User Report Added.</h5>
+                                     
+                                {% endif %}
+                            </form>
 
                                 
                             </div>
@@ -192,7 +210,53 @@
 
         </div>
         <!-- End of Main Content  -->
+<!--Pagination-->
+{% if incidentReports %}
+<nav aria-label="Page navigation example">
+   <ul class="pagination justify-content-center">
+   {% if incidentReports.has_previous %}
+       <li class="page-item">
+       <a class="page-link" href="?page={{ incidentReports.previous_page_number }}">Previous</a>
+     </li>
+   {% else %}
+       <li class="page-item disabled">
+       <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+     </li>
+   {% endif %}
 
+   {% if incidentReports.number|add:'-4' > 1 %}
+       <li class="page-item"><a class="page-link" href="?page={{ incidentReports.number|add:'-5' }}">&hellip;</a></li>
+   {% endif %}
+
+   {% for i in incidentReports.paginator.page_range %}
+       {% if incidentReports.number == i %}
+           <li class="page-item active" aria-current="page">
+         <span class="page-link">
+           {{ i }}
+           <span class="sr-only">(current)</span>
+         </span>
+       </li>
+       {% elif i > incidentReports.number|add:'-5' and i < incidentReports.number|add:'5' %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+       {% endif %}
+   {% endfor %}
+
+   {% if incidentReports.paginator.num_pages > incidentReports.number|add:'4' %}
+      <li class="page-item"><a class="page-link" href="?page={{ incidentReports.number|add:'5' }}">&hellip;</a></li>
+   {% endif %}
+
+   {% if incidentReports.has_next %}
+       <li class="page-item">
+       <a class="page-link" href="?page={{ incidentReports.next_page_number }}">Next</a>
+     </li>
+   {% else %}
+       <li class="page-item disabled">
+       <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+     </li>
+   {% endif %}
+ </ul>
+</nav>
+{% endif %}
 
         <!-- Scroll to Top-->
         <a class="scroll-to-top rounded" href="#scroll-up">
@@ -275,14 +339,21 @@
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                {% if incidentReports %}
+                                <form id="form1" action="{% url 'user_reports' %}" enctype="multipart/form-data" method="post">
+                                    {% csrf_token %}
+                                    
+                                    {% if incidentReports %}
+                                    <div class="modal-footer">
+                                 
+                                            <input type="submit" class="btn btn-sm btn-danger" value="Bulk Delete">
+                                        </div>
                                 <table class="table table-bordered table-hover text-dark" id="user_report" width="100%"
                                     style="cursor: pointer;" cellspacing="0">
 
                                     <!-- Table Header  -->
                                     <thead>
                                         <tr>
-                                            <th>Report ID</th>
+                                            <th></th>
                                             <th>Username</th>
                                             <th>Role</th>
                                             <th>Description</th>
@@ -302,7 +373,13 @@
                                         {% for incident in incidentReports %}
                                         {% if incident.user_report.user.username %}
                                         <tr>
-                                            <td>{{incident.id}}</td>
+                                            {% if incident.user_report.status == 2 %}
+                                            <td>
+                                                {% comment %} <input type="checkbox" name="{{incident.id}}" id="check" disabled> {% endcomment %}
+                                            </td>
+                                            {% else %}
+                                            <td><input type="checkbox" name="{{incident.user_report.id}}" id="check"></td>
+                                            {% endif %}
                                             <td>{{incident.user_report.user.username}}</td>
                                             <td>{% if incident.user_report.user.role %}{{incident.user_report.user.get_role}}{% endif %}</td>
                                             <td>{{incident.user_report.description}}</td>
@@ -324,8 +401,11 @@
                                                 <a href="{% url 'incident_report_general_view' incident.id %}"><i class='bx bxs-folder-open'
                                                     title="View"></i></a>
                        
-                                                        <a href="#" data-toggle="modal" data-target="#deleteuserModal{{ incident.id }}"><i class='bx bx-trash'
-                                                            data-toggle="tooltip" title="Delete" ></i></a>
+                                                    {% if incident.user_report.status == 2 %} 
+                                                    {% else %}     
+                                                    <a href="#" data-toggle="modal" data-target="#deleteModal{{ incident.id }}"><i class='bx bx-trash'
+                                                        data-toggle="tooltip" title="Delete" ></i></a>
+                                                        {% endif %}
                                             </td>
                                             
                                         </tr>
@@ -361,10 +441,10 @@
                                 </table>
                                 {% else %}
 
-                        <h5 class="text-center">No User Report.</h5>
-                             
-                        {% endif %}
-
+                                <h5 class="text-center">No User Report Added.</h5>
+                                     
+                                {% endif %}
+                            </form>
                                 
                             </div>
                         </div>
@@ -381,7 +461,53 @@
         </div>
         <!-- End of Main Content  -->
 
+<!--Pagination-->
+{% if incidentReports %}
+<nav aria-label="Page navigation example">
+   <ul class="pagination justify-content-center">
+   {% if incidentReports.has_previous %}
+       <li class="page-item">
+       <a class="page-link" href="?page={{ incidentReports.previous_page_number }}">Previous</a>
+     </li>
+   {% else %}
+       <li class="page-item disabled">
+       <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+     </li>
+   {% endif %}
 
+   {% if incidentReports.number|add:'-4' > 1 %}
+       <li class="page-item"><a class="page-link" href="?page={{ incidentReports.number|add:'-5' }}">&hellip;</a></li>
+   {% endif %}
+
+   {% for i in incidentReports.paginator.page_range %}
+       {% if incidentReports.number == i %}
+           <li class="page-item active" aria-current="page">
+         <span class="page-link">
+           {{ i }}
+           <span class="sr-only">(current)</span>
+         </span>
+       </li>
+       {% elif i > incidentReports.number|add:'-5' and i < incidentReports.number|add:'5' %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+       {% endif %}
+   {% endfor %}
+
+   {% if incidentReports.paginator.num_pages > incidentReports.number|add:'4' %}
+      <li class="page-item"><a class="page-link" href="?page={{ incidentReports.number|add:'5' }}">&hellip;</a></li>
+   {% endif %}
+
+   {% if incidentReports.has_next %}
+       <li class="page-item">
+       <a class="page-link" href="?page={{ incidentReports.next_page_number }}">Next</a>
+     </li>
+   {% else %}
+       <li class="page-item disabled">
+       <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+     </li>
+   {% endif %}
+ </ul>
+</nav>
+{% endif %}
         <!-- Scroll to Top-->
         <a class="scroll-to-top rounded" href="#scroll-up">
             <i class='bx bxs-up-arrow'></i>
@@ -390,6 +516,6 @@
 {% endif %}
 
 
-{% include 'includes/alerts.html' %}
+{% include 'includes/alerts_frame.html' %}
 
 {% endblock %}

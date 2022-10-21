@@ -104,64 +104,96 @@ def admin_profile_edit(request):
 @user_passes_test(check_role_admin)
 def admin_user_account(request):
     form = UserManagementForm(request.POST)
-    user = User.objects.all()
+    user = User.objects.all().order_by('-last_login')
     paginator = Paginator(user, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in user:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = User.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'User successfully deleted')
     context = {
         'form': form,
         'user': user,
         'page_obj':page_obj
     }
     print(context)
-    return render(request, 'pages/admin_user_account.html', context)
+    return render(request, 'pages/admin/admin_user_account.html', context)
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
 def admin_user_account_member(request):
-    user = User.objects.filter(role = 1)
+    user = User.objects.filter(role = 1).order_by('-last_login')
     form = UserManagementForm(request.POST)
     paginator = Paginator(user, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in user:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = User.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'User successfully deleted')
     context = {
         'form': form,
         'user': user,
         'page_obj':page_obj
     }
     print(context)
-    return render(request, 'pages/admin_user_account.html', context)
+    return render(request, 'pages/admin/admin_user_account.html', context)
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
 def admin_user_account_admin(request):
-    user = User.objects.filter(role = 2)
+    user = User.objects.filter(role = 2).order_by('-last_login')
     form = UserManagementForm(request.POST)
     paginator = Paginator(user, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in user:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = User.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'User successfully deleted')
     context = {
         'form': form,
         'user': user,
         'page_obj':page_obj
     }
     print(context)
-    return render(request, 'pages/admin_user_account.html', context)
+    return render(request, 'pages/admin/admin_user_account.html', context)
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
 def admin_user_account_superadmin(request):
-    user = User.objects.filter(role = 3)
+    user = User.objects.filter(role = 3).order_by('-last_login')
     form = UserManagementForm(request.POST)
     paginator = Paginator(user, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in user:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = User.objects.get(id=i.id)
+                b.delete()
+            messages.success(request, 'User successfully deleted')
     context = {
         'form': form,
         'user': user,
         'page_obj':page_obj
     }
-    return render(request, 'pages/admin_user_account.html', context)
+    return render(request, 'pages/admin/admin_user_account.html', context)
 
 
 @login_required(login_url = 'login')
@@ -221,7 +253,7 @@ def admin_user_account_edit(request, id=None):
         'user': user
     }
     
-    return render(request, 'pages/admin_user_account_edit.html', context)
+    return render(request, 'pages/admin/admin_user_account_edit.html', context)
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
