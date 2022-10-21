@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'incidentreport',
     'generate_report',
     'dashboard',
-    'livereload'
+    # 'livereload'
     
 ]
 
