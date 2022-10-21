@@ -160,8 +160,8 @@ google.maps.event.addListener(autocomplete, 'place_changed', function () {
 });
 
 
-$("#id_general-accident_factor").change(function () {
-    const url = $("#form_incidentgeneral").attr("data-acc-url");  // get the url of the `load_cities` view
+$("#id_accident_factor").change(function () {
+    const url = $("#msform").attr("data-acc-url");  // get the url of the `load_cities` view
     const accidentId = $(this).val();  // get the selected country ID from the HTML input
 
     $.ajax({                       // initialize an AJAX request
@@ -170,7 +170,7 @@ $("#id_general-accident_factor").change(function () {
             'accident_factor_id': accidentId       // add the country id to the GET parameters
         },
         success: function (data) {
-            let select_element = $('#id_general-accident_subcategory'); //Sub_category select  
+            let select_element = $('#id_accident_factor'); //Sub_category select  
             //console.log(data) // `data` is the return of the `load_cities` view function
             $(select_element).html(data);  // replace the contents of the city input with the data that came from the server
 
@@ -179,7 +179,7 @@ $("#id_general-accident_factor").change(function () {
                 html_data += `<option value="${accident_subcategory.id}">${accident_subcategory.sub_category}</option>`
             });
             console.log(html_data);
-            $("#id_general-accident_subcategory").html(html_data);
+            $("#id_accident_factor").html(html_data);
 
         }
     });

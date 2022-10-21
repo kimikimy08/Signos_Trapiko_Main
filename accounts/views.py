@@ -13,6 +13,8 @@ from .utils import send_verfication_email, send_sms, detectUser
 from incidentreport.models import UserReport
 
 
+
+
 def check_role_member(user):
     if user.role == 1:
         return True

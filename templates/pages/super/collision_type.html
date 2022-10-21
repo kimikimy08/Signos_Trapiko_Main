@@ -41,9 +41,9 @@
                         <a href="{% url 'attributes_builder_collision_add' %}" title ="Add User"
                             class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight">
                             <i class='bx bx-user-plus'></i> Add Collision Type</a>
-                         <a href="{% url 'attributes_builder_collision_add_sub' %}" title ="Add User"
+                         {% comment %} <a href="{% url 'attributes_builder_collision_add_sub' %}" title ="Add User"
                             class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight">
-                            <i class='bx bx-user-plus'></i> Add Collision Type Sub Category</a>
+                            <i class='bx bx-user-plus'></i> Add Collision Type Sub Category</a> {% endcomment %}
                         <!-- <a href="#add2"
                             class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight"
                             data-toggle="modal" data-toggle="tooltip">
@@ -92,8 +92,8 @@
                                     <td>{{collision_types.updated_at}}</td>
                                     
                                     <td>
-                                        <a href="{% url 'attributes_builder_collision_sub' collision_types.id  %}"><i class='bx bxs-folder-open'
-                                            title="View"></i></a>
+                                        {% comment %} <a href="{% url 'attributes_builder_collision_sub' collision_types.id  %}"><i class='bx bxs-folder-open'
+                                            title="View"></i></a> {% endcomment %}
                                             <a href="{% url 'attributes_builder_collision_edit' collision_types.id %}"><i class='bx bxs-edit'
                                                 title="Edit"></i></a>
                                             <a href="{% url 'attributes_builder_collision_delete' collision_types.id %}" data-toggle="modal" data-target="#deleteuserModal{{ collision_types.id }}"><i class='bx bx-trash'

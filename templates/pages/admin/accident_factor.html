@@ -41,9 +41,9 @@
                         <a href="{% url 'attributes_builder_accident_add_admin' %}" title ="Add User"
                             class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight">
                             <i class='bx bx-user-plus'></i> Add Accident Factor</a>
-                            <a href="{% url 'attributes_builder_accident_add_sub_admin'%}" title ="Add User"
+                            {% comment %} <a href="{% url 'attributes_builder_accident_add_sub_admin'%}" title ="Add User"
                             class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight">
-                            <i class='bx bx-user-plus'></i> Add Accident Factor Sub Category</a>
+                            <i class='bx bx-user-plus'></i> Add Accident Factor Sub Category</a> {% endcomment %}
 
                         <!-- <a href="#add2"
                             class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight"
@@ -93,8 +93,8 @@
                                     <td>{{accident_factors.updated_at}}</td>
 
                                     <td>
-                                        <a href="{% url 'attributes_builder_accident_sub_admin' accident_factors.id %}"><i class='bx bxs-folder-open'
-                                            title="View"></i></a>
+                                        {% comment %} <a href="{% url 'attributes_builder_accident_sub_admin' accident_factors.id %}"><i class='bx bxs-folder-open'
+                                            title="View"></i></a> {% endcomment %}
                                             <a href="{% url 'attributes_builder_accident_edit_admin' accident_factors.id %}"><i class='bx bxs-edit'
                                                 title="Edit"></i></a>
                                             <a href="{% url 'attributes_builder_accident_delete_admin' accident_factors.id %}" data-toggle="modal" data-target="#deleteuserModal{{ accident_factors.id }}"><i class='bx bx-trash'

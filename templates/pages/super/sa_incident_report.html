@@ -11,6 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href=" {% static 'css/datepicker.css' %} " rel="stylesheet"> 
 
     <!-- Favicon-->
     <link href="assets/img/faviconwhite.png" rel="icon">
@@ -65,7 +66,7 @@
                 
                 <div class="row mb-5">
                     <div class="col-md-12 col-md-offset-1">
-                        <form id="msform" action="{% url 'sa_incidentreports' %}" method="post" enctype="multipart/form-data" >
+                        <form id="msform" action="{% url 'sa_incidentreports' %}" method="post" enctype="multipart/form-data" data-acc-url="{% url 'ajax_load_accident' %} >
                             {% csrf_token %}
                             <!-- progressbar -->
                             <ul id="progressbar">
@@ -140,25 +141,16 @@
                                             </div>
 
                                             <div class="form-row">
-                                                <div class="form-group col-md-6">
+                                                <div class="form-group col-md-12">
                                                     <label for="inputAccident">Accident Factor</label>
                                                     {{form_general.accident_factor}}
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputAccident">Accident Factor Sub Category</label>
-                                                    {{form_general.accident_subcategory}}
                                                 </div>
                                             </div>
                                             
                                             <div class="form-row">
-                                                <div class="form-group col-md-6">
+                                                <div class="form-group col-md-12">
                                                     <label for="inputCollision">Collision Type</label>
                                                     {{form_general.collision_type}}
-                                                </div>
-
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputCollision">Collision Sub Category</label>
-                                                    {{form_general.collision_subcategory}}
                                                 </div>
                                             </div>
                                             
@@ -216,9 +208,9 @@
                     </div>
                 </div>
        
-    
+            </div>
     <!-- End of page Wrapper-->
-        </div>    
+      
     <!-- End of Main Content  -->
 
 
@@ -240,7 +232,22 @@
 
 
     <!-- End of Page Wrapper -->
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.css"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+    
+    <script>
+        var date = new Date();
+         date.setDate(date.getDate()-14);
+         var date1 = new Date();
+         date1.setDate(date1.getDate()+0);
+        $('.datepickstart').datepicker({
+         autoclose: true,
+         todayHighlight: true,
+         format: 'mm/dd/yyyy',
+          startDate: date,
+          endDate: date1
+        });
+    </script>
     <script>
 
         $("#id_accident_factor").change(function () {

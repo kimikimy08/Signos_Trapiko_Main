@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+
 <html lang="en">
 
 <head>
@@ -72,7 +73,7 @@
                                 <li><a href="#" class="nav-link">About</a></li>
                                 <li><a href="#" class="nav-link">Contact</a></li>
                                 <!-- Department Directory  -->
-                                {% if user.is_authenticated %}
+                              {% if user.is_authenticated %}
                                 <li> 
                                   <a href="{% url 'logout' %}" ><button type="button" class="btn btn-outline-primary rounded">Sign out</button></a>
                                 </li>
@@ -85,8 +86,8 @@
                                 <li>
                                     <a href="{% url 'registration' %}" ><button type="button" class="btn btn-primary rounded">Register</button></a>
                                 </li>
-                              </li>
-                                {% endif %}
+                              </li> 
+                              {% endif %}
                                 
                             </ul>
                         </nav>

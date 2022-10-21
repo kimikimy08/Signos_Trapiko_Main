@@ -481,8 +481,8 @@ def user_report_delete(request, id=None):
 
 # AJAX
 def load_accident(request):
-    accident_factor_id = request.GET.get('accident_factor_id')
-    collision_type_id = request.GET.get('collision_type_id')
+    accident_factor_id = request.GET.get('id_accident_factor')
+    collision_type_id = request.GET.get('id_collision_type')
     acc_subcat = AccidentCausationSub.objects.filter(accident_factor_id=accident_factor_id).all()
     col_subcat = CollisionTypeSub.objects.filter(collision_type_id=collision_type_id).all()
     context = {
