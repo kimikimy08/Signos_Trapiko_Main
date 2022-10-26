@@ -202,4 +202,4 @@ GOOGLE_API_KEY = config('GOOGLE_API_KEY')
 # GEOS_LIBRARY_PATH = "/opt/homebrew/Cellar/geos/3.11.0/lib/libgeos_c.dylib"
 
 GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
-GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
+GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PAT')
