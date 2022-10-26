@@ -115,17 +115,13 @@ django_heroku.settings(locals())
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'Signos_Trapiko',
-        'USER': 'postgres',
-        'PASSWORD': 'signos0805Trapiko',
-        # 'HOST': 'localhost',
+        'NAME': '*',
+        'USER': '*',
+        'PASSWORD': '*',
+        'HOST': '*',
+        'PORT': '5432',
     },
 }
-
-import dj_database_url
-DATABASES['default'] = dj_database_url.config()
-DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
-DATABASES['default']['NAME'] = 'Signos_Trapiko'
 
 # DATABASES['default'] = dj_database_url.config()
 # DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
