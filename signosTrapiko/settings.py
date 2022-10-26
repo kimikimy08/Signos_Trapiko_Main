@@ -118,7 +118,7 @@ DATABASES = {
         'NAME': 'Signos_Trapiko',
         'USER': 'postgres',
         'PASSWORD': 'signos0805Trapiko',
-        'HOST': 'localhost',
+        # 'HOST': 'localhost',
     },
 }
 
