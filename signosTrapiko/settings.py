@@ -98,15 +98,15 @@ WSGI_APPLICATION = 'signosTrapiko.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-#        'NAME': config('DB_NAME'),
-#        'USER': config('DB_USER'),
-#        'PASSWORD': config('DB_PASSWORD'),
-#        'HOST': config('DB_HOST'),
-#    }
-# }
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.contrib.gis.db.backends.postgis',
+       'NAME': config('DB_NAME'),
+       'USER': config('DB_USER'),
+       'PASSWORD': config('DB_PASSWORD'),
+       'HOST': config('DB_HOST'),
+   }
+}
 
 # DATABASES = {'default': dj_database_url.config(default='django.contrib.gis.db.backends.postgis://django.contrib.gis.db.backends.postgis:signos0805Trapiko@localhost/Signos_Trapiko')}
 
@@ -210,15 +210,6 @@ GOOGLE_API_KEY = config('GOOGLE_API_KEY')
 GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
 GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
 
-django_heroku.settings(locals())
+DATABASES['default'] = dj_database_url.config()
+DATABASES['default']['ENGINE'] = "django.contrib.gis.db.backends.postgis"
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': '*',
-        'USER': '*',
-        'PASSWORD': '*',
-        'HOST': '*',
-        'PORT': '5432',
-    },
-}
