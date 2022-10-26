@@ -1,5 +1,8 @@
+import csv
 import os
 from django.conf import settings
+from django.db import IntegrityError
+from django.forms import ValidationError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -17,6 +20,7 @@ from datetime import datetime
 from .resources import UserReportResource, IncidentGeneraltResource, IncidentRemarkResources, IncidentPeopleResources, IncidentVehicleResources
 from tablib import Dataset
 from django.core.paginator import Paginator
+import pandas as pd
 
 
 @login_required(login_url='login')
@@ -153,9 +157,20 @@ def user_report(request):
     profile = get_object_or_404(UserProfile, user=request.user)
 
     incidentReports = IncidentGeneral.objects.all().order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.user_report_id))
+            print(x)
+            if str(x) == 'on':
+                b = UserReport.objects.get(id=i.user_report_id)
+                b.delete()
+                messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentReports': incidentReports,
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -165,9 +180,20 @@ def user_report(request):
 def user_report_pending(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incidentReports = IncidentGeneral.objects.filter(user_report__status = 1).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.user_report_id))
+            print(x)
+            if str(x) == 'on':
+                b = UserReport.objects.get(id=i.user_report_id)
+                b.delete()
+                messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentReports': incidentReports,
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -177,9 +203,20 @@ def user_report_pending(request):
 def user_report_approved(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incidentReports = IncidentGeneral.objects.filter(user_report__status = 2).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.user_report_id))
+            print(x)
+            if str(x) == 'on':
+                b = UserReport.objects.get(id=i.user_report_id)
+                b.delete()
+                messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentReports': incidentReports,
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -189,13 +226,46 @@ def user_report_approved(request):
 def user_report_rejected(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incidentReports = IncidentGeneral.objects.filter(user_report__status = 3).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.user_report_id))
+            print(x)
+            if str(x) == 'on':
+                b = UserReport.objects.get(id=i.user_report_id)
+                b.delete()
+                messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentReports': incidentReports,
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/user_report.html', context)
 
 
+@login_required(login_url='login')
+@user_passes_test(check_role_super_admin)
+def user_report_today(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+    today = datetime.today().date()
+    incidentReports = IncidentGeneral.objects.filter(created_at__date=today).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.user_report_id))
+            print(x)
+            if str(x) == 'on':
+                b = UserReport.objects.get(id=i.user_report_id)
+                b.delete()
+                messages.success(request, 'User Report successfully deleted')
+    context = {
+        'profile': profile,
+        'incidentReports': page_obj,
+    }
+    return render(request, 'pages/user_report.html', context)
 
 
 @login_required(login_url='login')
@@ -1777,8 +1847,6 @@ def attributes_builder_crash_delete_admin(request, id):
 @login_required(login_url='login')
 @user_passes_test(check_role_super)
 def sa_incidentreports(request):
-    # if request.method!="POST":
-    #     return redirect ('user_reports')
     profile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':
         form =  UserReportForm(request.POST or None, request.FILES or None)
@@ -1797,24 +1865,13 @@ def sa_incidentreports(request):
                 longitude=request.POST.get("longitude")
                 description=request.POST.get("description")
                 
-                
-                # accident_factor = AccidentCausation.objects.get(pk=request.id)
-                # accident_subcategory = AccidentCausationSub.objects.get(pk=request.id)
-                # collision_type = CollisionType.objects.get(pk=request.id)
-                # collision_subcategory = CollisionTypeSub.objects.get(pk=request.id)
-                # crash_type = CrashType.objects.get(pk=request.id)
+    
                 accident_factor1 = request.POST.get("accident_factor")
                 accident_factor = AccidentCausation.objects.get(pk=accident_factor1)
-                
-                # accident_subcategory1 = request.POST.get("accident_subcategory")
-                # accident_subcategory = AccidentCausationSub.objects.get(pk=accident_subcategory1)
+
                 collision_type1 = request.POST.get("collision_type")
                 collision_type = CollisionType.objects.get(pk=collision_type1)
-                
-                
-                
-                # collision_subcategory1 = request.POST.get("collision_subcategory")
-                # collision_subcategory = CollisionTypeSub.objects.get(pk=collision_subcategory1)
+
                 
                 crash_type1 = request.POST.get("crash_type")
                 crash_type = CrashType.objects.get(pk=crash_type1)
@@ -1833,7 +1890,16 @@ def sa_incidentreports(request):
                 form.user = request.user
                 user_report=UserReport(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description)
                 user_report.status = 2
-                user_report.save()
+                # user_report.save()
+                
+                user_instance =  UserReport.objects.filter(date = date)
+                
+                if user_instance.exists():
+                    user_report.duplicate = "Possible Duplicate"
+                    user_report.save()
+                else:
+                    user_report.save()
+                
                 incident_general=IncidentGeneral(user_report=user_report,accident_factor=accident_factor,
                                                 collision_type=collision_type,
                                                 crash_type=crash_type,
@@ -1843,6 +1909,8 @@ def sa_incidentreports(request):
                 incident_remarks = IncidentRemark(incident_general=incident_general,responder=responder,action_taken=action_taken)
                 incident_remarks.save()
                 
+                
+                
                 messages.success(request,"Data Save Successfully")
                 request.session['latest__id'] = incident_general.id
                 return redirect('sa_incidentreports_additional')
@@ -1851,8 +1919,7 @@ def sa_incidentreports(request):
             print('invalid form')
             messages.error(request, str(e))
 
-            messages.error(request,"Error in Saving Data")
-            # return redirect ('user_reports')
+
         else:
             print('invalid formd')
             print(form.errors)
@@ -3018,50 +3085,510 @@ def admin_user_report_media_delete(request, id):
     user_report.delete()
     return redirect('user_reports')
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def simple_upload(request):
-    if request.method == 'POST':
-        user_resource = UserReportResource()
-        incident_general = IncidentGeneraltResource()
-        incident_remark = IncidentRemarkResources()
-        dataset = Dataset()
-        new_userreport = request.FILES['myfile']
+    data = None
+    
+    try:
+        if request.method == 'POST':
+            data = request.FILES['myfile']
+            
+            if not data.name.endswith('.csv'):
+                messages.warning(request, 'The wrong file type was uploaded')
+                return redirect('user_reports')
+            else: 
+                data = pd.read_csv(data, header=0, encoding="UTF-8", na_values=[' '])
+                data = data.astype(object).where(pd.notnull(data), None)
+            try:
+                for index, rows in data.iterrows():
+                    
+                        userid = rows["User ID"] 
+                        generalid = rows["User ID"]
+                        date = rows["Date"] if rows["Date"] else datetime.date.today()
+                        time = rows["Time"]
+                        description = rows["Description"] if rows["Description"] else " "
+                        address = rows["Address"] if rows["Address"] else " "
+                        latitude = rows["Latitude"] if rows["Latitude"] else " "
+                        longitude = rows["Longitude"] if rows["Longitude"] else " "
+                        status = rows["Status"] if rows["Status"] else " "
+                        weather = rows["Weather"] if rows["Weather"] else " "
+                        light = rows["Light"] if rows["Light"] else " "
+                        accident_factor = rows["Accident Factor"] if rows["Accident Factor"] else " "
+                        collision_type = rows["Collision Type"] if rows["Collision Type"] else " "
+                        crash_type = rows["Crash"] if rows["Crash"] else " "
+                        severity = rows["Severity"] if rows["Severity"] else " "
+                        movement_code = rows["Movement Code"] if rows["Movement Code"] else " "
+                        responder = rows["Responder"] if rows["Responder"] else " "
+                        action_taken = rows["Action Taken"] if rows["Action Taken"] else " "
+                    
+                        # user_report_instance = UserReport.objects.get(userid=userid)
+                        # general_instance = IncidentGeneral.objects.get(generalid=generalid)
+                        
+                        # get_or_create is used to eliminate forming or any duplicate record 
+                        userreport, created = UserReport.objects.get_or_create(
+                            user=request.user,
+                            userid=userid,
+                            date=date,
+                            time=time,
+                            description=description,
+                            address=address,
+                            latitude=latitude,
+                            longitude=longitude,
+                            status=status
+                        )
+                        
+                        usergeneral, created = IncidentGeneral.objects.get_or_create(
+                            user=request.user,
+                            user_report=UserReport.objects.get(userid=userid),
+                            generalid = generalid,
+                            weather=weather,
+                            light=light,
+                            accident_factor=AccidentCausation.objects.get(category=accident_factor),
+                            collision_type=CollisionType.objects.get(category=collision_type),
+                            crash_type=CrashType.objects.get(crash_type=crash_type),
+                            severity=severity,
+                            movement_code=movement_code
+                        )
+                        
+                        userremarks, created = IncidentRemark.objects.get_or_create(
+                            incident_general = IncidentGeneral.objects.get(generalid=generalid),
+                            responder=responder,
+                            action_taken=action_taken
+                        )
+                        
+                        
+                        
+                        if created:
+                            userreport.save()
+                            usergeneral.save()
+                            userremarks.save()
+                messages.success(request, "The files has been uploaded to the database")
+                            # return redirect('simple_upload')
+                        
+                        # else:
+                        #     messages.error(request, "The files not uploaded to the database")
+                        
+            except ValidationError as e:
+                messages.error(request, str(e))
+                return redirect('simple_upload')
+                    
+            except IntegrityError as e:
+                messages.error(request, str(e))
+                return redirect('simple_upload')
+                   
+                
+    except csv.Error as e:
+        print(e)
+        return redirect('simple_upload')
+    
 
-        imported_data = dataset.load(new_userreport.read(),format='xls')
-        #print(imported_data)
-        for data in imported_data:
-            value = UserReport(user=request.user, date=data[0], description=data[1], address=data[2], latitude=data[3], longitude=data[4], status=data[5])
-            value1= IncidentGeneral(user=request.user, weather=data[6],
-                                    light=data[7], severity=data[8], movement_code=data[9])
-            value2 = IncidentRemark(responder=data[10], action_taken=data[11])
-            value.save()
-            value1.save()
-            value2.save()
-            print(data[1])
-    return render(request, 'input.html')
+    return render(request, 'pages/super/input.html')
+    
+    # if request.method == 'POST':
+    #     user_resource = UserReportResource()
+    #     incident_general = IncidentGeneraltResource()
+    #     incident_remark = IncidentRemarkResources()
+        
+        
+    #     dataset = Dataset()
+    #     new_userreport = request.FILES['myfile']
 
+    #     imported_data = dataset.load(new_userreport.read(),format='xls')
+    #     #print(imported_data)
+    #     for data in imported_data:
+    #         user_report_instance = UserReport.objects.get(userid=data[0])
+    #         general_instance = IncidentGeneral.objects.get(generalid=data[0])
+    #         value = UserReport(user=request.user, userid= data[0], date=data[1], description=data[2], address=data[3], latitude=data[4], longitude=data[5], status=data[6])
+    #         value1= IncidentGeneral(user=request.user, user_report__userid=user_report_instance, generalid=data[0], weather=data[6],
+    #                                 light=data[7], severity=data[8], movement_code=data[9])
+    #         value2 = IncidentRemark(incident_general__generalid=general_instance, responder=data[10], action_taken=data[11])
+    #         value.save()
+    #         value1.save()
+    #         value2.save()
+    #         print(data[1])
+    # return render(request, 'input.html')
 
+@login_required(login_url = 'login')
+@user_passes_test(check_role_super)
 def simple_upload_additional(request):
-    if request.method == 'POST':
-        incident_people = IncidentPeopleResources()
-        incident_vehicle = IncidentVehicleResources()
-        dataset = Dataset()
-        new_userreport = request.FILES['myfile']
+    data = None
+    
+    try:
+        if request.method == 'POST':
+            data = request.FILES['myfile']
+            
+            if not data.name.endswith('.csv'):
+                messages.warning(request, 'The wrong file type was uploaded')
+                return redirect('user_reports')
+            
+            else: 
+                data = pd.read_csv(data, header=0, encoding="UTF-8", na_values=[' '])
+                data = data.astype(object).where(pd.notnull(data), None)
+                
+            
+            try:
+                for index, rows in data.iterrows():
+                
+                    generalid = rows["User ID"]
+                    incident_first_name = rows["First Name"]
+                    incident_middle_name = rows["Middle Name"]
+                    incident_last_name = rows["Last Name"]
+                    incident_age = rows["Age"]
+                    incident_gender = rows["Gender"]
+                    incident_address = rows["Address"]
+                    incident_involvement = rows["Involvement"]
+                    incident_id_presented = rows["ID Presented"]
+                    incident_id_number = rows["ID Number"]
+                    incident_injury = rows["Injury"]
+                    incident_driver_error = rows["Driver Error"]
+                    incident_alcohol_drugs = rows["Alcohol/Drugs"]
+                    incident_seatbelt_helmet = rows["Seatbelt/Helmet"]
+                    classification = rows["Vehicle Classification"]
+                    vehicle_type = rows["Vehicle Type"]
+                    brand = rows["Brand"]
+                    plate_number = rows["Plate Number"]
+                    engine_number = rows["Engine Number"]
+                    chassis_number = rows["Chassis Number"]
+                    insurance_details = rows["Insurance Details"]
+                    maneuver = rows["Maneuver"]
+                    damage = rows["Damage"]
+                    defect = rows["Defect"]
+                    loading = rows["Loading"]
+                    
+                    rows.fillna(" ", inplace=True)
+                
+                    userperson, created = IncidentPerson.objects.get_or_create(
+                        incident_general = IncidentGeneral.objects.get(generalid=generalid),
+                        incident_first_name=incident_first_name,
+                        incident_middle_name=incident_middle_name,
+                        incident_last_name=incident_last_name,
+                        incident_age=incident_age,
+                        incident_gender=incident_gender,
+                        incident_address=incident_address,
+                        incident_involvement=incident_involvement,
+                        incident_id_presented=incident_id_presented,
+                        incident_id_number=incident_id_number,
+                        incident_injury=incident_injury,
+                        incident_driver_error=incident_driver_error,
+                        incident_alcohol_drugs=incident_alcohol_drugs,
+                        incident_seatbelt_helmet=incident_seatbelt_helmet,
+                    )
+                    
 
-        imported_data = dataset.load(new_userreport.read(),format='xls')
-        #print(imported_data)
-        for data in imported_data:
-            value = IncidentPerson(incident_first_name=data[0],
-                                    incident_middle_name=data[1], incident_last_name=data[2], incident_age=data[3], incident_gender=data[4],
-                                    incident_address=data[5], incident_involvement=data[6], incident_id_presented=data[7], incident_id_number=data[8],
-                                    incident_injury=data[9], incident_driver_error=data[10], incident_alcohol_drugs=data[11], incident_seatbelt_helmet=data[12])
-            value1 = IncidentVehicle(classification=data[13],
-                                    vehicle_type=data[14], brand=data[15], plate_number=data[16],
-                                    engine_number=data[17], chassis_number=data[18], insurance_details=data[19], maneuver=data[20],
-                                    damage=data[21], defect=data[22], loading=data[23])
+                    
+                    uservehicle, created = IncidentVehicle.objects.get_or_create(
+                        incident_general = IncidentGeneral.objects.get(generalid=generalid),
+                        classification = classification,
+                        vehicle_type=vehicle_type,
+                        brand=brand,
+                        plate_number=plate_number,
+                        engine_number=engine_number,
+                        chassis_number=chassis_number,
+                        insurance_details=insurance_details,
+                        maneuver=maneuver,
+                        damage=damage,
+                        defect=defect,
+                        loading=loading,
+                    )
+                    
+                    
+                    
+                    
+                    if created:
+                        userperson.save()
+                        uservehicle.save()
+                messages.success(request, "The files has been uploaded to the database")
+                        
+            except ValidationError as e:
+                messages.error(request, str(e))
+                return redirect('simple_upload_additional')
+                    
+            except IntegrityError as e:
+                messages.error(request, str(e))
+                return redirect('simple_upload_additional')
+                    
+
+    except csv.Error as e:
+        print(e)
+        return redirect('simple_upload_additional')
+
+
+    return render(request, 'pages/super/input_additional.html')
+    # if request.method == 'POST':
+    #     incident_people = IncidentPeopleResources()
+    #     incident_vehicle = IncidentVehicleResources()
+    #     dataset = Dataset()
+    #     new_userreport = request.FILES['myfile']
+
+    #     imported_data = dataset.load(new_userreport.read(),format='xls')
+    #     #print(imported_data)
+    #     for data in imported_data:
+    #         value = IncidentPerson(incident_first_name=data[0],
+    #                                 incident_middle_name=data[1], incident_last_name=data[2], incident_age=data[3], incident_gender=data[4],
+    #                                 incident_address=data[5], incident_involvement=data[6], incident_id_presented=data[7], incident_id_number=data[8],
+    #                                 incident_injury=data[9], incident_driver_error=data[10], incident_alcohol_drugs=data[11], incident_seatbelt_helmet=data[12])
+    #         value1 = IncidentVehicle(classification=data[13],
+    #                                 vehicle_type=data[14], brand=data[15], plate_number=data[16],
+    #                                 engine_number=data[17], chassis_number=data[18], insurance_details=data[19], maneuver=data[20],
+    #                                 damage=data[21], defect=data[22], loading=data[23])
                                     
-            value.save()
-            value1.save()
-            print(data[1])
-    return render(request, 'input_additional.html')
+    #         value.save()
+    #         value1.save()
+    #         print(data[1])
+    # return render(request, 'input_additional.html')
+    
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
+def a_simple_upload(request):
+    data = None
+    
+    try:
+        if request.method == 'POST':
+            data = request.FILES['myfile']
+            
+            if not data.name.endswith('.csv'):
+                messages.warning(request, 'The wrong file type was uploaded')
+                return redirect('user_report')
+            else: 
+                data = pd.read_csv(data, header=0, encoding="UTF-8", na_values=[' '])
+                data = data.astype(object).where(pd.notnull(data), None)
+            try:
+                for index, rows in data.iterrows():
+                    
+                        userid = rows["User ID"] 
+                        generalid = rows["User ID"]
+                        date = rows["Date"] if rows["Date"] else datetime.date.today()
+                        time = rows["Time"]
+                        description = rows["Description"] if rows["Description"] else " "
+                        address = rows["Address"] if rows["Address"] else " "
+                        latitude = rows["Latitude"] if rows["Latitude"] else " "
+                        longitude = rows["Longitude"] if rows["Longitude"] else " "
+                        status = rows["Status"] if rows["Status"] else " "
+                        weather = rows["Weather"] if rows["Weather"] else " "
+                        light = rows["Light"] if rows["Light"] else " "
+                        accident_factor = rows["Accident Factor"] if rows["Accident Factor"] else " "
+                        collision_type = rows["Collision Type"] if rows["Collision Type"] else " "
+                        crash_type = rows["Crash"] if rows["Crash"] else " "
+                        severity = rows["Severity"] if rows["Severity"] else " "
+                        movement_code = rows["Movement Code"] if rows["Movement Code"] else " "
+                        responder = rows["Responder"] if rows["Responder"] else " "
+                        action_taken = rows["Action Taken"] if rows["Action Taken"] else " "
+                    
+                        # user_report_instance = UserReport.objects.get(userid=userid)
+                        # general_instance = IncidentGeneral.objects.get(generalid=generalid)
+                        
+                        # get_or_create is used to eliminate forming or any duplicate record 
+                        userreport, created = UserReport.objects.get_or_create(
+                            user=request.user,
+                            userid=userid,
+                            date=date,
+                            time=time,
+                            description=description,
+                            address=address,
+                            latitude=latitude,
+                            longitude=longitude,
+                            status=status
+                        )
+                        
+                        usergeneral, created = IncidentGeneral.objects.get_or_create(
+                            user=request.user,
+                            user_report=UserReport.objects.get(userid=userid),
+                            generalid = generalid,
+                            weather=weather,
+                            light=light,
+                            accident_factor=AccidentCausation.objects.get(category=accident_factor),
+                            collision_type=CollisionType.objects.get(category=collision_type),
+                            crash_type=CrashType.objects.get(crash_type=crash_type),
+                            severity=severity,
+                            movement_code=movement_code
+                        )
+                        
+                        userremarks, created = IncidentRemark.objects.get_or_create(
+                            incident_general = IncidentGeneral.objects.get(generalid=generalid),
+                            responder=responder,
+                            action_taken=action_taken
+                        )
+                        
+                        
+                        
+                        if created:
+                            userreport.save()
+                            usergeneral.save()
+                            userremarks.save()
+                messages.success(request, "The files has been uploaded to the database")
+                            # return redirect('simple_upload')
+                        
+                        # else:
+                        #     messages.error(request, "The files not uploaded to the database")
+                        
+            except ValidationError as e:
+                messages.error(request, str(e))
+                return redirect('a_simple_upload')
+                    
+            except IntegrityError as e:
+                messages.error(request, str(e))
+                return redirect('a_simple_upload')
+                   
+                
+    except csv.Error as e:
+        print(e)
+        return redirect('a_simple_upload')
+    
+
+    return render(request, 'pages/admin/a_input.html')
+    
+    # if request.method == 'POST':
+    #     user_resource = UserReportResource()
+    #     incident_general = IncidentGeneraltResource()
+    #     incident_remark = IncidentRemarkResources()
+        
+        
+    #     dataset = Dataset()
+    #     new_userreport = request.FILES['myfile']
+
+    #     imported_data = dataset.load(new_userreport.read(),format='xls')
+    #     #print(imported_data)
+    #     for data in imported_data:
+    #         user_report_instance = UserReport.objects.get(userid=data[0])
+    #         general_instance = IncidentGeneral.objects.get(generalid=data[0])
+    #         value = UserReport(user=request.user, userid= data[0], date=data[1], description=data[2], address=data[3], latitude=data[4], longitude=data[5], status=data[6])
+    #         value1= IncidentGeneral(user=request.user, user_report__userid=user_report_instance, generalid=data[0], weather=data[6],
+    #                                 light=data[7], severity=data[8], movement_code=data[9])
+    #         value2 = IncidentRemark(incident_general__generalid=general_instance, responder=data[10], action_taken=data[11])
+    #         value.save()
+    #         value1.save()
+    #         value2.save()
+    #         print(data[1])
+    # return render(request, 'input.html')
+
+@login_required(login_url = 'login')
+@user_passes_test(check_role_admin)
+def a_simple_upload_additional(request):
+    data = None
+    
+    try:
+        if request.method == 'POST':
+            data = request.FILES['myfile']
+            
+            if not data.name.endswith('.csv'):
+                messages.warning(request, 'The wrong file type was uploaded')
+                return redirect('user_reports')
+            
+            else: 
+                data = pd.read_csv(data, header=0, encoding="UTF-8", na_values=[' '])
+                data = data.astype(object).where(pd.notnull(data), None)
+                
+            
+            try:
+                for index, rows in data.iterrows():
+                
+                    generalid = rows["User ID"]
+                    incident_first_name = rows["First Name"]
+                    incident_middle_name = rows["Middle Name"]
+                    incident_last_name = rows["Last Name"]
+                    incident_age = rows["Age"]
+                    incident_gender = rows["Gender"]
+                    incident_address = rows["Address"]
+                    incident_involvement = rows["Involvement"]
+                    incident_id_presented = rows["ID Presented"]
+                    incident_id_number = rows["ID Number"]
+                    incident_injury = rows["Injury"]
+                    incident_driver_error = rows["Driver Error"]
+                    incident_alcohol_drugs = rows["Alcohol/Drugs"]
+                    incident_seatbelt_helmet = rows["Seatbelt/Helmet"]
+                    classification = rows["Vehicle Classification"]
+                    vehicle_type = rows["Vehicle Type"]
+                    brand = rows["Brand"]
+                    plate_number = rows["Plate Number"]
+                    engine_number = rows["Engine Number"]
+                    chassis_number = rows["Chassis Number"]
+                    insurance_details = rows["Insurance Details"]
+                    maneuver = rows["Maneuver"]
+                    damage = rows["Damage"]
+                    defect = rows["Defect"]
+                    loading = rows["Loading"]
+                    
+                    rows.fillna(" ", inplace=True)
+                
+                    userperson, created = IncidentPerson.objects.get_or_create(
+                        incident_general = IncidentGeneral.objects.get(generalid=generalid),
+                        incident_first_name=incident_first_name,
+                        incident_middle_name=incident_middle_name,
+                        incident_last_name=incident_last_name,
+                        incident_age=incident_age,
+                        incident_gender=incident_gender,
+                        incident_address=incident_address,
+                        incident_involvement=incident_involvement,
+                        incident_id_presented=incident_id_presented,
+                        incident_id_number=incident_id_number,
+                        incident_injury=incident_injury,
+                        incident_driver_error=incident_driver_error,
+                        incident_alcohol_drugs=incident_alcohol_drugs,
+                        incident_seatbelt_helmet=incident_seatbelt_helmet,
+                    )
+                    
+
+                    
+                    uservehicle, created = IncidentVehicle.objects.get_or_create(
+                        incident_general = IncidentGeneral.objects.get(generalid=generalid),
+                        classification = classification,
+                        vehicle_type=vehicle_type,
+                        brand=brand,
+                        plate_number=plate_number,
+                        engine_number=engine_number,
+                        chassis_number=chassis_number,
+                        insurance_details=insurance_details,
+                        maneuver=maneuver,
+                        damage=damage,
+                        defect=defect,
+                        loading=loading,
+                    )
+                    
+                    
+                    
+                    
+                    if created:
+                        userperson.save()
+                        uservehicle.save()
+                messages.success(request, "The files has been uploaded to the database")
+                        
+            except ValidationError as e:
+                messages.error(request, str(e))
+                return redirect('a_simple_upload_additional')
+                    
+            except IntegrityError as e:
+                messages.error(request, str(e))
+                return redirect('a_simple_upload_additional')
+                    
+
+    except csv.Error as e:
+        print(e)
+        return redirect('a_simple_upload_additional')
+
+
+    return render(request, 'pages/admin/a_input_additional.html')
+    # if request.method == 'POST':
+    #     incident_people = IncidentPeopleResources()
+    #     incident_vehicle = IncidentVehicleResources()
+    #     dataset = Dataset()
+    #     new_userreport = request.FILES['myfile']
+
+    #     imported_data = dataset.load(new_userreport.read(),format='xls')
+    #     #print(imported_data)
+    #     for data in imported_data:
+    #         value = IncidentPerson(incident_first_name=data[0],
+    #                                 incident_middle_name=data[1], incident_last_name=data[2], incident_age=data[3], incident_gender=data[4],
+    #                                 incident_address=data[5], incident_involvement=data[6], incident_id_presented=data[7], incident_id_number=data[8],
+    #                                 incident_injury=data[9], incident_driver_error=data[10], incident_alcohol_drugs=data[11], incident_seatbelt_helmet=data[12])
+    #         value1 = IncidentVehicle(classification=data[13],
+    #                                 vehicle_type=data[14], brand=data[15], plate_number=data[16],
+    #                                 engine_number=data[17], chassis_number=data[18], insurance_details=data[19], maneuver=data[20],
+    #                                 damage=data[21], defect=data[22], loading=data[23])
+                                    
+    #         value.save()
+    #         value1.save()
+    #         print(data[1])
+    # return render(request, 'input_additional.html')
 
 

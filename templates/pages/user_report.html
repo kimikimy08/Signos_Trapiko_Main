@@ -51,10 +51,10 @@
                         </div>
                         <div class="d-flex bd-highlight">
                             <div class="p-2 bd-highlight">
-                                <a href="{% url 'simple_upload' %}" title ="Add User"
+                                <a href="{% url 'a_simple_upload' %}" title ="Add User"
                                     class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight">
                                     <i class='bx bx-user-plus'></i> Upload Incident General</a>
-                                    <a href="{% url 'simple_upload_additional'%}" title ="Add User"
+                                    <a href="{% url 'a_simple_upload_additional'%}" title ="Add User"
                                     class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight">
                                     <i class='bx bx-user-plus'></i> Upload Incident Additional</a>
         
@@ -73,6 +73,9 @@
                             <ul class="nav nav-pills card-header-pills">
                                 <li class="nav-item">
                                     <a class="{% if '/userReport' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report' %}">All Reports</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="{% if '/userReports/today' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report_today' %}">Today</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="{% if '/userReport/pending' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report_pending' %}">Pending</a>

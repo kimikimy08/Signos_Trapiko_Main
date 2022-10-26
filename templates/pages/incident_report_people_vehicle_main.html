@@ -49,13 +49,13 @@
                                     <a class="nav-link " href="{% url 'incident_report_general_view' general_instance.id %}">General</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="">People</a>
+                                    <a class="nav-link active" href="{% url 'incident_report_people_vehicle_main' general_instance.id %}">People</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'incident_report_vehicle_main' general_instance.id %}">Vehicle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="">Media</a>
+                                    <a class="nav-link" href="{% url 'incident_report_media_main' general_instance.id %}">Media</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'incident_report_remarks_view' general_instance.id %}">Remarks</a>

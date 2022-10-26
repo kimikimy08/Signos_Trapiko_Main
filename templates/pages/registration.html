@@ -20,7 +20,7 @@
    <body style="background: url({% static 'images/register.png' %}); background-size:cover;" oncontextmenu="return false">
 
     <center>
-    <div id="registerform">
+    <div id="container-fluid">
       <img src="{% static 'logo/SignosLogo.png' %}"
          style="width: 185px;" alt="logo">
       <h1 style="text-align:left;">Sign up</h1>
@@ -50,7 +50,7 @@
           <tr> 
             <td>
               <div class="field-holder" style=" margin-bottom:17px">
-                <label class = "form-label mb-0" for="firstname"><h6>First Name</h6></label>
+                <label for="firstname" class="first-name"></label>
                 {{form.first_name}}
 
               </div>
@@ -58,14 +58,14 @@
         
             <td>
               <div class="field-holder" style="margin-bottom:17px">
-                <label class = "form-label mb-0" for="middlename"><h6>Middle Name</h6></label>
+                <label for="middlename" class="middle-name"></label>
                 {{form.middle_name}}
               </div>
             </td>
           
             <td>
               <div class="field-holder" style="margin-bottom:17px">
-                <label class = "form-label mb-0" for="lastname"><h6>Last Name</h6></label>
+                <label for="lastname" class="last-name"></label>
                 {{form.last_name}}
               </div>
             </td>
@@ -75,7 +75,7 @@
           <tr>
             <td colspan ="2">
            
-                <label class = "form-label mb-0" for="mobile"><h6>Mobile Number</h6></label>
+                <label for="mobile" class="mobile-number"></label>
                 <div class="field-holder" style="margin-bottom:17px">
                     {{form.mobile_number}}
                     <ul class="error-list" style="font-size: 10px; padding-left: 0px; padding-right: 10px;">
@@ -91,7 +91,7 @@
             
             <td>
 
-              <label class = "form-label mb-0" for="birthday"><h6>Birthday</h6></label>
+              <label for="birthday" class="birthday"></label>
                 <div class="field-holder" style="margin-bottom:17px">
                 {{m_form.birthdate}}
               </div>
@@ -100,7 +100,7 @@
 
           <tr>  
             <td colspan ="3">
-              <label class = "form-label mb-0" for="email"><h6>Email</h6></label>
+              <label for="email" class="email"></label>
                 <div class="field-holder" style="margin-bottom:17px">
                 {{form.email}}
                 <ul class="error-list" style="font-size: 10px; padding-left: 0px;">
@@ -116,7 +116,7 @@
           <tr>
             <td colspan ="3">
 
-              <label class = "form-label mb-0" for="username"><h6>Username</h6></label>
+              <label for="username" class="username"></label>
                 <div class="field-holder" style="margin-bottom:17px">
                 {{form.username}}
                 <ul class="error-list" style="font-size: 10px; padding-left: 0px;">
@@ -132,7 +132,7 @@
 
           <tr>
             <td colspan="3">
-              <label class = "form-label mb-0" for="password"><h6>Password</h6></label>
+              <label for="password" class="password"></label>
                 <div class="field-holder" style="margin-bottom:17px">
                 {{form.password}}
                 <ul class="error-list" style="font-size: 10px; padding-left: 0px;">
@@ -146,7 +146,7 @@
 
           <tr>
             <td colspan="3">
-              <label class = "form-label mb-0" for="confirmpassword"><h6>Confirm Password</h6></label>
+              <label for="confirmpassword" class="confirmpassword"></label>
                 <div class="field-holder" style="margin-bottom:17px">
                 {{form.confirm_password}}
                 <ul class="error-list" style="font-size: 10px; padding-left: 0px;">
@@ -161,7 +161,7 @@
           <tr>
             <td colspan="3">
 
-              <label class = "form-label mb-0" for="image"><h6>Upload Valid I.D</h6></label>
+              <label for="image" class="upload-image"></label>
               <div class="field-holder" style="margin-bottom:17px">
               {{m_form.upload_id}}
             </div>
@@ -172,8 +172,10 @@
         
         <br>  
         <div class="send-button" align="center">
-              <input type="submit" id="button" name="signupSubmit" value="Register">
+
+              <button type="submit" class="btn btn-primary" name="signupsubmit"> Register </button>
               <p class="signin" > Already have an account? <a id="log" href="{% url 'login' %}"> Login </a></p>
+              
         </div>
 
       </form>

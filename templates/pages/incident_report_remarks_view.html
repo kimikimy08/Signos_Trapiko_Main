@@ -49,13 +49,13 @@
                                     <a class="nav-link " href="{% url 'incident_report_general_view' general_instance.id %}">General</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="">People</a>
+                                    <a class="nav-link" href="{% url 'incident_report_people_vehicle_main' general_instance.id %}">People</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'incident_report_vehicle_main' general_instance.id %}">Vehicle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="">Media</a>
+                                    <a class="nav-link" href="{% url 'incident_report_media_main' general_instance.id %}">Media</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link active" href="{% url 'incident_report_remarks_view' general_instance.id %}">Remarks</a>
@@ -114,7 +114,7 @@
                                     <div class="modal-footer">
                                         {% comment %} <input type="button" class="btn btn-secondary" data-dismiss="modal"
                                             value="Clear"> {% endcomment %}
-                                            <button type="button" class="btn btn-warning"> <a href="{% url 'incident_report_remarks_edit' general_instance.id %}" class="discard-link"> Edit </a></button>
+                                            <button type="button" class="btn btn-primary"> <a href="{% url 'incident_report_remarks_edit' general_instance.id %}" style="text-decoration: none; color: white;"> Edit </a></button>
                                     </div>
                                 </table>
                             </div>

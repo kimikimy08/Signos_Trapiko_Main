@@ -5,7 +5,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from PIL import Image
 from django.core.validators import FileExtensionValidator
-
+from django.contrib.gis.db import models
+from django.contrib.gis.geos import GEOSGeometry, fromstr
+from django.contrib.gis.db import models as gismodels
+from django.contrib.gis.geos import Point
 
 # class Barangay_district(models.Model):
 #     name = models.CharField(max_length=250)
@@ -20,7 +23,14 @@ class UserReport(models.Model):
         (REJECTED, 'Rejected')
     )
     
+    IF_DUPLICATE = (
+        ('Duplicate', 'Duplicate'),
+        ('Possible Duplicate', 'Possible Duplicate'),
+        ('Not Duplicate', 'Not Duplicate')
+    )
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    userid = models.CharField(max_length=250, unique=True,  null=True, blank=True)
     # barangay = models.ForeignKey(Barangay_district, on_delete=models.CASCADE, null=True)
     description = models.TextField(max_length=250, blank=True)
     address = models.CharField(max_length=250)
@@ -30,10 +40,12 @@ class UserReport(models.Model):
     pin_code = models.CharField(max_length=6, blank=True, null=True)
     latitude = models.FloatField(max_length=20, blank=True, null=True)
     longitude = models.FloatField(max_length=20, blank=True, null=True)
+    geo_location = gismodels.PointField(blank=True, null=True, srid=4326) # New field
     upload_photovideo = models.FileField(upload_to='incident_report/image', blank=True, null=True)
     date = models.DateField(auto_now_add=False, auto_now=False, blank=True, null=True)
     time = models.TimeField(auto_now_add=False, auto_now=False, blank=True, null=True)
     status = models.PositiveSmallIntegerField(choices=STATUS, blank=True, null=True)
+    duplicate =  models.CharField(choices=IF_DUPLICATE,max_length=250, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -46,8 +58,12 @@ class UserReport(models.Model):
             incident_status = 'Rejected'
         return incident_status
     
+    
+    # New method to generate geo_location from lat, lng
+    
+
     def save(self, *args, **kwargs):
-        super(UserReport, self).save(*args, **kwargs)
+        # super(UserReport, self).save(*args, **kwargs)
         if self.upload_photovideo:
             if  ".jpg" in self.upload_photovideo.url or ".png" in self.upload_photovideo.url:
              #check if image exists before resize
@@ -58,8 +74,15 @@ class UserReport(models.Model):
                     new_width = int(new_height / img.height * img.width)
                     img = img.resize((new_width, new_height))
                     img.save(self.upload_photovideo.path)
+        
+        # if self.latitude and self.longitude:
+        #     self.geo_location = Point(float(self.longitude), float(self.latitude))
+        #     return super(UserReport, self).save(*args, **kwargs)
 
-    
+        return super(UserReport, self).save(*args, **kwargs)
+
+        
+        
 
 class AccidentCausation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -136,6 +159,7 @@ class IncidentGeneral(models.Model):
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, null=True, blank=True)
     user_report = models.OneToOneField(UserReport, on_delete=models.CASCADE, null=True, blank=True)
+    generalid = models.CharField(max_length=250, unique=True, null=True, blank=True)
     accident_factor = models.ForeignKey(AccidentCausation, on_delete=models.SET_NULL, blank=True, null=True)
     accident_subcategory = models.ForeignKey(AccidentCausationSub, on_delete=models.SET_NULL, blank=True, null=True)
     collision_type = models.ForeignKey(CollisionType, on_delete=models.SET_NULL, blank=True, null=True)
@@ -359,5 +383,3 @@ class Incident(models.Model):
     incident_vehicle = models.ForeignKey(IncidentVehicle, on_delete=models.SET_NULL, blank=True, null=True)
     incident_media = models.ForeignKey(IncidentMedia, on_delete=models.SET_NULL, blank=True, null=True)
     incident_remark = models.ForeignKey(IncidentRemark, on_delete=models.SET_NULL, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)

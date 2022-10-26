@@ -169,7 +169,7 @@ footer {
           <thead>
               <tr>
                   <th scope="col">ACCIDENT CAUSATION</th>
-                  <th scope="col">ACCIDENT CAUSATION SUB-CATEGORY</th>
+                  {% comment %} <th scope="col">ACCIDENT CAUSATION SUB-CATEGORY</th> {% endcomment %}
                   <th scope="col">SEVERITY</th>
               </tr>
           </thead>
@@ -178,7 +178,7 @@ footer {
             
               <tr>
                   <td scope="row">{{i.accident_factor.category}}</td>
-                  <td scope="row">{{i.accident_subcategory.sub_category}}</td>
+                  {% comment %} <td scope="row">{{i.accident_subcategory.sub_category}}</td> {% endcomment %}
                   <td>{{i.severity}}</td>
                  
            

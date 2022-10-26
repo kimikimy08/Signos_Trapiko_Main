@@ -158,6 +158,7 @@ footer {
       <br>
     </div>
     <h3>Collision Type vs Severity</h3>
+    <h4> {{incident_general_collision.date}} </h4>
     <div id="company" class="clearfix">
     </div>
     <br>
@@ -169,7 +170,7 @@ footer {
           <thead>
               <tr>
                   <th scope="col">COLLISION TYPE</th>
-                  <th scope="col">COLLISION TYPE SUB-CATEGORY</th>
+                  {% comment %} <th scope="col">COLLISION TYPE SUB-CATEGORY</th> {% endcomment %}
                   <th scope="col">SEVERITY</th>
               </tr>
           </thead>
@@ -178,7 +179,7 @@ footer {
             
               <tr>
                   <td scope="row">{{i.collision_type.category}}</td>
-                  <td scope="row">{{i.collision_subcategory.sub_category}}</td>
+                  {% comment %} <td scope="row">{{i.collision_subcategory.sub_category}}</td> {% endcomment %}
                   <td>{{i.severity}}</td>
                  
            

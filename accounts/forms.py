@@ -8,20 +8,21 @@ class DateInput(forms.DateInput):
     
 
 class UserForm(forms.ModelForm):
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Jones', 'style': 'width: 150px; '}))
-    middle_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'A', 'style': 'width: 150px; '}))
-    last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Smith', 'style': 'width: 150px; '}))
+    
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'form-control'}))
+    middle_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Middle Name', 'class': 'form-control'}))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control'}))
     mobile_number = forms.CharField(max_length=15, validators=[RegexValidator(
-        '^\+[0-9]{1,3}\.?\s?\d{8,13}', message="Phone number must not consist of space and requires country code. eg : +639171234567")],widget=forms.TextInput(attrs={'placeholder': '09123456789', 'style': 'width: 305px; '}),
+        '^\+[0-9]{1,3}\.?\s?\d{8,13}', message="Phone number must not consist of space and requires country code. eg : +639171234567")],widget=forms.TextInput(attrs={'placeholder': 'Mobile Number', 'class': 'form-control'}),
                                     error_messages={'unique': ("Mobile Number already exists.")})
     
-    email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'jonesmith@gmail.com', 'style': 'width: 460px; '}),
+    email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Email', 'class': 'form-control'}),
                             error_messages={'unique': ("Email already exists.")},)
-    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Jones_Smith31', 'style': 'width: 460px; '}),
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username', 'class': 'form-control'}),
                                error_messages={'unique': ("Username already exists.")},)
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '********', 'style': 'width: 460px; '}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}))
     #password = forms.CharField(validators=[MinLengthValidator(8),RegexValidator('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])$', message="Password should be a combination of Alphabets and Numbers")], widget=forms.PasswordInput(attrs={'placeholder': '********', 'style': 'width: 460px; '}))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '********', 'style': 'width: 460px;' }))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password', 'class': 'form-control' }))
     class Meta:
         model = User
         fields = ['first_name', 'middle_name', 'last_name', 'username', 'email', 'mobile_number', 'password']

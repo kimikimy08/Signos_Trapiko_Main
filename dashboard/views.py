@@ -187,7 +187,7 @@ def superadmin_dashboard(request):
         incident_general = incident_general.filter(
             user_report__date__lte=todate)
         incident_vehicle = incident_vehicle.filter(
-            incident_general__user_report__date__gte=fromdate)
+            incident_general__user_report__date__gte=todate)
 
     # labels = []
     # data = []

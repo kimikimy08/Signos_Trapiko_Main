@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'formtools',
+    'django.contrib.gis',
     
     'accounts',
     'member',
@@ -98,7 +99,7 @@ WSGI_APPLICATION = 'signosTrapiko.wsgi.application'
 
 # DATABASES = {
 #    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
+#        'ENGINE': 'django.contrib.gis.db.backends.postgis',
 #        'NAME': config('DB_NAME'),
 #        'USER': config('DB_USER'),
 #        'PASSWORD': config('DB_PASSWORD'),
@@ -143,9 +144,19 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Manila'
 
-USE_I18N = True
+USE_I18N = False
 
-USE_TZ = True
+USE_TZ = False
+
+USE_L10N = False
+
+DATE_INPUT_FORMATS = [
+    '%Y-%m-%d', '%m/%d/%Y', '%m/%d/%y', # '2006-10-25', '10/25/2006', '10/25/06'
+    '%b %d %Y', '%b %d, %Y',            # 'Oct 25 2006', 'Oct 25, 2006'
+    '%d %b %Y', '%d %b, %Y',            # '25 Oct 2006', '25 Oct, 2006'
+    '%B %d %Y', '%B %d, %Y',            # 'October 25 2006', 'October 25, 2006'
+    '%d %B %Y', '%d %B, %Y',            # '25 October 2006', '25 October, 2006'
+]
 
 
 # Static files (CSS, JavaScript, Images)
@@ -186,3 +197,6 @@ DEFAULT_FROM_EMAIL = 'Link Technologies <linktechnologies2022@gmail.com>'
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 GOOGLE_API_KEY = config('GOOGLE_API_KEY')
+
+GDAL_LIBRARY_PATH = "/opt/homebrew/Cellar/gdal/3.5.2_1/lib/libgdal.dylib"
+GEOS_LIBRARY_PATH = "/opt/homebrew/Cellar/geos/3.11.0/lib/libgeos_c.dylib"

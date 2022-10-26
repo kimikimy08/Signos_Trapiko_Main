@@ -8,6 +8,7 @@ urlpatterns = [
     path('userReport/pending/', views.user_report_pending, name='user_report_pending'),
     path('userReport/approved/', views.user_report_approved, name='user_report_approved'),
     path('userReport/rejected/', views.user_report_rejected, name='user_report_rejected'),
+    path('userReport/today/', views.user_report_today, name='user_report_today'),
     # path('userReport/today', views.user_report_today, name='user_report_today'),
     
     path('userReports/', views.user_reports, name='user_reports'),
@@ -129,6 +130,8 @@ urlpatterns = [
     path('incidentReport/vehicle/delete/<int:id>/', views.admin_user_report_vehicle_delete, name='admin_user_report_vehicle_delete'),
     path('incidentReport/media/delete/<int:id>/', views.admin_user_report_media_delete, name='admin_user_report_media_delete'),
 
-    path('import/userreport/', views.simple_upload, name='simple_upload'),
-    path('import/additional/', views.simple_upload_additional, name='simple_upload_additional'),
+    path('import/userreports/', views.simple_upload, name='simple_upload'),
+    path('import/additionals/', views.simple_upload_additional, name='simple_upload_additional'),
+    path('import/userreport/', views.a_simple_upload, name='a_simple_upload'),
+    path('import/additional/', views.a_simple_upload_additional, name='a_simple_upload_additional'),
 ]

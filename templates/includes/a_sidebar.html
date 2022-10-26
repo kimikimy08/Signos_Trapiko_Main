@@ -43,7 +43,7 @@
                     <a class="collapse-item" href="{% url 'a_incidentreports' %}">
                         <i class='bx bxs-car-crash'></i>
                         <span>Incident Report</span></a>
-                <a class="collapse-item" href="#">
+                <a class="collapse-item" href="{% url 'generate_report' %}">
                     <i class='bx bxs-file-pdf'></i>
                     <span>Generate Report</span></a>
             </div>
@@ -98,7 +98,7 @@
     </li>
 
      <!-- Inbox -->
-     <li class="nav-item">
+     {% comment %} <li class="nav-item">
         <a class="nav-link" href="#">
             <i class="fa-solid fa-inbox"></i>
             <span class="">Inbox</span></a>
@@ -116,7 +116,7 @@
         <a class="nav-link" href="#">
             <i class='bx bx-history'></i>
             <span class="">Activity Log</span></a>
-    </li>
+    </li> {% endcomment %}
 
     <!-- Sign Out  -->
     <li class="nav-item">

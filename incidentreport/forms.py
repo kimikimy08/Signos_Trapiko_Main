@@ -1,5 +1,6 @@
 import datetime
 from django import forms
+from django.conf import settings
 from .models import UserReport, Incident, IncidentGeneral, AccidentCausationSub, CollisionTypeSub, IncidentPerson, IncidentVehicle, IncidentRemark, IncidentMedia, AccidentCausation, CollisionType, CollisionTypeSub, CrashType
 #from .validators import allow_only_images_validator
 from django.forms.formsets import BaseFormSet
@@ -24,6 +25,7 @@ class UserReportForm1(forms.ModelForm):
         attrs={'required': 'required', 'class': 'form-control'}))
     description = forms.CharField(widget=forms.Textarea(
         attrs={'area': '3', 'class': 'form-control'}))
+    
 
     # latitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     # longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
@@ -43,6 +45,7 @@ class UserReportForm1(forms.ModelForm):
         self.fields['description'].required = False
         self.fields['address'].required = False
         self.fields['time'].required = False
+        self.fields['date'].required = False
         
         self.fields['date'].widget.attrs['class'] = 'form-control datepickstart'
         self.fields['time'].widget.attrs['class'] = 'form-control'
@@ -56,6 +59,8 @@ class UserReportForm1(forms.ModelForm):
         self.fields['description'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['class'] = 'form-control'
         self.fields['date'].widget.attrs['autocomplete'] = 'off'
+        self.fields['date'].input_formats = settings.DATE_INPUT_FORMATS
+        
         
         for field in self.fields:
             if field == 'latitude' or field == 'longitude' or field == 'city' or field == 'pin_code':
@@ -85,6 +90,7 @@ class UserReportForm(forms.ModelForm):
         attrs={'required': 'required', 'class': 'form-control'}))
     description = forms.CharField(widget=forms.Textarea(
         attrs={'area': '3', 'class': 'form-control'}))
+    # date = forms.DateTimeField(input_formats=['%Y-%m-%d'])
 
     # latitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     # longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
@@ -104,6 +110,7 @@ class UserReportForm(forms.ModelForm):
         self.fields['description'].required = False
         self.fields['address'].required = False
         self.fields['time'].required = False
+        self.fields['date'].required = False
         
         self.fields['date'].widget.attrs['class'] = 'form-control datepickstart'
         self.fields['time'].widget.attrs['class'] = 'form-control'
@@ -117,6 +124,8 @@ class UserReportForm(forms.ModelForm):
         self.fields['description'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['class'] = 'form-control'
         self.fields['date'].widget.attrs['autocomplete'] = 'off'
+        self.fields['date'].input_formats = settings.DATE_INPUT_FORMATS
+        
         
         for field in self.fields:
             if field == 'latitude' or field == 'longitude' or field == 'city' or field == 'pin_code':
