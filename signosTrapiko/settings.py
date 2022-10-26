@@ -14,6 +14,7 @@ from pathlib import Path
 from decouple import config
 import os
 import dj_database_url
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -107,8 +108,20 @@ WSGI_APPLICATION = 'signosTrapiko.wsgi.application'
 #    }
 # }
 
-DATABASES = {'default': dj_database_url.config(default='django.contrib.gis.db.backends.postgis://django.contrib.gis.db.backends.postgis:signos0805Trapiko@localhost/Signos_Trapiko')}
+# DATABASES = {'default': dj_database_url.config(default='django.contrib.gis.db.backends.postgis://django.contrib.gis.db.backends.postgis:signos0805Trapiko@localhost/Signos_Trapiko')}
 
+django_heroku.settings(locals())
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'Signos_Trapiko',
+        'USER': 'postgres',
+        'PASSWORD': 'signos0805Trapiko',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
+}
 
 # DATABASES['default'] = dj_database_url.config()
 # DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
