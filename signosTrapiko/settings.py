@@ -107,8 +107,12 @@ WSGI_APPLICATION = 'signosTrapiko.wsgi.application'
 #    }
 # }
 
-DATABASES = {'default': dj_database_url.config(default='postgis://postgis:signos0805Trapiko@localhost/Signos_Trapiko')}
+DATABASES = {'default': dj_database_url.config(default='django.contrib.gis.db.backends.postgis://django.contrib.gis.db.backends.postgis:signos0805Trapiko@localhost/Signos_Trapiko')}
 
+
+# DATABASES['default'] = dj_database_url.config()
+# DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+# DATABASES['default']['NAME'] = os.environ['NAME']
 
 AUTH_USER_MODEL = 'accounts.User'
 
