@@ -758,12 +758,6 @@ section {
 
 /* ========== QUOTE  */
 
-.quote {
-  background: linear-gradient(rgba(40, 58, 90, 0.9), rgba(40, 58, 90, 0.9));
-  /* background-size: cover;
-  padding: 120px 0; */
-}
-
 .quote h1 {
   color: var(--white);
   font-style: italic;
