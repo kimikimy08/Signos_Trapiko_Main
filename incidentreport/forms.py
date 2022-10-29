@@ -71,7 +71,7 @@ class UserReportForm1(forms.ModelForm):
             self.fields['description'].required = False
             self.fields['date'].widget.attrs['readonly'] = 'readonly'
             self.fields['time'].widget.attrs['readonly'] = 'readonly'
-            self.fields['status'].widget.attrs['disabled'] = 'disabled'
+            # self.fields['status'].widget.attrs['disabled'] = 'disabled'
 
     # def __init__(self, *args, **kwargs):
     #     super(UserReportForm, self).__init__(*args, **kwargs)

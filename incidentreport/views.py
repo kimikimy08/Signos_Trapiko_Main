@@ -407,6 +407,8 @@ def my_report_edit(request, id):
     return render(request, 'pages/member/member_myreport_edit.html', context)
 
 
+
+
 @login_required(login_url='login')
 @user_passes_test(check_role_member)
 def my_report_delete(request, id):
