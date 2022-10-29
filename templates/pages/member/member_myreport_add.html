@@ -32,22 +32,22 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="inputSeverity">City</label>
-                    {{form.city}}
+                        {% comment %} <label for="inputSeverity">City</label> {% endcomment %}
+                    {{form.city.as_hidden}}
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="inputSeverity">Zip Code</label>
-                    {{form.pin_code}}
+                        {% comment %} <label for="inputSeverity">Zip Code</label> {% endcomment %}
+                    {{form.pin_code.as_hidden}}
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="inputSeverity">Latitude</label>
-                    {{form.latitude}}
+                        {% comment %} <label for="inputSeverity">Latitude</label> {% endcomment %}
+                    {{form.latitude.as_hidden}}
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="inputSeverity">Longitude</label>
-                    {{form.longitude}}
+                        {% comment %} <label for="inputSeverity">Longitude</label> {% endcomment %}
+                    {{form.longitude.as_hidden}}
                     </div>
                 </div>
                 <div class="form-row">
@@ -56,8 +56,15 @@
                     {{form.description}}
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        
+                        {{form.upload_photovideo}}
+                        <small for="inputSeverity">Upload Photo and Video related to the incident for further investigation</small>
+                    </div>
+                </div>
 
-                {{form.upload_photovideo}}
+                
                 <ul class="error-list" style="font-size: 10px; padding-left: 0px;">
                   
                     <li style="color:red">{{form.errors}}</li>

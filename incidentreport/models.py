@@ -63,7 +63,7 @@ class UserReport(models.Model):
     
 
     def save(self, *args, **kwargs):
-        # super(UserReport, self).save(*args, **kwargs)
+        super(UserReport, self).save(*args, **kwargs)
         if self.upload_photovideo:
             if  ".jpg" in self.upload_photovideo.url or ".png" in self.upload_photovideo.url:
              #check if image exists before resize
@@ -79,7 +79,7 @@ class UserReport(models.Model):
         #     self.geo_location = Point(float(self.longitude), float(self.latitude))
         #     return super(UserReport, self).save(*args, **kwargs)
 
-        return super(UserReport, self).save(*args, **kwargs)
+        # return super(UserReport, self).save(*args, **kwargs)
 
         
         

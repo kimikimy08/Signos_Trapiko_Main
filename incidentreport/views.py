@@ -292,6 +292,7 @@ def my_report(request):
     return render(request, 'pages/member/member_myreport.html', context)
 
 
+
 @login_required(login_url='login')
 @user_passes_test(check_role_member)
 def my_report_pending(request):
@@ -729,7 +730,7 @@ class multistepformsubmission_member(SessionWizardView):
 
     # template_name = 'pages/incident_report.html'
     # form_list = [UserReportForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm]
-    file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'media'))
+    file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'incident_report/image'))
     
     def get_template_names(self):
         return [TEMPLATES2[self.steps.current]]

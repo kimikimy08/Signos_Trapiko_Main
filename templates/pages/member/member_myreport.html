@@ -87,9 +87,14 @@
                         
                         {% if incidentReports %}
                         <div class="modal-footer">
+                        <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#bulkdeleteModal">Bulk Delete</a>
+                    </div>
+                            {% comment %} {% endif %} {% endcomment %}
+
+                        {% comment %} <div class="modal-footer">
                      
                                 <input type="submit" class="btn btn-sm btn-danger" value="Bulk Delete">
-                            </div>
+                            </div> {% endcomment %}
                     
                         <table class="table table-bordered table-hover text-dark" id="user_report" width="100%"
                             style="cursor: pointer;" cellspacing="0">
@@ -166,6 +171,32 @@
     
         
                     <a class="btn btn-sm btn-danger" href="{% url 'my_report_delete' incident.id %}">Delete</a>
+            
+                </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- BULK Delete Modal HTML -->
+<div class="modal fade" id="bulkdeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete this account?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+        <div class="modal-body">
+            <h6>Do you want to delete the selected record? This process cannot be undone.</h6>
+        </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                
+    
+                <input type="submit" class="btn btn-sm btn-danger" value="Bulk Delete">
+                    {% comment %} <a class="btn btn-sm btn-danger" href="{% url 'my_report_delete' incident.id %}">Delete</a> {% endcomment %}
             
                 </div>
         </div>
