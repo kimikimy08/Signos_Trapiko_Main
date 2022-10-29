@@ -98,23 +98,23 @@
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="inputCity">City</label>
-                                                    {{form.city}}
+                                                    {% comment %} <label for="inputCity">City</label> {% endcomment %}
+                                                    {{form.city.as_hidden}}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <label for="inputZip">Zip</label>
-                                                    {{form.pin_code}}
+                                                    {% comment %} <label for="inputZip">Zip</label> {% endcomment %}
+                                                    {{form.pin_code.as_hidden}}
                                                 </div>
                                             </div>
 
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="inputSeverity">Latitude</label>
-                                                    {{form.latitude}}
+                                                    {% comment %} <label for="inputSeverity">Latitude</label> {% endcomment %}
+                                                    {{form.latitude.as_hidden}}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <label for="inputSeverity">Longitude</label>
-                                                    {{form.longitude}}
+                                                    {% comment %} <label for="inputSeverity">Longitude</label> {% endcomment %}
+                                                    {{form.longitude.as_hidden}}
                                                 </div>
                                             </div>
 
