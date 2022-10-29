@@ -180,12 +180,12 @@ def superadmin_dashboard(request):
     user_report = IncidentGeneral.objects.filter(status='2')
     if fromdate:
         incident_general = incident_general.filter(
-            user_report__date__gte=fromdate)
+            date__gte=fromdate)
         incident_vehicle = incident_vehicle.filter(
             incident_general__date__gte=fromdate)
     if todate:
         incident_general = incident_general.filter(
-            user_report__date__lte=todate)
+            date__lte=todate)
         incident_vehicle = incident_vehicle.filter(
             incident_general__date__gte=todate)
 
