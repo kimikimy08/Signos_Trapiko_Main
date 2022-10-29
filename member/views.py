@@ -96,6 +96,7 @@ def member_profile_edit(request):
         'profile_form': profile_form,
         'user_form' : user_form,
         'profile': profile,
+        
     }
     
     return render(request, 'pages/member/member_profile_edit.html', context)

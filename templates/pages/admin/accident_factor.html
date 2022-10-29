@@ -36,21 +36,14 @@
                 <div class="pg-title p-2 flex-grow-1 bd-highlight">
                     <h4>Attributes Builder - Accident Factor</h4>
                 </div>
-                <div class="d-flex bd-highlight">
+                {% comment %} <div class="d-flex bd-highlight">
                     <div class="p-2 bd-highlight">
                         <a href="{% url 'attributes_builder_accident_add_admin' %}" title ="Add User"
                             class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight">
                             <i class='bx bx-user-plus'></i> Add Accident Factor</a>
-                            {% comment %} <a href="{% url 'attributes_builder_accident_add_sub_admin'%}" title ="Add User"
-                            class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight">
-                            <i class='bx bx-user-plus'></i> Add Accident Factor Sub Category</a> {% endcomment %}
 
-                        <!-- <a href="#add2"
-                            class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight"
-                            data-toggle="modal" data-toggle="tooltip">
-                            <i class='bx bx-user-plus'></i> Add User</a> -->
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
             
 
@@ -65,21 +58,21 @@
                             {% csrf_token %}
                             
                             
-                            <div class="modal-footer">
+                            {% comment %} <div class="modal-footer">
                          
                                     <input type="submit" class="btn btn-sm btn-danger" value="Bulk Delete">
-                                </div>
+                                </div> {% endcomment %}
                         <table class="table table-bordered table-hover text-dark" id="user_report" width="100%"
                             style="cursor: pointer;" cellspacing="0">
 
                             <!-- Table Header  -->
                             <thead>
                                 <tr>
-                                    <th></th>
+                                    {% comment %} <th></th> {% endcomment %}
                                     <th>Accident Factor</th>
                                     <th>Created Date</th>
                                     <th>Modified Date</th>
-                                    <th>Settings</th>
+                                    {% comment %} <th>Settings</th> {% endcomment %}
                                 </tr>
                             </thead>
 
@@ -92,20 +85,19 @@
                                     <td>{{accident_factors.created_at}}</td>
                                     <td>{{accident_factors.updated_at}}</td>
 
-                                    <td>
-                                        {% comment %} <a href="{% url 'attributes_builder_accident_sub_admin' accident_factors.id %}"><i class='bx bxs-folder-open'
-                                            title="View"></i></a> {% endcomment %}
+                                    {% comment %} <td>
+                                        
                                             <a href="{% url 'attributes_builder_accident_edit_admin' accident_factors.id %}"><i class='bx bxs-edit'
                                                 title="Edit"></i></a>
                                             <a href="{% url 'attributes_builder_accident_delete_admin' accident_factors.id %}" data-toggle="modal" data-target="#deleteuserModal{{ accident_factors.id }}"><i class='bx bx-trash'
                                                 data-toggle="tooltip" title="Delete" ></i></a>
                                                 
-                                    </td>
+                                    </td> {% endcomment %}
 
                                 </tr>
 
                                  <!-- Delete Modal HTML -->
-                        <div class="modal fade" id="deleteuserModal{{ accident_factors.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
+                        {% comment %} <div class="modal fade" id="deleteuserModal{{ accident_factors.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -127,7 +119,7 @@
                                         </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> {% endcomment %}
                         
                                {% endfor %}
                             </tbody>
