@@ -80,7 +80,7 @@
                             <tbody>
                                 {% for accident_factors in accident_factor %}
                                 <tr>
-                                    <td><input type="checkbox" name="{{accident_factors.id}}" id="check"></td>
+                                    {% comment %} <td><input type="checkbox" name="{{accident_factors.id}}" id="check"></td> {% endcomment %}
                                     <td>{{accident_factors}}</td>
                                     <td>{{accident_factors.created_at}}</td>
                                     <td>{{accident_factors.updated_at}}</td>

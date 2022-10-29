@@ -84,7 +84,7 @@
                                 {% for crash_types in crash_type %}
         
                                 <tr>
-                                    <td><input type="checkbox" name="{{crash_types.id}}" id="check"></td>
+                                    {% comment %} <td><input type="checkbox" name="{{crash_types.id}}" id="check"></td> {% endcomment %}
                                     <td>{{crash_types}}</td>
                                     <td>{{crash_types.created_at}}</td>
                                     <td>{{crash_types.updated_at}}</td>
@@ -138,6 +138,7 @@
                     </div>
                 </div>
             </div>
+        </div>
             <!-- End of User Report Table  -->
                           <!--Pagination-->
                           {% if crash_type %}

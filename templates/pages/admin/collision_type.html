@@ -80,7 +80,7 @@
                                 {% for collision_types in collision_type %}
         
                                 <tr>
-                                    <td><input type="checkbox" name="{{collision_types.id}}" id="check"></td>
+                                    {% comment %} <td><input type="checkbox" name="{{collision_types.id}}" id="check"></td> {% endcomment %}
                                     <td>{{collision_types}}</td>
                                     <td>{{collision_types.created_at}}</td>
                                     <td>{{collision_types.updated_at}}</td>
