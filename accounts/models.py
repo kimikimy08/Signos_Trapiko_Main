@@ -134,8 +134,8 @@ class User(AbstractBaseUser):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     birthdate = models.DateField(blank=True, null=True)
-    profile_picture = models.ImageField(default='user.jpeg', upload_to='users/profile_pictures')
-    upload_id = models.ImageField(default='user.jpeg', upload_to='member/id')
+    profile_picture = models.ImageField(upload_to='users/profile_pictures')
+    upload_id = models.ImageField(upload_to='member/id')
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
