@@ -50,7 +50,8 @@
                         <div class="card-body">
                             <div class="table-responsive">
 
-                                <form id="incident_form_member"  enctype="multipart/form-data" method="post" data-acc-url="{% url 'ajax_load_accident' %}">{% csrf_token %}
+                                <form id="incident_form_member"  enctype="multipart/form-data" method="post" ">
+                                    {% csrf_token %}
                                     <table>
                                         {{ wizard.management_form }}
                                         {% if wizard.form.forms %}

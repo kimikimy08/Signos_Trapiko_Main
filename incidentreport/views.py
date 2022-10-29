@@ -749,7 +749,7 @@ class multistepformsubmission_member(SessionWizardView):
         # IncidentGeneral, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
         profile = get_object_or_404(UserProfile, user=self.request.user)
 
-        user_instance = IncidentGeneral()
+    
         general_instance = IncidentGeneral()
         person_instance  = IncidentPerson()
         vehicle_instance = IncidentVehicle()
@@ -759,16 +759,13 @@ class multistepformsubmission_member(SessionWizardView):
         #listing_instance.listing_owner = self.request.user
         #listing_instance.listing_type = 'P'
         for form in form_list:
-            user_instance = construct_instance(form, user_instance, form._meta.fields, form._meta.exclude)
             general_instance = construct_instance(form, general_instance, form._meta.fields, form._meta.exclude)
             person_instance = construct_instance(form, person_instance, form._meta.fields, form._meta.exclude)
             vehicle_instance = construct_instance(form, vehicle_instance, form._meta.fields, form._meta.exclude)
             media_instance = construct_instance(form, media_instance, form._meta.fields, form._meta.exclude)
             remarks_instance = construct_instance(form, remarks_instance, form._meta.fields, form._meta.exclude)
-        user_instance.user = self.request.user
-        user_instance.status = 1
-        user_instance.save()
-        general_instance.user_report = user_instance
+        general_instance.user = self.request.user
+        general_instance.status = 1
         general_instance.save()
         person_instance.incident_general = general_instance
         person_instance.save()
