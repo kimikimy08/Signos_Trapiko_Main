@@ -33,7 +33,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = ['young-cove-57050.herokuapp.com', 'www.qc-signostrapiko.com', 'qc-signostrapiko.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['young-cove-57050.herokuapp.com', 'www.qc-signostrapiko.com', 'qc-signostrapiko.com', '127.0.0.1', 'localhost', 'hwww.qc-signostrapiko.com']
 
 
 # Application definition
