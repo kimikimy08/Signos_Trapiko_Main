@@ -10,10 +10,36 @@ from django.contrib.gis.geos import GEOSGeometry, fromstr
 from django.contrib.gis.db import models as gismodels
 from django.contrib.gis.geos import Point
 
-# class Barangay_district(models.Model):
-#     name = models.CharField(max_length=250)
-#     district = models.CharField(max_length=250)
-class UserReport(models.Model):
+
+class AccidentCausation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    category = models.CharField(max_length=250)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.category
+
+class CollisionType(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    category = models.CharField(max_length=250)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.category
+
+
+class CrashType(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    crash_type = models.CharField(max_length=250, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.crash_type
+
+class IncidentGeneral(models.Model):
     PENDING = 1
     APPROVED = 2
     REJECTED = 3
@@ -29,108 +55,6 @@ class UserReport(models.Model):
         ('Not Duplicate', 'Not Duplicate')
     )
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    userid = models.CharField(max_length=250, unique=True,  null=True, blank=True)
-    # barangay = models.ForeignKey(Barangay_district, on_delete=models.CASCADE, null=True)
-    description = models.TextField(max_length=250, blank=True)
-    address = models.CharField(max_length=250)
-    country = models.CharField(max_length=50, blank=True, null=True)
-    state = models.CharField(max_length=250, blank=True, null=True)
-    city = models.CharField(max_length=50, blank=True, null=True)
-    pin_code = models.CharField(max_length=6, blank=True, null=True)
-    latitude = models.FloatField(max_length=20, blank=True, null=True)
-    longitude = models.FloatField(max_length=20, blank=True, null=True)
-    geo_location = gismodels.PointField(blank=True, null=True, srid=4326) # New field
-    upload_photovideo = models.FileField(upload_to='incident_report/image', blank=True, null=True)
-    date = models.DateField(auto_now_add=False, auto_now=False, blank=True, null=True)
-    time = models.TimeField(auto_now_add=False, auto_now=False, blank=True, null=True)
-    status = models.PositiveSmallIntegerField(choices=STATUS, blank=True, null=True)
-    duplicate =  models.CharField(choices=IF_DUPLICATE,max_length=250, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    def get_status(self):
-        if self.status == 1:
-            incident_status = 'Pending'
-        elif self.status == 2:
-            incident_status = 'Approved'
-        elif self.status == 3:
-            incident_status = 'Rejected'
-        return incident_status
-    
-    
-    # New method to generate geo_location from lat, lng
-    
-
-    def save(self, *args, **kwargs):
-        super(UserReport, self).save(*args, **kwargs)
-        if self.upload_photovideo:
-            if  ".jpg" in self.upload_photovideo.url or ".png" in self.upload_photovideo.url:
-             #check if image exists before resize
-                img = Image.open(self.upload_photovideo.path)
-
-                if img.height > 1080 or img.width > 1920:
-                    new_height = 720
-                    new_width = int(new_height / img.height * img.width)
-                    img = img.resize((new_width, new_height))
-                    img.save(self.upload_photovideo.path)
-        
-        # if self.latitude and self.longitude:
-        #     self.geo_location = Point(float(self.longitude), float(self.latitude))
-        #     return super(UserReport, self).save(*args, **kwargs)
-
-        # return super(UserReport, self).save(*args, **kwargs)
-
-        
-        
-
-class AccidentCausation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    category = models.CharField(max_length=250)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.category
-
-class AccidentCausationSub(models.Model):
-    accident_factor = models.ForeignKey(AccidentCausation, on_delete=models.CASCADE)
-    sub_category = models.CharField(max_length=250, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.sub_category
-
-
-class CollisionType(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    category = models.CharField(max_length=250)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.category
-
-class CollisionTypeSub(models.Model):
-    collision_type = models.ForeignKey(CollisionType, on_delete=models.CASCADE)
-    sub_category = models.CharField(max_length=250, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.sub_category
-
-class CrashType(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    crash_type = models.CharField(max_length=250, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.crash_type
-
-class IncidentGeneral(models.Model):
     WEATHER = (
         ('Clear Night', 'Clear Night'),
         ('Cloudy', 'Cloudy'),
@@ -158,12 +82,23 @@ class IncidentGeneral(models.Model):
     )
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, null=True, blank=True)
-    user_report = models.OneToOneField(UserReport, on_delete=models.CASCADE, null=True, blank=True)
     generalid = models.CharField(max_length=250, unique=True, null=True, blank=True)
+    description = models.TextField(max_length=250, blank=True)
+    address = models.CharField(max_length=250)
+    country = models.CharField(max_length=50, blank=True, null=True)
+    state = models.CharField(max_length=250, blank=True, null=True)
+    city = models.CharField(max_length=50, blank=True, null=True)
+    pin_code = models.CharField(max_length=6, blank=True, null=True)
+    latitude = models.FloatField(max_length=20, blank=True, null=True)
+    longitude = models.FloatField(max_length=20, blank=True, null=True)
+    geo_location = gismodels.PointField(blank=True, null=True, srid=4326) # New field
+    upload_photovideo = models.FileField(upload_to='incident_report/image', blank=True, null=True)
+    date = models.DateField(auto_now_add=False, auto_now=False, blank=True, null=True)
+    time = models.TimeField(auto_now_add=False, auto_now=False, blank=True, null=True)
+    status = models.PositiveSmallIntegerField(choices=STATUS, blank=True, null=True)
+    duplicate =  models.CharField(choices=IF_DUPLICATE,max_length=250, blank=True, null=True)
     accident_factor = models.ForeignKey(AccidentCausation, on_delete=models.SET_NULL, blank=True, null=True)
-    accident_subcategory = models.ForeignKey(AccidentCausationSub, on_delete=models.SET_NULL, blank=True, null=True)
     collision_type = models.ForeignKey(CollisionType, on_delete=models.SET_NULL, blank=True, null=True)
-    collision_subcategory = models.ForeignKey(CollisionTypeSub, on_delete=models.SET_NULL, blank=True, null=True)
     crash_type = models.ForeignKey(CrashType, on_delete=models.SET_NULL, blank=True, null=True)
     weather =  models.CharField(choices=WEATHER, max_length=250,blank=True, null=True)
     light =  models.CharField(choices=LIGHT,max_length=250, blank=True, null=True)
@@ -172,7 +107,27 @@ class IncidentGeneral(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    def get_status(self):
+        if self.status == 1:
+            incident_status = 'Pending'
+        elif self.status == 2:
+            incident_status = 'Approved'
+        elif self.status == 3:
+            incident_status = 'Rejected'
+        return incident_status
+    
+    def save(self, *args, **kwargs):
+        super(IncidentGeneral, self).save(*args, **kwargs)
+        if self.upload_photovideo:
+            if  ".jpg" in self.upload_photovideo.url or ".png" in self.upload_photovideo.url:
+             #check if image exists before resize
+                img = Image.open(self.upload_photovideo.path)
 
+                if img.height > 1080 or img.width > 1920:
+                    new_height = 720
+                    new_width = int(new_height / img.height * img.width)
+                    img = img.resize((new_width, new_height))
+                    img.save(self.upload_photovideo.path)
 
     # @receiver(post_save, sender=UserReport)
     # def create_user_report_general(sender, instance, created, **kwargs):
@@ -377,7 +332,6 @@ class IncidentRemark(models.Model):
 
 class Incident(models.Model):
     incident_general = models.OneToOneField(IncidentGeneral, on_delete=models.CASCADE)
-    user_report = models.OneToOneField(UserReport, on_delete=models.CASCADE, blank=True, null=True)
     incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.SET_NULL, blank=True, null=True)
     incident_person = models.ForeignKey(IncidentPerson, on_delete=models.SET_NULL, blank=True, null=True)
     incident_vehicle = models.ForeignKey(IncidentVehicle, on_delete=models.SET_NULL, blank=True, null=True)

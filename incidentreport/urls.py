@@ -1,7 +1,6 @@
 from django.urls import path, include
 from . import views
 from accounts import views as AccountViews
-from .views_inc import FormView, CancelView
 
 urlpatterns = [
     path('userReport/', views.user_report, name='user_report'),
@@ -83,8 +82,8 @@ urlpatterns = [
     path('attributes_builders/crash_type/delete/<int:id>/', views.attributes_builder_crash_delete, name='attributes_builder_crash_delete'),
     
     
-    path('ajax/load-accident/', views.load_accident, name='ajax_load_accident'), # AJAX
-    path('ajax/load-collision/', views.load_collision, name='ajax_load_collision'), # AJAX
+    # path('ajax/load-accident/', views.load_accident, name='ajax_load_accident'), # AJAX
+    # path('ajax/load-collision/', views.load_collision, name='ajax_load_collision'), # AJAX
     
     
     

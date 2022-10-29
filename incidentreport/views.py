@@ -9,15 +9,15 @@ from django.urls import reverse
 from accounts.models import UserProfile, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_admin, check_role_super, check_role_member, check_role_super_admin
-from incidentreport.models import  UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle, AccidentCausation, CollisionType, CrashType
+from incidentreport.models import  IncidentGeneral, IncidentRemark, IncidentMedia, IncidentPerson, IncidentVehicle, AccidentCausation, CollisionType, CrashType
 from django.contrib import messages
 
-from .forms import UserReportForm, UserReportForm1, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm, AccidentCausationForm, AccidentCausationSubForm, CollisionTypeForm, CollisionTypeSubForm, CrashTypeForm
+from .forms import IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm, AccidentCausationForm,  CollisionTypeForm, CrashTypeForm
 from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.forms.models import construct_instance
 from datetime import datetime
-from .resources import UserReportResource, IncidentGeneraltResource, IncidentRemarkResources, IncidentPeopleResources, IncidentVehicleResources
+from .resources import IncidentGeneraltResource, IncidentRemarkResources, IncidentPeopleResources, IncidentVehicleResources
 from tablib import Dataset
 from django.core.paginator import Paginator
 import pandas as pd
@@ -27,23 +27,22 @@ import pandas as pd
 @user_passes_test(check_role_super_admin)
 def user_reports(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = IncidentGeneral.objects.filter(user_report__isnull=False).order_by('-updated_at')
-    userReport = UserReport.objects.all().order_by('-updated_at')
-    paginator = Paginator(incidentReports, 10)
+    incidentGeneral = IncidentGeneral.objects.all().order_by('-updated_at')
+    paginator = Paginator(incidentGeneral, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     if request.method == 'POST':
-        for i in incidentReports:
-            x = request.POST.get(str(i.user_report_id))
+        for i in incidentGeneral:
+            x = request.POST.get(str(i.id))
             print(x)
             if str(x) == 'on':
-                b = UserReport.objects.get(id=i.user_report_id)
+                b = IncidentGeneral.objects.get(id=i.id)
                 b.delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentReports': page_obj,
-        'userReport': userReport
+        'incidentGeneral': page_obj,
+        # 'IncidentGeneral': IncidentGeneral
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -53,23 +52,23 @@ def user_reports(request):
 def user_reports_pending(request):
     profile = get_object_or_404(UserProfile, user=request.user)
 
-    incidentReports = IncidentGeneral.objects.filter(user_report__status = 1).order_by('-updated_at')
-    userReport = UserReport.objects.all().order_by('-updated_at')
-    paginator = Paginator(incidentReports, 10)
+    # incidentReports = IncidentGeneral.objects.filter(user_report__status = 1).order_by('-updated_at')
+    incidentGeneral = IncidentGeneral.objects.filter(status = 1).order_by('-updated_at')
+    paginator = Paginator(incidentGeneral, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     if request.method == 'POST':
-        for i in incidentReports:
-            x = request.POST.get(str(i.user_report_id))
+        for i in incidentGeneral:
+            x = request.POST.get(str(i.id))
             print(x)
             if str(x) == 'on':
-                b = UserReport.objects.get(id=i.user_report_id)
+                b = IncidentGeneral.objects.get(id=i.id)
                 b.delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentReports': page_obj,
-        'userReport': userReport
+        'incidentGeneral': page_obj,
+        'IncidentGeneral': IncidentGeneral
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -78,21 +77,21 @@ def user_reports_pending(request):
 @user_passes_test(check_role_super_admin)
 def user_reports_approved(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = IncidentGeneral.objects.filter(user_report__status = 2).order_by('-updated_at')
-    paginator = Paginator(incidentReports, 10)
+    incidentGeneral = IncidentGeneral.objects.filter(status = 2).order_by('-updated_at')
+    paginator = Paginator(incidentGeneral, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     if request.method == 'POST':
-        for i in incidentReports:
-            x = request.POST.get(str(i.user_report_id))
+        for i in incidentGeneral:
+            x = request.POST.get(str(i.id))
             print(x)
             if str(x) == 'on':
-                b = UserReport.objects.get(id=i.user_report_id)
+                b = IncidentGeneral.objects.get(id=i.id)
                 b.delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentReports': page_obj,
+        'incidentGeneral': page_obj,
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -101,21 +100,21 @@ def user_reports_approved(request):
 @user_passes_test(check_role_super_admin)
 def user_reports_rejected(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = IncidentGeneral.objects.filter(user_report__status = 3).order_by('-updated_at')
-    paginator = Paginator(incidentReports, 10)
+    incidentGeneral = IncidentGeneral.objects.filter(status = 3).order_by('-updated_at')
+    paginator = Paginator(incidentGeneral, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     if request.method == 'POST':
-        for i in incidentReports:
-            x = request.POST.get(str(i.user_report_id))
+        for i in incidentGeneral:
+            x = request.POST.get(str(i.id))
             print(x)
             if str(x) == 'on':
-                b = UserReport.objects.get(id=i.user_report_id)
+                b = IncidentGeneral.objects.get(id=i.id)
                 b.delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentReports': page_obj,
+        'incidentGeneral': page_obj,
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -133,7 +132,7 @@ def user_reports_today(request):
             x = request.POST.get(str(i.user_report_id))
             print(x)
             if str(x) == 'on':
-                b = UserReport.objects.get(id=i.user_report_id)
+                b = IncidentGeneral.objects.get(id=i.user_report_id)
                 b.delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
@@ -146,7 +145,7 @@ def user_reports_today(request):
 @user_passes_test(check_role_super_admin)
 def user_report_delete(request, id=None):
     incidentReports = get_object_or_404(IncidentGeneral, id=id)
-    #user_report = UserReport.objects.all()
+    #user_report = IncidentGeneral.objects.all()
     incidentReports.delete()
     return redirect('user_reports')
 
@@ -165,7 +164,7 @@ def user_report(request):
             x = request.POST.get(str(i.user_report_id))
             print(x)
             if str(x) == 'on':
-                b = UserReport.objects.get(id=i.user_report_id)
+                b = IncidentGeneral.objects.get(id=i.user_report_id)
                 b.delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
@@ -188,7 +187,7 @@ def user_report_pending(request):
             x = request.POST.get(str(i.user_report_id))
             print(x)
             if str(x) == 'on':
-                b = UserReport.objects.get(id=i.user_report_id)
+                b = IncidentGeneral.objects.get(id=i.user_report_id)
                 b.delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
@@ -211,7 +210,7 @@ def user_report_approved(request):
             x = request.POST.get(str(i.user_report_id))
             print(x)
             if str(x) == 'on':
-                b = UserReport.objects.get(id=i.user_report_id)
+                b = IncidentGeneral.objects.get(id=i.user_report_id)
                 b.delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
@@ -234,7 +233,7 @@ def user_report_rejected(request):
             x = request.POST.get(str(i.user_report_id))
             print(x)
             if str(x) == 'on':
-                b = UserReport.objects.get(id=i.user_report_id)
+                b = IncidentGeneral.objects.get(id=i.user_report_id)
                 b.delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
@@ -258,7 +257,7 @@ def user_report_today(request):
             x = request.POST.get(str(i.user_report_id))
             print(x)
             if str(x) == 'on':
-                b = UserReport.objects.get(id=i.user_report_id)
+                b = IncidentGeneral.objects.get(id=i.user_report_id)
                 b.delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
@@ -272,7 +271,7 @@ def user_report_today(request):
 @user_passes_test(check_role_member)
 def my_report(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(user=request.user).order_by('-created_at')
+    incidentReports = IncidentGeneral.objects.filter(user=request.user).order_by('-created_at')
     paginator = Paginator(incidentReports, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -281,7 +280,7 @@ def my_report(request):
             x = request.POST.get(str(i.id))
             print(x)
             if str(x) == 'on':
-                b = UserReport.objects.get(id=i.id)
+                b = IncidentGeneral.objects.get(id=i.id)
                 b.delete()
             messages.success(request, 'Report details successfully deleted')
         return redirect('my_report')
@@ -297,7 +296,7 @@ def my_report(request):
 @user_passes_test(check_role_member)
 def my_report_pending(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(status=1, user=request.user)
+    incidentReports = IncidentGeneral.objects.filter(status=1, user=request.user)
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -309,7 +308,7 @@ def my_report_pending(request):
 @user_passes_test(check_role_member)
 def my_report_approved(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(status=2, user=request.user)
+    incidentReports = IncidentGeneral.objects.filter(status=2, user=request.user)
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -321,7 +320,7 @@ def my_report_approved(request):
 @user_passes_test(check_role_member)
 def my_report_rejected(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(status=3, user=request.user)
+    incidentReports = IncidentGeneral.objects.filter(status=3, user=request.user)
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -330,7 +329,7 @@ def my_report_rejected(request):
 
 
 # def my_report_delete(request, incident_id=None):
-#     incidentReports = UserReport.objects.get(pk=incident_id)
+#     incidentReports = IncidentGeneral.objects.get(pk=incident_id)
 #     incidentReports.delete()
 #     return redirect('my_report')
 
@@ -339,7 +338,7 @@ def my_report_rejected(request):
 # @user_passes_test(check_role_member)
 # def my_report_add(request):
 
-#     form = UserReportForm(request.POST, request.FILES)
+#     form = IncidentGeneralForm(request.POST, request.FILES)
 #     profile = get_object_or_404(UserProfile, user=request.user)
 
 #     if request.method == 'POST':
@@ -357,7 +356,7 @@ def my_report_rejected(request):
 #             # user_report = form.save(commit=False)
 #             # user_report.user = get_user(request)
 #             # user_report.save()
-#             obj = UserReport.objects.create(user_id=request.user.pk, date=date, time=time, address=address,
+#             obj = IncidentGeneral.objects.create(user_id=request.user.pk, date=date, time=time, address=address,
 #                                             description=description, upload_photovideo=upload_photovideo, status=status)
 #             obj.save()
 #             messages.success(request, 'User Report added successfully!')
@@ -367,7 +366,7 @@ def my_report_rejected(request):
 #             print(form.errors)
 
 #     else:
-#         form = UserReportForm()
+#         form = IncidentGeneralForm()
 #     context = {
 #         'form': form,
 #         'profile': profile,
@@ -377,7 +376,7 @@ def my_report_rejected(request):
 
 
 def my_report_view(request, id):
-    user_report = get_object_or_404(UserReport, pk=id)
+    user_report = get_object_or_404(IncidentGeneral, pk=id)
     context = {
         'user_report': user_report,
     }
@@ -388,9 +387,9 @@ def my_report_view(request, id):
 @login_required(login_url='login')
 @user_passes_test(check_role_member)
 def my_report_edit(request, id):
-    user_report = get_object_or_404(UserReport, pk=id)
+    user_report = get_object_or_404(IncidentGeneral, pk=id)
     if request.method == 'POST':
-        form = UserReportForm1(request.POST or None,
+        form = IncidentGeneralForm1(request.POST or None,
                               request.FILES or None, instance=user_report)
         if form.is_valid():
             form.save()
@@ -398,7 +397,7 @@ def my_report_edit(request, id):
             return redirect('my_report')
         
     else:
-        form = UserReportForm1(instance=user_report)
+        form = IncidentGeneralForm1(instance=user_report)
         # messages.error(request, 'Report details unsuccessfully updated')
     context = {
         'form': form,
@@ -412,7 +411,7 @@ def my_report_edit(request, id):
 @login_required(login_url='login')
 @user_passes_test(check_role_member)
 def my_report_delete(request, id):
-    user_report = get_object_or_404(UserReport, pk=id)
+    user_report = get_object_or_404(IncidentGeneral, pk=id)
     incident_general = get_object_or_404(IncidentGeneral, pk=id)
     incident_remark = get_object_or_404(IncidentRemark, pk=id)
     incident_remark.delete()
@@ -424,11 +423,11 @@ def my_report_delete(request, id):
 
 def incident_report_general(request):
     if request.method == 'POST':
-        user_report_form = UserReportForm(request.POST, request.FILES)
+        user_report_form = IncidentGeneralForm(request.POST, request.FILES)
         inc_gen_form = IncidentGeneralForm(request.POST, request.FILES)
 
     else:
-        user_report_form = UserReportForm()
+        user_report_form = IncidentGeneralForm()
         inc_gen_form = IncidentGeneralForm()
     context = {
         'user_report_form': user_report_form,
@@ -438,7 +437,7 @@ def incident_report_general(request):
 
 def incident_report_people(request):
     if request.method == 'POST':
-        user_report_form = UserReportForm(request.POST, request.FILES)
+        user_report_form = IncidentGeneralForm(request.POST, request.FILES)
         person_instance = IncidentPersonForm(request.POST, request.FILES)
         obj = get_object_or_404(UserProfile, pk=request.id)
         try:
@@ -477,7 +476,7 @@ def incident_report_people(request):
             messages.error(request, str(e))
             
     else:
-        user_report_form = UserReportForm()
+        user_report_form = IncidentGeneralForm()
         person_instance = IncidentPersonForm()
         print(user_report_form.errors)
         print(person_instance.errors)
@@ -493,11 +492,11 @@ def incident_report_people(request):
     
 def incident_report_vehicle(request):
     if request.method == 'POST':
-        user_report_form = UserReportForm(request.POST, request.FILES)
+        user_report_form = IncidentGeneralForm(request.POST, request.FILES)
         inc_veh_form = IncidentVehicleForm(request.POST, request.FILES)
 
     else:
-        user_report_form = UserReportForm()
+        user_report_form = IncidentGeneralForm()
         inc_veh_form = IncidentVehicleForm()
         print(user_report_form.errors)
         print(inc_veh_form.errors)
@@ -510,11 +509,11 @@ def incident_report_vehicle(request):
 
 def incident_report_media(request):
     if request.method == 'POST':
-        user_report_form = UserReportForm(request.POST, request.FILES)
+        user_report_form = IncidentGeneralForm(request.POST, request.FILES)
         inc_med_form = IncidentMediaForm(request.POST, request.FILES)
 
     else:
-        user_report_form = UserReportForm()
+        user_report_form = IncidentGeneralForm()
         inc_med_form = IncidentMediaForm()
         print(user_report_form.errors)
         print(inc_med_form.errors)
@@ -547,39 +546,37 @@ def incident_report_remarks(request):
 @user_passes_test(check_role_super_admin)
 def user_report_delete(request, id=None):
     incidentReports = get_object_or_404(IncidentGeneral, id=id)
-    #user_report = UserReport.objects.all()
+    #user_report = IncidentGeneral.objects.all()
     incidentReports.delete()
     return redirect('user_reports')
 
 
 # AJAX
-def load_accident(request):
-    accident_factor_id = request.GET.get('id_accident_factor')
-    collision_type_id = request.GET.get('id_collision_type')
-    acc_subcat = AccidentCausationSub.objects.filter(accident_factor_id=accident_factor_id).all()
-    col_subcat = CollisionTypeSub.objects.filter(collision_type_id=collision_type_id).all()
-    context = {
-        'acc_subcat': acc_subcat,
-        'col_subcat': col_subcat
-    }
-    return render(request, 'incident/acc_sub_dropdown_list_options.html', context)
-    #return JsonResponse(list(acc_subcat.values('id', 'sub_category')), safe=False)
+# def load_accident(request):
+#     accident_factor_id = request.GET.get('id_accident_factor')
+#     collision_type_id = request.GET.get('id_collision_type')
+#     context = {
+#         'acc_subcat': acc_subcat,
+#         'col_subcat': col_subcat
+#     }
+#     return render(request, 'incident/acc_sub_dropdown_list_options.html', context)
+#     #return JsonResponse(list(acc_subcat.values('id', 'sub_category')), safe=False)
 
-def load_collision(request):
-    collision_type_id = request.GET.get('collision_type_id')
-    col_subcat = CollisionTypeSub.objects.filter(collision_type_id=collision_type_id).all()
-    #return render(request, 'incident/acc_sub_dropdown_list_options.html', {'acc_subcat': acc_subcat})
-    return JsonResponse(list(col_subcat.values('id', 'sub_category')), safe=False)
+# def load_collision(request):
+#     collision_type_id = request.GET.get('collision_type_id')
+#     col_subcat = CollisionTypeSub.objects.filter(collision_type_id=collision_type_id).all()
+#     #return render(request, 'incident/acc_sub_dropdown_list_options.html', {'acc_subcat': acc_subcat})
+#     return JsonResponse(list(col_subcat.values('id', 'sub_category')), safe=False)
 
 
-# FORMS = [("information", UserReportForm),
+# FORMS = [("information", IncidentGeneralForm),
 #         ("general", IncidentGeneralForm),
 #         #  ("people", IncidentPersonForm),
 #         #  ("vehicle",IncidentVehicleForm),
 #         #  ("media", IncidentMediaForm),
 #          ("remarks", IncidentRemarksForm)]
 
-FORMS1 = [("information", UserReportForm1)]
+FORMS1 = [("information", IncidentGeneralForm)]
 
 # TEMPLATES = {"information": "pages/super/incident_report_user.html",
 #                 "general": "pages/super/incident_report_general.html",
@@ -603,17 +600,17 @@ TEMPLATES2 = {"information": "pages/member/member_myreport_add.html"}
 
 
 #     # template_name = 'pages/incident_report.html'
-#     # form_list = [UserReportForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm]
+#     # form_list = [IncidentGeneralForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm]
 #     file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'media'))
     
 #     def get_template_names(self):
 #         return [TEMPLATES[self.steps.current]]
     
 #     def done(self, form_list, **kwargs):
-#         # UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
+#         # IncidentGeneral, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
 #         profile = get_object_or_404(UserProfile, user=self.request.user)
 #         cleaned_data = [form.cleaned_data for form in form_list]
-#         user_instance = UserReport()
+#         user_instance = IncidentGeneral()
 #         general_instance = IncidentGeneral()
 #         # person_instance  = IncidentPerson()
 #         # vehicle_instance = IncidentVehicle()
@@ -677,22 +674,22 @@ TEMPLATES2 = {"information": "pages/member/member_myreport_add.html"}
 #             'profile': profile
 #         }
 #         # return redirect('/incidentReport/people', context)
-#         return redirect('/userReports', context)
+#         return redirect('/IncidentGenerals', context)
 
 # class multistepformsubmission_admin(SessionWizardView):
     
 
 #     # template_name = 'pages/incident_report.html'
-#     # form_list = [UserReportForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm]
+#     # form_list = [IncidentGeneralForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm]
 #     file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'media'))
     
 #     def get_template_names(self):
 #         return [TEMPLATES1[self.steps.current]]
     
 #     def done(self, form_list, **kwargs):
-#         # UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
+#         # IncidentGeneral, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
 #         profile = get_object_or_404(UserProfile, user=self.request.user)
-#         user_instance = UserReport()
+#         user_instance = IncidentGeneral()
 #         general_instance = IncidentGeneral()
 #         person_instance  = IncidentPerson()
 #         vehicle_instance = IncidentVehicle()
@@ -725,13 +722,13 @@ TEMPLATES2 = {"information": "pages/member/member_myreport_add.html"}
 #         context = {
 #             'profile': profile
 #         }
-#         return redirect('/userReports', context)
+#         return redirect('/IncidentGenerals', context)
     
 class multistepformsubmission_member(SessionWizardView):
     
 
     # template_name = 'pages/incident_report.html'
-    # form_list = [UserReportForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm]
+    # form_list = [IncidentGeneralForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm]
     file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'incident_report/image'))
     
     def get_template_names(self):
@@ -749,10 +746,10 @@ class multistepformsubmission_member(SessionWizardView):
             messages.add_message(self.request, messages.INFO, ('It worked'))
     
     def done(self, form_list, **kwargs):
-        # UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
+        # IncidentGeneral, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
         profile = get_object_or_404(UserProfile, user=self.request.user)
 
-        user_instance = UserReport()
+        user_instance = IncidentGeneral()
         general_instance = IncidentGeneral()
         person_instance  = IncidentPerson()
         vehicle_instance = IncidentVehicle()
@@ -782,7 +779,7 @@ class multistepformsubmission_member(SessionWizardView):
         remarks_instance.incident_general = general_instance
         remarks_instance.save()
         
-        # Notification.objects.create(to_user=self.request, userreport=self.user_report, notification_type='application', created_by=self.user, extra_id=general_instance.id)
+        # Notification.objects.create(to_user=self.request, IncidentGeneral=self.user_report, notification_type='application', created_by=self.user, extra_id=general_instance.id)
         
         messages.success(self.request, 'Report details successfully added')
         context = {
@@ -800,8 +797,8 @@ def incident_form_member(request):
 
 # def incident_report_people_view(request, id):
 #     general_instance = get_object_or_404(IncidentGeneral, pk=id)
-#     #user_instance = UserReport.objects.all()
-#     user_report = UserReport.objects.all()
+#     #user_instance = IncidentGeneral.objects.all()
+#     user_report = IncidentGeneral.objects.all()
 #     person_instance  = IncidentPerson.objects.all()
 #     vehicle_instance = IncidentVehicle.objects.all()
 #     media_instance = IncidentMedia.objects.all()
@@ -819,8 +816,8 @@ def incident_form_member(request):
 
 # def incident_report_vehicle_view(request, id):
 #     general_instance = get_object_or_404(IncidentGeneral, pk=id)
-#     #user_instance = UserReport.objects.all()
-#     user_report = UserReport.objects.all()
+#     #user_instance = IncidentGeneral.objects.all()
+#     user_report = IncidentGeneral.objects.all()
 #     person_instance  = IncidentPerson.objects.all()
 #     vehicle_instance = IncidentVehicle.objects.all()
 #     media_instance = IncidentMedia.objects.all()
@@ -838,8 +835,8 @@ def incident_form_member(request):
 
 # def incident_report_media_view(request, id):
 #     general_instance = get_object_or_404(IncidentGeneral, pk=id)
-#     #user_instance = UserReport.objects.all()
-#     user_report = UserReport.objects.all()
+#     #user_instance = IncidentGeneral.objects.all()
+#     user_report = IncidentGeneral.objects.all()
 #     person_instance  = IncidentPerson.objects.all()
 #     vehicle_instance = IncidentVehicle.objects.all()
 #     media_instance = IncidentMedia.objects.all()
@@ -857,8 +854,8 @@ def incident_form_member(request):
 
 # def incident_report_remarks_view(request, id):
 #     general_instance = get_object_or_404(IncidentGeneral, pk=id)
-#     #user_instance = UserReport.objects.all()
-#     user_report = UserReport.objects.all()
+#     #user_instance = IncidentGeneral.objects.all()
+#     user_report = IncidentGeneral.objects.all()
 #     person_instance  = IncidentPerson.objects.all()
 #     vehicle_instance = IncidentVehicle.objects.all()
 #     media_instance = IncidentMedia.objects.all()
@@ -878,7 +875,7 @@ def incident_form_member(request):
 
 
 
-# FORMS = [("information", UserReportForm),
+# FORMS = [("information", IncidentGeneralForm),
 #         ("general", IncidentGeneralForm),
 #          ("people", IncidentPersonForm),
 #          ("vehicle",IncidentVehicleForm),
@@ -893,7 +890,7 @@ def incident_form_member(request):
 #         'remarks_instance': remarks_instance,
 
 # def incident_report_people_edit(request, id=None):
-#     userreport =  get_object_or_404(UserReport, pk=id)
+#     IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
 #     general = get_object_or_404(IncidentGeneral, pk=id)
 #     person = get_object_or_404(IncidentPerson, pk=id)
 #     if request.method == 'POST':
@@ -910,7 +907,7 @@ def incident_form_member(request):
 #     context = {
 #         'general': general,
 #         'person_instance' : person_instance,
-#         'userreport': userreport,
+#         'IncidentGeneral': IncidentGeneral,
 #         'person': person
 #     }
     
@@ -1092,7 +1089,7 @@ def attributes_builder_accident_edit(request, id):
 @user_passes_test(check_role_super)
 def attributes_builder_accident_delete(request, id):
     accident_factor = get_object_or_404(AccidentCausation, pk=id)
-    #user_report = UserReport.objects.all()
+    #user_report = IncidentGeneral.objects.all()
     accident_factor.delete()
     return redirect('attributes_builder_accident')
 
@@ -1164,7 +1161,7 @@ def attributes_builder_accident_edit_sub(request, id):
 @user_passes_test(check_role_super)
 def attributes_builder_accident_delete_sub(request, id):
     accident_factor_sub = get_object_or_404(AccidentCausationSub, pk=id)
-    #user_report = UserReport.objects.all()
+    #user_report = IncidentGeneral.objects.all()
     accident_factor_sub.delete()
     messages.error(request, 'Accident Factor Sub-category has been successfully deleted')
     return redirect('attributes_builder_accident')
@@ -1235,7 +1232,7 @@ def attributes_builder_collision_edit(request, id):
 @user_passes_test(check_role_super)
 def attributes_builder_collision_delete(request, id):
     collision_type = get_object_or_404(CollisionType, pk=id)
-    #user_report = UserReport.objects.all()
+    #user_report = IncidentGeneral.objects.all()
     collision_type.delete()
     return redirect('attributes_builder_collision')
 
@@ -1307,7 +1304,7 @@ def attributes_builder_collision_edit_sub(request, id):
 @user_passes_test(check_role_super)
 def attributes_builder_collision_delete_sub(request, id):
     collision_type_sub = get_object_or_404(CollisionTypeSub, pk=id)
-    #user_report = UserReport.objects.all()
+    #user_report = IncidentGeneral.objects.all()
     collision_type_sub.delete()
     return redirect('attributes_builder_collision')
 
@@ -1376,7 +1373,7 @@ def attributes_builder_crash_edit(request, id):
 @user_passes_test(check_role_super)
 def attributes_builder_crash_delete(request, id):
     crash_type = get_object_or_404(CrashType, pk=id)
-    #user_report = UserReport.objects.all()
+    #user_report = IncidentGeneral.objects.all()
     crash_type.delete()
     return redirect('attributes_builder_crash')
 
@@ -1560,7 +1557,7 @@ def attributes_builder_accident_edit_admin(request, id):
 @user_passes_test(check_role_admin)
 def attributes_builder_accident_delete_admin(request, id):
     accident_factor = get_object_or_404(AccidentCausation, pk=id)
-    #user_report = UserReport.objects.all()
+    #user_report = IncidentGeneral.objects.all()
     accident_factor.delete()
     return redirect('attributes_builder_accident_admin')
 
@@ -1632,7 +1629,7 @@ def attributes_builder_accident_edit_sub_admin(request, id):
 @user_passes_test(check_role_admin)
 def attributes_builder_accident_delete_sub_admin(request, id):
     accident_factor_sub = get_object_or_404(AccidentCausationSub, pk=id)
-    #user_report = UserReport.objects.all()
+    #user_report = IncidentGeneral.objects.all()
     accident_factor_sub.delete()
     return redirect('attributes_builder_accident_admin')
 
@@ -1702,7 +1699,7 @@ def attributes_builder_collision_edit_admin(request, id):
 @user_passes_test(check_role_admin)
 def attributes_builder_collision_delete_admin(request, id):
     collision_type = get_object_or_404(CollisionType, pk=id)
-    #user_report = UserReport.objects.all()
+    #user_report = IncidentGeneral.objects.all()
     collision_type.delete()
     return redirect('attributes_builder_collision_admin')
 
@@ -1774,7 +1771,7 @@ def attributes_builder_collision_edit_sub_admin(request, id):
 @user_passes_test(check_role_admin)
 def attributes_builder_collision_delete_sub_admin(request, id):
     collision_type_sub = get_object_or_404(CollisionTypeSub, pk=id)
-    #user_report = UserReport.objects.all()
+    #user_report = IncidentGeneral.objects.all()
     collision_type_sub.delete()
     return redirect('attributes_builder_collision_admin')
 
@@ -1843,7 +1840,7 @@ def attributes_builder_crash_edit_admin(request, id):
 @user_passes_test(check_role_admin)
 def attributes_builder_crash_delete_admin(request, id):
     crash_type = get_object_or_404(CrashType, pk=id)
-    #user_report = UserReport.objects.all()
+    #user_report = IncidentGeneral.objects.all()
     crash_type.delete()
     return redirect('attributes_builder_crash_admin')
 
@@ -1852,7 +1849,7 @@ def attributes_builder_crash_delete_admin(request, id):
 def sa_incidentreports(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':
-        form =  UserReportForm(request.POST or None, request.FILES or None)
+        form =  IncidentGeneralForm(request.POST or None, request.FILES or None)
         form_general = IncidentGeneralForm(request.POST or None, request.FILES or None)
         # form_people = IncidentRemarksForm(request.POST or None, request.FILES or None)
         form_media = IncidentRemarksForm(request.POST or None, request.FILES or None)
@@ -1891,22 +1888,24 @@ def sa_incidentreports(request):
                 responder = request.POST.get("responder")
                 action_taken = request.POST.get("action_taken")
                 form.user = request.user
-                user_report=UserReport(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description)
-                user_report.status = 2
+                # user_report=IncidentGeneral(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description)
+                # user_report.status = 2
                 # user_report.save()
                 
-                user_instance =  UserReport.objects.filter(date = date)
+                user_instance =  IncidentGeneral.objects.filter(date = date)
                 
-                if user_instance.exists():
-                    user_report.duplicate = "Possible Duplicate"
-                    user_report.save()
-                else:
-                    user_report.save()
+                # if user_instance.exists():
+                #     user_report.duplicate = "Possible Duplicate"
+                #     user_report.save()
+                # else:
+                #     user_report.save()
                 
-                incident_general=IncidentGeneral(user_report=user_report,accident_factor=accident_factor,
+                incident_general=IncidentGeneral(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description,
+                                                 accident_factor=accident_factor,
                                                 collision_type=collision_type,
                                                 crash_type=crash_type,
                                                 weather=weather,light=light,severity=severity,movement_code=movement_code)
+                incident_general.status = 2
                 incident_general.save()
                 
                 incident_remarks = IncidentRemark(incident_general=incident_general,responder=responder,action_taken=action_taken)
@@ -1929,7 +1928,7 @@ def sa_incidentreports(request):
             print(form_general.errors)
             print(form_remarks.errors)
     else:
-        form = UserReportForm()
+        form = IncidentGeneralForm()
         form_general = IncidentGeneralForm()
         form_remarks = IncidentRemarksForm()        
     context = {
@@ -1950,7 +1949,7 @@ def sa_incidentreports_additional(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incident_general = get_object_or_404(IncidentGeneral, pk=general_id )
     if request.method == 'POST':
-        form =  UserReportForm(request.POST or None, request.FILES or None)
+        form =  IncidentGeneralForm(request.POST or None, request.FILES or None)
         form_general = IncidentGeneralForm(request.POST or None, request.FILES or None)
         form_people = IncidentPersonForm(request.POST or None, request.FILES or None)
         form_vehicle = IncidentVehicleForm(request.POST or None, request.FILES or None)
@@ -2024,7 +2023,7 @@ def sa_incidentreports_additional(request):
             print(form_vehicle.errors)
             print(form_media.errors)
     else:
-        form = UserReportForm()
+        form = IncidentGeneralForm()
         form_general = IncidentGeneralForm()
         form_people = IncidentPersonForm()
         form_vehicle = IncidentVehicleForm()
@@ -2049,7 +2048,7 @@ def a_incidentreports(request):
     #     return redirect ('user_reports')
     profile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':
-        form =  UserReportForm(request.POST or None, request.FILES or None)
+        form =  IncidentGeneralForm(request.POST or None, request.FILES or None)
         form_general = IncidentGeneralForm(request.POST or None, request.FILES or None)
         # form_people = IncidentRemarksForm(request.POST or None, request.FILES or None)
         form_media = IncidentRemarksForm(request.POST or None, request.FILES or None)
@@ -2099,7 +2098,7 @@ def a_incidentreports(request):
                 responder = request.POST.get("responder")
                 action_taken = request.POST.get("action_taken")
                 form.user = request.user
-                user_report=UserReport(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description)
+                user_report=IncidentGeneral(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description)
                 user_report.status = 2
                 user_report.save()
                 incident_general=IncidentGeneral(user_report=user_report,accident_factor=accident_factor,
@@ -2127,7 +2126,7 @@ def a_incidentreports(request):
             print(form_general.errors)
             print(form_remarks.errors)
     else:
-        form = UserReportForm()
+        form = IncidentGeneralForm()
         form_general = IncidentGeneralForm()
         form_remarks = IncidentRemarksForm()        
     context = {
@@ -2148,7 +2147,7 @@ def a_incidentreports_additional(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incident_general = get_object_or_404(IncidentGeneral, pk=general_id )
     if request.method == 'POST':
-        form =  UserReportForm(request.POST or None, request.FILES or None)
+        form =  IncidentGeneralForm(request.POST or None, request.FILES or None)
         form_general = IncidentGeneralForm(request.POST or None, request.FILES or None)
         form_people = IncidentPersonForm(request.POST or None, request.FILES or None)
         form_vehicle = IncidentVehicleForm(request.POST or None, request.FILES or None)
@@ -2222,7 +2221,7 @@ def a_incidentreports_additional(request):
             print(form_vehicle.errors)
             print(form_media.errors)
     else:
-        form = UserReportForm()
+        form = IncidentGeneralForm()
         form_general = IncidentGeneralForm()
         form_people = IncidentPersonForm()
         form_vehicle = IncidentVehicleForm()
@@ -2245,8 +2244,9 @@ def a_incidentreports_additional(request):
 def incident_report_general_view(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
-    #user_instance = UserReport.objects.all()
-    user_report = UserReport.objects.all()
+    
+    #user_instance = IncidentGeneral.objects.all()
+    user_report = IncidentGeneral.objects.all()
     person_instance  = IncidentPerson.objects.all()
     vehicle_instance = IncidentVehicle.objects.all()
     media_instance = IncidentMedia.objects.all()
@@ -2266,11 +2266,12 @@ def incident_report_general_view(request, id):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
 def incident_report_general_edit(request, id=None):
-    userreport =  get_object_or_404(UserReport, pk=id)
+    # IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
+    IncidentGeneral = IncidentGeneral.objects.filter(__incident_general =general)
     if request.method == 'POST':
         general_instance = IncidentGeneralForm(request.POST  or None, request.FILES  or None, instance=general)
-        user_report = UserReportForm(request.POST  or None, request.FILES  or None,  instance=userreport)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
         if general_instance.is_valid() and user_report.is_valid():
             user_report.instance.username = request.user
             general_instance.save()
@@ -2284,12 +2285,12 @@ def incident_report_general_edit(request, id=None):
 
     else:
         general_instance = IncidentGeneralForm(instance=general)
-        user_report = UserReportForm(instance=userreport)
+        user_report = IncidentGeneralForm(instance=IncidentGeneral)
     context = {
         'general_instance': general_instance,
         'user_report' : user_report,
         'general': general,
-        'userreport': userreport
+        'IncidentGeneral': IncidentGeneral
     }
     
     return render(request, 'pages/incident_report_general_edit.html', context)
@@ -2298,8 +2299,8 @@ def incident_report_remarks_view(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     remarks_instance = get_object_or_404(IncidentRemark, pk=id)
-    #user_instance = UserReport.objects.all()
-    user_report = UserReport.objects.all()
+    #user_instance = IncidentGeneral.objects.all()
+    user_report = IncidentGeneral.objects.all()
     person_instance  = IncidentPerson.objects.all()
     vehicle_instance = IncidentVehicle.objects.all()
     media_instance = IncidentMedia.objects.all()
@@ -2322,8 +2323,8 @@ def incident_report_remarks_view(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     remarks_instance = get_object_or_404(IncidentRemark, pk=id)
-    #user_instance = UserReport.objects.all()
-    user_report = UserReport.objects.all()
+    #user_instance = IncidentGeneral.objects.all()
+    user_report = IncidentGeneral.objects.all()
     person_instance  = IncidentPerson.objects.all()
     vehicle_instance = IncidentVehicle.objects.all()
     media_instance = IncidentMedia.objects.all()
@@ -2347,8 +2348,8 @@ def incident_report_people_vehicle_main(request, id):
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     people_instance = IncidentPerson.objects.filter(incident_general =general_instance )
     vehicle_instance = IncidentVehicle.objects.all()
-    # #user_instance = UserReport.objects.all()
-    # user_report = UserReport.objects.all()
+    # #user_instance = IncidentGeneral.objects.all()
+    # user_report = IncidentGeneral.objects.all()
     # person_instance  = IncidentPerson.objects.all()
     # vehicle_instance = IncidentVehicle.objects.all()
     # media_instance = IncidentMedia.objects.all()
@@ -2372,8 +2373,8 @@ def incident_report_people_vehicle_view(request, id, people_id):
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     person_instance = get_object_or_404(IncidentPerson, pk=people_id)
     vehicle_instance = IncidentVehicle.objects.all()
-    # #user_instance = UserReport.objects.all()
-    # user_report = UserReport.objects.all()
+    # #user_instance = IncidentGeneral.objects.all()
+    # user_report = IncidentGeneral.objects.all()
     # person_instance  = IncidentPerson.objects.all()
     # vehicle_instance = IncidentVehicle.objects.all()
     # media_instance = IncidentMedia.objects.all()
@@ -2394,8 +2395,8 @@ def incident_report_vehicle_main(request, id):
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     vehicle_instance = IncidentVehicle.objects.filter(incident_general =general_instance )
     # vehicle_instance = IncidentVehicle.objects.all()
-    # #user_instance = UserReport.objects.all()
-    # user_report = UserReport.objects.all()
+    # #user_instance = IncidentGeneral.objects.all()
+    # user_report = IncidentGeneral.objects.all()
     # person_instance  = IncidentPerson.objects.all()
     # vehicle_instance = IncidentVehicle.objects.all()
     # media_instance = IncidentMedia.objects.all()
@@ -2419,8 +2420,8 @@ def incident_report_media_main(request, id):
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     media_instance = IncidentMedia.objects.filter(incident_general =general_instance )
     # vehicle_instance = IncidentVehicle.objects.all()
-    # #user_instance = UserReport.objects.all()
-    # user_report = UserReport.objects.all()
+    # #user_instance = IncidentGeneral.objects.all()
+    # user_report = IncidentGeneral.objects.all()
     # person_instance  = IncidentPerson.objects.all()
     # vehicle_instance = IncidentVehicle.objects.all()
     # media_instance = IncidentMedia.objects.all()
@@ -2442,8 +2443,8 @@ def incident_report_vehicle_view(request, id, vehicle_id):
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     vehicle_instance = get_object_or_404(IncidentVehicle, pk=vehicle_id)
     # vehicle_instance = IncidentVehicle.objects.all()
-    # #user_instance = UserReport.objects.all()
-    # user_report = UserReport.objects.all()
+    # #user_instance = IncidentGeneral.objects.all()
+    # user_report = IncidentGeneral.objects.all()
     # person_instance  = IncidentPerson.objects.all()
     # vehicle_instance = IncidentVehicle.objects.all()
     # media_instance = IncidentMedia.objects.all()
@@ -2464,8 +2465,8 @@ def incident_report_media_view(request, id, media_id):
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     media_instance = get_object_or_404(IncidentMedia, pk=media_id)
     # vehicle_instance = IncidentVehicle.objects.all()
-    # #user_instance = UserReport.objects.all()
-    # user_report = UserReport.objects.all()
+    # #user_instance = IncidentGeneral.objects.all()
+    # user_report = IncidentGeneral.objects.all()
     # person_instance  = IncidentPerson.objects.all()
     # vehicle_instance = IncidentVehicle.objects.all()
     # media_instance = IncidentMedia.objects.all()
@@ -2482,30 +2483,29 @@ def incident_report_media_view(request, id, media_id):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
 def incident_report_general_edit(request, id=None):
-    userreport =  get_object_or_404(UserReport, pk=id)
-    general = get_object_or_404(IncidentGeneral, pk=id)
+    # incidentGeneral1 =  get_object_or_404(IncidentGeneral, pk=id)
+    incidentGeneral = get_object_or_404(IncidentGeneral, pk=id)
     if request.method == 'POST':
-        general_instance = IncidentGeneralForm(request.POST  or None, request.FILES  or None, instance=general)
-        user_report = UserReportForm(request.POST  or None, request.FILES  or None,  instance=userreport)
-        if general_instance.is_valid() and user_report.is_valid():
-            user_report.instance.username = request.user
+        general_instance = IncidentGeneralForm(request.POST  or None, request.FILES  or None, instance=incidentGeneral)
+        # user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
+        if general_instance.is_valid():
+            general_instance.instance.username = request.user
             general_instance.save()
-            user_report.save()
             messages.success(request, 'Profile updated')
 
             return redirect('user_reports')
         else:
             print(general_instance.errors)
-            print(user_report.errors)
+            # print(user_report.errors)
 
     else:
-        general_instance = IncidentGeneralForm(instance=general)
-        user_report = UserReportForm(instance=userreport)
+        general_instance = IncidentGeneralForm(instance=incidentGeneral)
+        # user_report = IncidentGeneralForm(instance=IncidentGeneral)
     context = {
         'general_instance': general_instance,
-        'user_report' : user_report,
-        'general': general,
-        'userreport': userreport
+        # 'user_report' : user_report,
+        'general': incidentGeneral,
+        'IncidentGeneral': IncidentGeneral
     }
     
     return render(request, 'pages/incident_report_general_edit.html', context)
@@ -2513,11 +2513,11 @@ def incident_report_general_edit(request, id=None):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
 def incident_report_remarks_edit(request, id=None):
-    userreport =  get_object_or_404(UserReport, pk=id)
+    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     remarks = get_object_or_404(IncidentRemark, pk=id)
     if request.method == 'POST':
-        user_report = UserReportForm(request.POST  or None, request.FILES  or None,  instance=userreport)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
         remarks_instance = IncidentRemarksForm(request.POST  or None, request.FILES  or None, instance=remarks)
         if remarks_instance.is_valid():
             user_report.instance.username = request.user
@@ -2531,12 +2531,12 @@ def incident_report_remarks_edit(request, id=None):
 
     else:
         remarks_instance = IncidentRemarksForm(instance=remarks)
-        user_report = UserReportForm(instance=userreport)
+        user_report = IncidentGeneralForm(instance=IncidentGeneral)
     context = {
         'remarks_instance': remarks_instance,
         'user_report' : user_report,
         'general': general,
-        'userreport': userreport
+        'IncidentGeneral': IncidentGeneral
     }
     
     return render(request, 'pages/incident_report_remarks_edit.html', context)
@@ -2544,11 +2544,11 @@ def incident_report_remarks_edit(request, id=None):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
 def incident_report_people_edit(request, id=None, people_id=None):
-    userreport =  get_object_or_404(UserReport, pk=id)
+    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     people = get_object_or_404(IncidentPerson, pk=people_id)
     if request.method == 'POST':
-        user_report = UserReportForm(request.POST  or None, request.FILES  or None,  instance=userreport)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
         person_instance = IncidentPersonForm(request.POST  or None, request.FILES  or None, instance=people)
         if person_instance.is_valid():
             user_report.instance.username = request.user
@@ -2562,12 +2562,12 @@ def incident_report_people_edit(request, id=None, people_id=None):
 
     else:
         person_instance = IncidentPersonForm(instance=people)
-        user_report = UserReportForm(instance=userreport)
+        user_report = IncidentGeneralForm(instance=IncidentGeneral)
     context = {
         'person_instance': person_instance,
         'user_report' : user_report,
         'general': general,
-        'userreport': userreport,
+        'IncidentGeneral': IncidentGeneral,
         'people': people
     }
     
@@ -2576,11 +2576,11 @@ def incident_report_people_edit(request, id=None, people_id=None):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
 def incident_report_vehicle_edit(request, id=None, vehicle_id=None):
-    userreport =  get_object_or_404(UserReport, pk=id)
+    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     vehicle = get_object_or_404(IncidentVehicle, pk=vehicle_id)
     if request.method == 'POST':
-        user_report = UserReportForm(request.POST  or None, request.FILES  or None,  instance=userreport)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
         vehicle_instance = IncidentVehicleForm(request.POST  or None, request.FILES  or None, instance=vehicle)
         if vehicle_instance.is_valid():
             user_report.instance.username = request.user
@@ -2594,12 +2594,12 @@ def incident_report_vehicle_edit(request, id=None, vehicle_id=None):
 
     else:
         vehicle_instance = IncidentVehicleForm(instance=vehicle)
-        user_report = UserReportForm(instance=userreport)
+        user_report = IncidentGeneralForm(instance=IncidentGeneral)
     context = {
         'vehicle_instance': vehicle_instance,
         'user_report' : user_report,
         'general': general,
-        'userreport': userreport,
+        'IncidentGeneral': IncidentGeneral,
         'vehicle': vehicle
     }
     
@@ -2608,11 +2608,11 @@ def incident_report_vehicle_edit(request, id=None, vehicle_id=None):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
 def incident_report_media_edit(request, id=None, media_id=None):
-    userreport =  get_object_or_404(UserReport, pk=id)
+    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     media = get_object_or_404(IncidentMedia, pk=media_id)
     if request.method == 'POST':
-        user_report = UserReportForm(request.POST  or None, request.FILES  or None,  instance=userreport)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
         media_instance = IncidentMediaForm(request.POST  or None, request.FILES  or None, instance=media)
         if media_instance.is_valid():
             user_report.instance.username = request.user
@@ -2626,12 +2626,12 @@ def incident_report_media_edit(request, id=None, media_id=None):
 
     else:
         media_instance = IncidentMediaForm(instance=media)
-        user_report = UserReportForm(instance=userreport)
+        user_report = IncidentGeneralForm(instance=IncidentGeneral)
     context = {
         'media_instance': media_instance,
         'user_report' : user_report,
         'general': general,
-        'userreport': userreport,
+        'IncidentGeneral': IncidentGeneral,
         'media': media
     }
     
@@ -2645,8 +2645,8 @@ def incident_report_media_edit(request, id=None, media_id=None):
 def a_incident_report_general_view(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
-    #user_instance = UserReport.objects.all()
-    user_report = UserReport.objects.all()
+    #user_instance = IncidentGeneral.objects.all()
+    user_report = IncidentGeneral.objects.all()
     person_instance  = IncidentPerson.objects.all()
     vehicle_instance = IncidentVehicle.objects.all()
     media_instance = IncidentMedia.objects.all()
@@ -2667,12 +2667,12 @@ def a_incident_report_general_view(request, id):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
 def a_incident_report_general_edit(request, id):
-    userreport =  get_object_or_404(UserReport, pk=id)
+    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     print(general)
     if request.method == 'POST':
         general_instance = IncidentGeneralForm(request.POST  or None, request.FILES  or None, instance=general)
-        user_report = UserReportForm(request.POST  or None, request.FILES  or None,  instance=userreport)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
         if general_instance.is_valid() and user_report.is_valid():
             user_report.instance.username = request.user
             general_instance.save()
@@ -2686,13 +2686,13 @@ def a_incident_report_general_edit(request, id):
 
     else:
         general_instance = IncidentGeneralForm(instance=general)
-        user_report = UserReportForm(instance=userreport)
+        user_report = IncidentGeneralForm(instance=IncidentGeneral)
     print(general)
     context = {
         'general_instance': general_instance,
         'user_report' : user_report,
         'general': general,
-        'userreport': userreport
+        'IncidentGeneral': IncidentGeneral
     }
     
     return render(request, 'pages/a_incident_report_general_edit.html', context)
@@ -2703,8 +2703,8 @@ def a_incident_report_remarks_view(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     remarks_instance = get_object_or_404(IncidentRemark, pk=id)
-    #user_instance = UserReport.objects.all()
-    user_report = UserReport.objects.all()
+    #user_instance = IncidentGeneral.objects.all()
+    user_report = IncidentGeneral.objects.all()
     person_instance  = IncidentPerson.objects.all()
     vehicle_instance = IncidentVehicle.objects.all()
     media_instance = IncidentMedia.objects.all()
@@ -2727,8 +2727,8 @@ def a_incident_report_remarks_view(request, id):
     profile = get_object_or_404(UserProfile, user=request.user)
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     remarks_instance = get_object_or_404(IncidentRemark, pk=id)
-    #user_instance = UserReport.objects.all()
-    user_report = UserReport.objects.all()
+    #user_instance = IncidentGeneral.objects.all()
+    user_report = IncidentGeneral.objects.all()
     person_instance  = IncidentPerson.objects.all()
     vehicle_instance = IncidentVehicle.objects.all()
     media_instance = IncidentMedia.objects.all()
@@ -2752,8 +2752,8 @@ def a_incident_report_people_vehicle_main(request, id):
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     people_instance = IncidentPerson.objects.filter(incident_general =general_instance )
     vehicle_instance = IncidentVehicle.objects.all()
-    # #user_instance = UserReport.objects.all()
-    # user_report = UserReport.objects.all()
+    # #user_instance = IncidentGeneral.objects.all()
+    # user_report = IncidentGeneral.objects.all()
     # person_instance  = IncidentPerson.objects.all()
     # vehicle_instance = IncidentVehicle.objects.all()
     # media_instance = IncidentMedia.objects.all()
@@ -2777,8 +2777,8 @@ def a_incident_report_people_vehicle_view(request, id, people_id):
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     person_instance = get_object_or_404(IncidentPerson, pk=people_id)
     vehicle_instance = IncidentVehicle.objects.all()
-    # #user_instance = UserReport.objects.all()
-    # user_report = UserReport.objects.all()
+    # #user_instance = IncidentGeneral.objects.all()
+    # user_report = IncidentGeneral.objects.all()
     # person_instance  = IncidentPerson.objects.all()
     # vehicle_instance = IncidentVehicle.objects.all()
     # media_instance = IncidentMedia.objects.all()
@@ -2799,8 +2799,8 @@ def a_incident_report_vehicle_main(request, id):
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     vehicle_instance = IncidentVehicle.objects.filter(incident_general =general_instance )
     # vehicle_instance = IncidentVehicle.objects.all()
-    # #user_instance = UserReport.objects.all()
-    # user_report = UserReport.objects.all()
+    # #user_instance = IncidentGeneral.objects.all()
+    # user_report = IncidentGeneral.objects.all()
     # person_instance  = IncidentPerson.objects.all()
     # vehicle_instance = IncidentVehicle.objects.all()
     # media_instance = IncidentMedia.objects.all()
@@ -2824,8 +2824,8 @@ def a_incident_report_media_main(request, id):
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     media_instance = IncidentMedia.objects.filter(incident_general =general_instance )
     # vehicle_instance = IncidentVehicle.objects.all()
-    # #user_instance = UserReport.objects.all()
-    # user_report = UserReport.objects.all()
+    # #user_instance = IncidentGeneral.objects.all()
+    # user_report = IncidentGeneral.objects.all()
     # person_instance  = IncidentPerson.objects.all()
     # vehicle_instance = IncidentVehicle.objects.all()
     # media_instance = IncidentMedia.objects.all()
@@ -2849,8 +2849,8 @@ def a_incident_report_vehicle_view(request, id, vehicle_id):
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     vehicle_instance = get_object_or_404(IncidentVehicle, pk=vehicle_id)
     # vehicle_instance = IncidentVehicle.objects.all()
-    # #user_instance = UserReport.objects.all()
-    # user_report = UserReport.objects.all()
+    # #user_instance = IncidentGeneral.objects.all()
+    # user_report = IncidentGeneral.objects.all()
     # person_instance  = IncidentPerson.objects.all()
     # vehicle_instance = IncidentVehicle.objects.all()
     # media_instance = IncidentMedia.objects.all()
@@ -2871,8 +2871,8 @@ def a_incident_report_media_view(request, id, media_id):
     general_instance = get_object_or_404(IncidentGeneral, pk=id)
     media_instance = get_object_or_404(IncidentMedia, pk=media_id)
     # vehicle_instance = IncidentVehicle.objects.all()
-    # #user_instance = UserReport.objects.all()
-    # user_report = UserReport.objects.all()
+    # #user_instance = IncidentGeneral.objects.all()
+    # user_report = IncidentGeneral.objects.all()
     # person_instance  = IncidentPerson.objects.all()
     # vehicle_instance = IncidentVehicle.objects.all()
     # media_instance = IncidentMedia.objects.all()
@@ -2889,11 +2889,11 @@ def a_incident_report_media_view(request, id, media_id):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
 def a_incident_report_general_edit(request, id=None):
-    userreport =  get_object_or_404(UserReport, pk=id)
+    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     if request.method == 'POST':
         general_instance = IncidentGeneralForm(request.POST  or None, request.FILES  or None, instance=general)
-        user_report = UserReportForm(request.POST  or None, request.FILES  or None,  instance=userreport)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
         if general_instance.is_valid() and user_report.is_valid():
             user_report.instance.username = request.user
             general_instance.save()
@@ -2907,12 +2907,12 @@ def a_incident_report_general_edit(request, id=None):
 
     else:
         general_instance = IncidentGeneralForm(instance=general)
-        user_report = UserReportForm(instance=userreport)
+        user_report = IncidentGeneralForm(instance=IncidentGeneral)
     context = {
         'general_instance': general_instance,
         'user_report' : user_report,
         'general': general,
-        'userreport': userreport
+        'IncidentGeneral': IncidentGeneral
     }
     
     return render(request, 'pages/a_incident_report_general_edit.html', context)
@@ -2920,11 +2920,11 @@ def a_incident_report_general_edit(request, id=None):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
 def a_incident_report_remarks_edit(request, id=None):
-    userreport =  get_object_or_404(UserReport, pk=id)
+    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     remarks = get_object_or_404(IncidentRemark, pk=id)
     if request.method == 'POST':
-        user_report = UserReportForm(request.POST  or None, request.FILES  or None,  instance=userreport)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
         remarks_instance = IncidentRemarksForm(request.POST  or None, request.FILES  or None, instance=remarks)
         if remarks_instance.is_valid():
             user_report.instance.username = request.user
@@ -2938,12 +2938,12 @@ def a_incident_report_remarks_edit(request, id=None):
 
     else:
         remarks_instance = IncidentRemarksForm(instance=remarks)
-        user_report = UserReportForm(instance=userreport)
+        user_report = IncidentGeneralForm(instance=IncidentGeneral)
     context = {
         'remarks_instance': remarks_instance,
         'user_report' : user_report,
         'general': general,
-        'userreport': userreport
+        'IncidentGeneral': IncidentGeneral
     }
     
     return render(request, 'pages/a_incident_report_remarks_edit.html', context)
@@ -2951,11 +2951,11 @@ def a_incident_report_remarks_edit(request, id=None):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
 def a_incident_report_people_edit(request, id=None, people_id=None):
-    userreport =  get_object_or_404(UserReport, pk=id)
+    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     people = get_object_or_404(IncidentPerson, pk=people_id)
     if request.method == 'POST':
-        user_report = UserReportForm(request.POST  or None, request.FILES  or None,  instance=userreport)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
         person_instance = IncidentPersonForm(request.POST  or None, request.FILES  or None, instance=people)
         if person_instance.is_valid():
             user_report.instance.username = request.user
@@ -2969,12 +2969,12 @@ def a_incident_report_people_edit(request, id=None, people_id=None):
 
     else:
         person_instance = IncidentPersonForm(instance=people)
-        user_report = UserReportForm(instance=userreport)
+        user_report = IncidentGeneralForm(instance=IncidentGeneral)
     context = {
         'person_instance': person_instance,
         'user_report' : user_report,
         'general': general,
-        'userreport': userreport,
+        'IncidentGeneral': IncidentGeneral,
         'people': people
     }
     
@@ -2983,11 +2983,11 @@ def a_incident_report_people_edit(request, id=None, people_id=None):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
 def a_incident_report_vehicle_edit(request, id=None, vehicle_id=None):
-    userreport =  get_object_or_404(UserReport, pk=id)
+    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     vehicle = get_object_or_404(IncidentVehicle, pk=vehicle_id)
     if request.method == 'POST':
-        user_report = UserReportForm(request.POST  or None, request.FILES  or None,  instance=userreport)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
         vehicle_instance = IncidentVehicleForm(request.POST  or None, request.FILES  or None, instance=vehicle)
         if vehicle_instance.is_valid():
             user_report.instance.username = request.user
@@ -3001,12 +3001,12 @@ def a_incident_report_vehicle_edit(request, id=None, vehicle_id=None):
 
     else:
         vehicle_instance = IncidentVehicleForm(instance=vehicle)
-        user_report = UserReportForm(instance=userreport)
+        user_report = IncidentGeneralForm(instance=IncidentGeneral)
     context = {
         'vehicle_instance': vehicle_instance,
         'user_report' : user_report,
         'general': general,
-        'userreport': userreport,
+        'IncidentGeneral': IncidentGeneral,
         'vehicle': vehicle
     }
     
@@ -3015,11 +3015,11 @@ def a_incident_report_vehicle_edit(request, id=None, vehicle_id=None):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
 def a_incident_report_media_edit(request, id=None, media_id=None):
-    userreport =  get_object_or_404(UserReport, pk=id)
+    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     media = get_object_or_404(IncidentMedia, pk=media_id)
     if request.method == 'POST':
-        user_report = UserReportForm(request.POST  or None, request.FILES  or None,  instance=userreport)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
         media_instance = IncidentMediaForm(request.POST  or None, request.FILES  or None, instance=media)
         if media_instance.is_valid():
             user_report.instance.username = request.user
@@ -3033,12 +3033,12 @@ def a_incident_report_media_edit(request, id=None, media_id=None):
 
     else:
         media_instance = IncidentMediaForm(instance=media)
-        user_report = UserReportForm(instance=userreport)
+        user_report = IncidentGeneralForm(instance=IncidentGeneral)
     context = {
         'media_instance': media_instance,
         'user_report' : user_report,
         'general': general,
-        'userreport': userreport,
+        'IncidentGeneral': IncidentGeneral,
         'media': media
     }
     
@@ -3125,11 +3125,11 @@ def simple_upload(request):
                         responder = rows["Responder"] if rows["Responder"] else " "
                         action_taken = rows["Action Taken"] if rows["Action Taken"] else " "
                     
-                        # user_report_instance = UserReport.objects.get(userid=userid)
+                        # user_report_instance = IncidentGeneral.objects.get(userid=userid)
                         # general_instance = IncidentGeneral.objects.get(generalid=generalid)
                         
                         # get_or_create is used to eliminate forming or any duplicate record 
-                        userreport, created = UserReport.objects.get_or_create(
+                        IncidentGeneral, created = IncidentGeneral.objects.get_or_create(
                             user=request.user,
                             userid=userid,
                             date=date,
@@ -3143,7 +3143,7 @@ def simple_upload(request):
                         
                         usergeneral, created = IncidentGeneral.objects.get_or_create(
                             user=request.user,
-                            user_report=UserReport.objects.get(userid=userid),
+                            user_report=IncidentGeneral.objects.get(userid=userid),
                             generalid = generalid,
                             weather=weather,
                             light=light,
@@ -3163,7 +3163,7 @@ def simple_upload(request):
                         
                         
                         if created:
-                            userreport.save()
+                            IncidentGeneral.save()
                             usergeneral.save()
                             userremarks.save()
                 messages.success(request, "The files has been uploaded to the database")
@@ -3189,20 +3189,20 @@ def simple_upload(request):
     return render(request, 'pages/super/input.html')
     
     # if request.method == 'POST':
-    #     user_resource = UserReportResource()
+    #     user_resource = IncidentGeneralResource()
     #     incident_general = IncidentGeneraltResource()
     #     incident_remark = IncidentRemarkResources()
         
         
     #     dataset = Dataset()
-    #     new_userreport = request.FILES['myfile']
+    #     new_IncidentGeneral = request.FILES['myfile']
 
-    #     imported_data = dataset.load(new_userreport.read(),format='xls')
+    #     imported_data = dataset.load(new_IncidentGeneral.read(),format='xls')
     #     #print(imported_data)
     #     for data in imported_data:
-    #         user_report_instance = UserReport.objects.get(userid=data[0])
+    #         user_report_instance = IncidentGeneral.objects.get(userid=data[0])
     #         general_instance = IncidentGeneral.objects.get(generalid=data[0])
-    #         value = UserReport(user=request.user, userid= data[0], date=data[1], description=data[2], address=data[3], latitude=data[4], longitude=data[5], status=data[6])
+    #         value = IncidentGeneral(user=request.user, userid= data[0], date=data[1], description=data[2], address=data[3], latitude=data[4], longitude=data[5], status=data[6])
     #         value1= IncidentGeneral(user=request.user, user_report__userid=user_report_instance, generalid=data[0], weather=data[6],
     #                                 light=data[7], severity=data[8], movement_code=data[9])
     #         value2 = IncidentRemark(incident_general__generalid=general_instance, responder=data[10], action_taken=data[11])
@@ -3322,9 +3322,9 @@ def simple_upload_additional(request):
     #     incident_people = IncidentPeopleResources()
     #     incident_vehicle = IncidentVehicleResources()
     #     dataset = Dataset()
-    #     new_userreport = request.FILES['myfile']
+    #     new_IncidentGeneral = request.FILES['myfile']
 
-    #     imported_data = dataset.load(new_userreport.read(),format='xls')
+    #     imported_data = dataset.load(new_IncidentGeneral.read(),format='xls')
     #     #print(imported_data)
     #     for data in imported_data:
     #         value = IncidentPerson(incident_first_name=data[0],
@@ -3378,11 +3378,11 @@ def a_simple_upload(request):
                         responder = rows["Responder"] if rows["Responder"] else " "
                         action_taken = rows["Action Taken"] if rows["Action Taken"] else " "
                     
-                        # user_report_instance = UserReport.objects.get(userid=userid)
+                        # user_report_instance = IncidentGeneral.objects.get(userid=userid)
                         # general_instance = IncidentGeneral.objects.get(generalid=generalid)
                         
                         # get_or_create is used to eliminate forming or any duplicate record 
-                        userreport, created = UserReport.objects.get_or_create(
+                        IncidentGeneral, created = IncidentGeneral.objects.get_or_create(
                             user=request.user,
                             userid=userid,
                             date=date,
@@ -3396,7 +3396,7 @@ def a_simple_upload(request):
                         
                         usergeneral, created = IncidentGeneral.objects.get_or_create(
                             user=request.user,
-                            user_report=UserReport.objects.get(userid=userid),
+                            user_report=IncidentGeneral.objects.get(userid=userid),
                             generalid = generalid,
                             weather=weather,
                             light=light,
@@ -3416,7 +3416,7 @@ def a_simple_upload(request):
                         
                         
                         if created:
-                            userreport.save()
+                            IncidentGeneral.save()
                             usergeneral.save()
                             userremarks.save()
                 messages.success(request, "The files has been uploaded to the database")
@@ -3442,20 +3442,20 @@ def a_simple_upload(request):
     return render(request, 'pages/admin/a_input.html')
     
     # if request.method == 'POST':
-    #     user_resource = UserReportResource()
+    #     user_resource = IncidentGeneralResource()
     #     incident_general = IncidentGeneraltResource()
     #     incident_remark = IncidentRemarkResources()
         
         
     #     dataset = Dataset()
-    #     new_userreport = request.FILES['myfile']
+    #     new_IncidentGeneral = request.FILES['myfile']
 
-    #     imported_data = dataset.load(new_userreport.read(),format='xls')
+    #     imported_data = dataset.load(new_IncidentGeneral.read(),format='xls')
     #     #print(imported_data)
     #     for data in imported_data:
-    #         user_report_instance = UserReport.objects.get(userid=data[0])
+    #         user_report_instance = IncidentGeneral.objects.get(userid=data[0])
     #         general_instance = IncidentGeneral.objects.get(generalid=data[0])
-    #         value = UserReport(user=request.user, userid= data[0], date=data[1], description=data[2], address=data[3], latitude=data[4], longitude=data[5], status=data[6])
+    #         value = IncidentGeneral(user=request.user, userid= data[0], date=data[1], description=data[2], address=data[3], latitude=data[4], longitude=data[5], status=data[6])
     #         value1= IncidentGeneral(user=request.user, user_report__userid=user_report_instance, generalid=data[0], weather=data[6],
     #                                 light=data[7], severity=data[8], movement_code=data[9])
     #         value2 = IncidentRemark(incident_general__generalid=general_instance, responder=data[10], action_taken=data[11])
@@ -3575,9 +3575,9 @@ def a_simple_upload_additional(request):
     #     incident_people = IncidentPeopleResources()
     #     incident_vehicle = IncidentVehicleResources()
     #     dataset = Dataset()
-    #     new_userreport = request.FILES['myfile']
+    #     new_IncidentGeneral = request.FILES['myfile']
 
-    #     imported_data = dataset.load(new_userreport.read(),format='xls')
+    #     imported_data = dataset.load(new_IncidentGeneral.read(),format='xls')
     #     #print(imported_data)
     #     for data in imported_data:
     #         value = IncidentPerson(incident_first_name=data[0],

@@ -5,15 +5,15 @@ from accounts.views import check_role_admin
 from django.contrib import messages
 from django.core.paginator import Paginator
 from accounts.forms import UserForm, MemberForm, UserManagementForm, UserUpdateForm, ProfileMgmtUpdateForm, UserUpdateManagementForm
-from incidentreport.models import UserReport
+from incidentreport.models import IncidentGeneral
 
 # Create your views here.
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
 def admin_profile(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(user=request.user).order_by('-created_at')
-    incidentReports_top = UserReport.objects.filter(user=request.user).order_by('-created_at')[:4]
+    incidentReports = IncidentGeneral.objects.filter(user=request.user).order_by('-created_at')
+    incidentReports_top = IncidentGeneral.objects.filter(user=request.user).order_by('-created_at')[:4]
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -25,8 +25,8 @@ def admin_profile(request):
 @user_passes_test(check_role_admin)
 def admin_profile_pending(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(status=1, user=request.user).order_by('-created_at')
-    incidentReports_top = UserReport.objects.filter(user=request.user)[:4]
+    incidentReports = IncidentGeneral.objects.filter(status=1, user=request.user).order_by('-created_at')
+    incidentReports_top = IncidentGeneral.objects.filter(user=request.user)[:4]
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -38,8 +38,8 @@ def admin_profile_pending(request):
 @user_passes_test(check_role_admin)
 def admin_profile_approved(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(status=2, user=request.user).order_by('-created_at')
-    incidentReports_top = UserReport.objects.filter(user=request.user)[:4]
+    incidentReports = IncidentGeneral.objects.filter(status=2, user=request.user).order_by('-created_at')
+    incidentReports_top = IncidentGeneral.objects.filter(user=request.user)[:4]
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
@@ -51,8 +51,8 @@ def admin_profile_approved(request):
 @user_passes_test(check_role_admin)
 def admin_profile_rejected(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(status=3, user=request.user).order_by('-created_at')
-    incidentReports_top = UserReport.objects.filter(user=request.user)[:4]
+    incidentReports = IncidentGeneral.objects.filter(status=3, user=request.user).order_by('-created_at')
+    incidentReports_top = IncidentGeneral.objects.filter(user=request.user)[:4]
     context = {
         'profile': profile,
         'incidentReports': incidentReports,

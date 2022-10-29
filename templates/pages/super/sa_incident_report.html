@@ -66,7 +66,7 @@
                 
                 <div class="row mb-5">
                     <div class="col-md-12 col-md-offset-1">
-                        <form id="msform" action="{% url 'sa_incidentreports' %}" method="post" enctype="multipart/form-data" data-acc-url="{% url 'ajax_load_accident' %}" >
+                        <form id="msform" action="{% url 'sa_incidentreports' %}" method="post" enctype="multipart/form-data" >
                             {% csrf_token %}
                             <!-- progressbar -->
                             <ul id="progressbar">

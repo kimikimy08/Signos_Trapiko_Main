@@ -17,7 +17,7 @@ from django.views.generic import View
 from .utils import render_to_pdf
 
 import pandas as pd
-from incidentreport.models import UserReport, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle, AccidentCausation, CollisionType, CrashType
+from incidentreport.models import IncidentGeneral, IncidentRemark, IncidentMedia, IncidentPerson, IncidentVehicle, AccidentCausation, CollisionType, CrashType
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_admin, check_role_super, check_role_member, check_role_super_admin
 
@@ -30,27 +30,27 @@ def admin_dashboard(request):
     fromdate = request.POST.get('fromdate')
     todate = request.POST.get('todate')
     incidentReports_pending = IncidentGeneral.objects.filter(
-        user_report__status=1)
+        status=1)
     today = datetime.today().date()
     incidentReports_today = IncidentGeneral.objects.filter(
         created_at__date=today)
     incidentReports_approved = IncidentGeneral.objects.filter(
-        user_report__status=2)
+        status=2)
     incidentReports = IncidentGeneral.objects.all()
-    incident_general = IncidentGeneral.objects.filter(user_report__status='2')
+    incident_general = IncidentGeneral.objects.filter(status='2')
     incident_vehicle = IncidentVehicle.objects.filter(
-        incident_general__user_report__status='2')
-    user_report = UserReport.objects.filter(status='2')
+        incident_general__status='2')
+    user_report = IncidentGeneral.objects.filter(status='2')
     if fromdate:
         incident_general = incident_general.filter(
-            user_report__date__gte=fromdate)
+            date__gte=fromdate)
         incident_vehicle = incident_vehicle.filter(
-            incident_general__user_report__date__gte=fromdate)
+            incident_general__date__gte=fromdate)
     if todate:
         incident_general = incident_general.filter(
             user_report__date__lte=todate)
         incident_vehicle = incident_vehicle.filter(
-            incident_general__user_report__date__gte=fromdate)
+            incident_general__date__gte=fromdate)
 
     # labels = []
     # data = []
@@ -84,7 +84,7 @@ def admin_dashboard(request):
     print(data2)
 
     df = pd.DataFrame(incident_general.values(
-        'user_report__latitude', 'user_report__longitude'))
+        'latitude', 'longitude'))
     
     # df.fillna(value=np.nan, inplace=True)
 
@@ -139,8 +139,8 @@ def admin_dashboard(request):
     folium.LayerControl().add_to(map2)
 
     for id, row in df.iterrows():
-        folium.CircleMarker(location=[row['user_report__latitude'],
-                            row['user_report__longitude']], radius=2, fill=True).add_to(map2)
+        folium.CircleMarker(location=[row['latitude'],
+                            row['longitude']], radius=2, fill=True).add_to(map2)
 
     map1 = map1._repr_html_()
     map2 = map2._repr_html_()
@@ -167,27 +167,27 @@ def superadmin_dashboard(request):
     fromdate = request.POST.get('fromdate')
     todate = request.POST.get('todate')
     incidentReports_pending = IncidentGeneral.objects.filter(
-        user_report__status=1)
+        status=1)
     today = datetime.today().date()
     incidentReports_today = IncidentGeneral.objects.filter(
-        created_at__date=today)
+        date=today)
     incidentReports_approved = IncidentGeneral.objects.filter(
-        user_report__status=2)
+        status=2)
     incidentReports = IncidentGeneral.objects.all()
-    incident_general = IncidentGeneral.objects.filter(user_report__status='2')
+    incident_general = IncidentGeneral.objects.filter(status='2')
     incident_vehicle = IncidentVehicle.objects.filter(
-        incident_general__user_report__status='2')
-    user_report = UserReport.objects.filter(status='2')
+        incident_general__status='2')
+    user_report = IncidentGeneral.objects.filter(status='2')
     if fromdate:
         incident_general = incident_general.filter(
             user_report__date__gte=fromdate)
         incident_vehicle = incident_vehicle.filter(
-            incident_general__user_report__date__gte=fromdate)
+            incident_general__date__gte=fromdate)
     if todate:
         incident_general = incident_general.filter(
             user_report__date__lte=todate)
         incident_vehicle = incident_vehicle.filter(
-            incident_general__user_report__date__gte=todate)
+            incident_general__date__gte=todate)
 
     # labels = []
     # data = []
@@ -221,7 +221,7 @@ def superadmin_dashboard(request):
     print(data2)
 
     df = pd.DataFrame(incident_general.values(
-        'user_report__latitude', 'user_report__longitude'))
+        'latitude', 'longitude'))
     
 
     # incident_vehicle = IncidentVehicle.objects.all()
@@ -275,8 +275,8 @@ def superadmin_dashboard(request):
     folium.LayerControl().add_to(map2)
 
     for id, row in df.iterrows():
-        folium.CircleMarker(location=[row['user_report__latitude'],
-                            row['user_report__longitude']], radius=2, fill=True).add_to(map2)
+        folium.CircleMarker(location=[row['latitude'],
+                            row['longitude']], radius=2, fill=True).add_to(map2)
 
     map1 = map1._repr_html_()
     map2 = map2._repr_html_()
@@ -302,16 +302,16 @@ def superadmin_dashboard(request):
 def index_map(request):
     fromdate = request.POST.get('fromdate')
     todate = request.POST.get('todate')
-    incident_general = IncidentGeneral.objects.filter(user_report__status='2')
+    incident_general = IncidentGeneral.objects.filter(status='2')
     if fromdate:
         incident_general = incident_general.filter(
-            user_report__date__gte=fromdate)
+            date__gte=fromdate)
     if todate:
         incident_general = incident_general.filter(
-            user_report__date__lte=todate)
+            date__lte=todate)
 
-    df = pd.DataFrame(incident_general.values('user_report__address', 'user_report__latitude',
-                      'user_report__longitude', 'accident_factor__category', 'accident_subcategory__sub_category', 'collision_type__category', 'collision_subcategory__sub_category'))
+    df = pd.DataFrame(incident_general.values('address', 'latitude',
+                      'longitude', 'accident_factor__category', 'collision_type__category',))
     print(fromdate)
 
     # coordenadas = list(IncidentGeneral.objects.values_list('user_report__latitude','user_report__longitude'))[-1]
@@ -335,9 +335,9 @@ def index_map(request):
 
     for id, row in df.iterrows():
 
-        html = '<strong>' + 'Address: ' + '</strong>' + str(row['user_report__address']) + ' <br>' + '<strong>' + 'Latitude: ' + '</strong>' + str(row['user_report__latitude']) + ' <br>' + \
+        html = '<strong>' + 'Address: ' + '</strong>' + str(row['address']) + ' <br>' + '<strong>' + 'Latitude: ' + '</strong>' + str(row['latitude']) + ' <br>' + \
             '<strong>' + 'Longitude: ' + '</strong>' + \
-            str(row['user_report__longitude']) 
+            str(row['longitude']) 
             # + '<br>' + '<strong>' + 'Accident Factor: ' + \
             # '</strong>' + str(row['accident_factor__category']) + '<br>' + '<strong>' + 'Accident Factor Sub Category: ' + '</strong>'+ str(row['accident_subcategory__sub_category'])+ '<br>' + \
             # '<strong>' + 'Collision Type: ' + '</strong>'+ str(row['collision_type__category'])+ '<br>' + \
@@ -349,7 +349,7 @@ def index_map(request):
 
         popup = folium.Popup(iframe,
                              max_width=300)
-        folium.Marker(location=[row['user_report__latitude'], row['user_report__longitude']], icon=folium.Icon(
+        folium.Marker(location=[row['latitude'], row['longitude']], icon=folium.Icon(
             icon="car", prefix='fa'), popup=popup).add_to(fg3)
         # folium.Marker(coordenadas).add_to(map1)
 

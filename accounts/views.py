@@ -10,7 +10,7 @@ import random
 from django.core.exceptions import PermissionDenied
 from .forms import UserForm, MemberForm
 from .utils import send_verfication_email, send_sms, detectUser
-from incidentreport.models import UserReport
+from incidentreport.models import IncidentGeneral
 
 
 
@@ -149,8 +149,8 @@ def myAccount(request):
 @user_passes_test(check_role_member)
 def member_dashboard(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = UserReport.objects.filter(user=request.user).order_by('-created_at')
-    incidentReports_top = UserReport.objects.filter(user=request.user).order_by('-created_at')[:4]
+    incidentReports = IncidentGeneral.objects.filter(user=request.user).order_by('-created_at')
+    incidentReports_top = IncidentGeneral.objects.filter(user=request.user).order_by('-created_at')[:4]
     context = {
         'profile': profile,
         'incidentReports': incidentReports,

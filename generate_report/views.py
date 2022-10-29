@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.views import View
 import xlwt
 from accounts.models import UserProfile, User
-from incidentreport.models import AccidentCausationSub, AccidentCausation,IncidentGeneral, IncidentVehicle
+from incidentreport.models import AccidentCausation,IncidentGeneral, IncidentVehicle
 import pytz
 from django.db.models import Count, Sum
 from django.db.models import Q

@@ -133,20 +133,20 @@
                                             {% endif %}
                                            
                                             <td>{{incident.user_report.user.username}}</td>
-                                            <td>{% if incident.user_report.user.role %}{{incident.user_report.user.get_role}}{% endif %}</td>
-                                            <td>{{incident.user_report.description}}</td>
-                                            <td>{{incident.user_report.address}}</td>
+                                            <td>{% if incident.user.role %}{{incident.user.get_role}}{% endif %}</td>
+                                            <td>{{incident.description}}</td>
+                                            <td>{{incident.address}}</td>
                                             {% comment %} <td>{{incident__incident_general.accident_factor}}</td>
                                             <td>{{incident.collision_type}}</td> {% endcomment %}
-                                            <td>{{incident.user_report.date}}</td>
-                                            <td>{{incident.user_report.time}}</td>
+                                            <td>{{incident.date}}</td>
+                                            <td>{{incident.time}}</td>
                                             <td>
-                                                {% if incident.user_report.status == 1 %}
-                                                <span class="badge badge-warning">{{incident.user_report.get_status}}</span>
-                                                {% elif incident.user_report.status == 2 %}
-                                                <span class="badge badge-success">{{incident.user_report.get_status}}</span>
-                                                {% elif incident.user_report.status == 3 %}
-                                                <span class="badge badge-danger">{{incident.user_report.get_status}}</span>
+                                                {% if incident.status == 1 %}
+                                                <span class="badge badge-warning">{{incident.get_status}}</span>
+                                                {% elif incident.status == 2 %}
+                                                <span class="badge badge-success">{{incident.get_status}}</span>
+                                                {% elif incident.status == 3 %}
+                                                <span class="badge badge-danger">{{incident.get_status}}</span>
                                                 {% endif %}
                                             </td>
                                             <td>
@@ -362,7 +362,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="{% if '/userReports/rejected' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports_rejected' %}">Rejected</a>
-                                </li>
+                                </li> 
                             </ul>
                         </div>
 
@@ -371,7 +371,7 @@
                                 <form id="form1" action="{% url 'user_reports' %}" enctype="multipart/form-data" method="post">
                                     {% csrf_token %}
                                     
-                                    {% if incidentReports %}
+                                    {% if incidentGeneral %}
                                     
                         <div class="modal-footer">
                         <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#bulkdeleteModal">Bulk Delete</a>
@@ -399,31 +399,31 @@
                                     <!-- Table Body  -->
                                     <tbody>
                                         
-                                        {% for incident in incidentReports %}
-                                        {% if incident.user_report.user.username %}
+                                        {% for incident in incidentGeneral %}
+                                        {% if incident.user.username %}
                                         <tr>
-                                            {% if incident.user_report.status == 2 %}
+                                            {% if incident.status == 2 %}
                                             <td>
                                                 {% comment %} <input type="checkbox" name="{{incident.id}}" id="check" disabled> {% endcomment %}
                                             </td>
                                             {% else %}
                                             <td><input type="checkbox" name="{{incident.user_report.id}}" id="check"></td>
                                             {% endif %}
-                                            <td>{{incident.user_report.user.username}}</td>
-                                            <td>{% if incident.user_report.user.role %}{{incident.user_report.user.get_role}}{% endif %}</td>
-                                            <td>{{incident.user_report.description}}</td>
-                                            <td>{{incident.user_report.address}}</td>
+                                            <td>{{incident.user.username}}</td>
+                                            <td>{% if incident.user.role %}{{incident.user.get_role}}{% endif %}</td>
+                                            <td>{{incident.description}}</td>
+                                            <td>{{incident.address}}</td>
                                             {% comment %} <td>{{incident__incident_general.accident_factor}}</td>
                                             <td>{{incident.collision_type}}</td> {% endcomment %}
-                                            <td>{{incident.user_report.date}}</td>
-                                            <td>{{incident.user_report.time}}</td>
+                                            <td>{{incident.date}}</td>
+                                            <td>{{incident.time}}</td>
                                             <td>
-                                                {% if incident.user_report.status == 1 %}
-                                                <span class="badge badge-warning">{{incident.user_report.get_status}}</span>
-                                                {% elif incident.user_report.status == 2 %}
-                                                <span class="badge badge-success">{{incident.user_report.get_status}}</span>
-                                                {% elif incident.user_report.status == 3 %}
-                                                <span class="badge badge-danger">{{incident.user_report.get_status}}</span>
+                                                {% if incident.status == 1 %}
+                                                <span class="badge badge-warning">{{incident.get_status}}</span>
+                                                {% elif incident.status == 2 %}
+                                                <span class="badge badge-success">{{incident.get_status}}</span>
+                                                {% elif incident.status == 3 %}
+                                                <span class="badge badge-danger">{{incident.get_status}}</span>
                                                 {% endif %}
                                             </td>
                                             <td>

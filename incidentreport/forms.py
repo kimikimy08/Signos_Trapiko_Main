@@ -1,7 +1,7 @@
 import datetime
 from django import forms
 from django.conf import settings
-from .models import UserReport, Incident, IncidentGeneral, AccidentCausationSub, CollisionTypeSub, IncidentPerson, IncidentVehicle, IncidentRemark, IncidentMedia, AccidentCausation, CollisionType, CollisionTypeSub, CrashType
+from .models import IncidentGeneral, IncidentPerson, IncidentVehicle, IncidentRemark, IncidentMedia, AccidentCausation, CollisionType, CrashType
 #from .validators import allow_only_images_validator
 from django.forms.formsets import BaseFormSet
 from accounts.validators import allow_only_images_validator, allow_only_images_video_validator
@@ -15,149 +15,186 @@ class TimeInput(forms.TimeInput):
     input_type = 'time'
 
 
-class UserReportForm1(forms.ModelForm):
+# class UserReportForm1(forms.ModelForm):
     
-    upload_photovideo = forms.FileField(
-        widget=forms.FileInput(attrs={'class': 'form-control p-1'}), validators=[allow_only_images_video_validator])
-    time = forms.TimeField(widget=TimeInput(
-        attrs={'class': 'form-control'}), initial=datetime.datetime.now())
-    address = forms.CharField(widget=forms.TextInput(
-        attrs={'required': 'required', 'class': 'form-control'}))
-    description = forms.CharField(widget=forms.Textarea(
-        attrs={'area': '3', 'class': 'form-control'}))
+#     upload_photovideo = forms.FileField(
+#         widget=forms.FileInput(attrs={'class': 'form-control p-1'}), validators=[allow_only_images_video_validator])
+#     time = forms.TimeField(widget=TimeInput(
+#         attrs={'class': 'form-control'}), initial=datetime.datetime.now())
+#     address = forms.CharField(widget=forms.TextInput(
+#         attrs={'required': 'required', 'class': 'form-control'}))
+#     description = forms.CharField(widget=forms.Textarea(
+#         attrs={'area': '3', 'class': 'form-control'}))
     
 
-    # latitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-    # longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-    class Meta:
-        model = UserReport
-        fields = [ 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude', 'date', 'time', 'status']
+#     # latitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+#     # longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+#     class Meta:
+#         model = UserReport
+#         fields = [ 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude', 'date', 'time', 'status']
         
-        # widgets = {
-        #     'date': DateInput(),
-        # }
+#         # widgets = {
+#         #     'date': DateInput(),
+#         # }
 
-    def __init__(self, *args, **kwargs):
-        # first call parent's constructor
-        super(UserReportForm1, self).__init__(*args, **kwargs)
-        # there's a `fields` property now
-        self.fields['upload_photovideo'].required = False
-        self.fields['description'].required = False
-        self.fields['address'].required = False
-        self.fields['time'].required = False
-        self.fields['date'].required = False
+#     def __init__(self, *args, **kwargs):
+#         # first call parent's constructor
+#         super(UserReportForm1, self).__init__(*args, **kwargs)
+#         # there's a `fields` property now
+#         self.fields['upload_photovideo'].required = False
+#         self.fields['description'].required = False
+#         self.fields['address'].required = False
+#         self.fields['time'].required = False
+#         self.fields['date'].required = False
         
-        self.fields['date'].widget.attrs['class'] = 'form-control datepickstart'
-        self.fields['time'].widget.attrs['class'] = 'form-control'
-        self.fields['address'].widget.attrs['class'] = 'form-control'
-        self.fields['country'].widget.attrs['class'] = 'form-control'
-        self.fields['state'].widget.attrs['class'] = 'form-control'
-        self.fields['city'].widget.attrs['class'] = 'form-control'
-        self.fields['pin_code'].widget.attrs['class'] = 'form-control'
-        self.fields['latitude'].widget.attrs['class'] = 'form-control'
-        self.fields['longitude'].widget.attrs['class'] = 'form-control'
-        self.fields['description'].widget.attrs['class'] = 'form-control'
-        self.fields['status'].widget.attrs['class'] = 'form-control'
-        self.fields['date'].widget.attrs['autocomplete'] = 'off'
-        self.fields['date'].input_formats = settings.DATE_INPUT_FORMATS
+#         self.fields['date'].widget.attrs['class'] = 'form-control datepickstart'
+#         self.fields['time'].widget.attrs['class'] = 'form-control'
+#         self.fields['address'].widget.attrs['class'] = 'form-control'
+#         self.fields['country'].widget.attrs['class'] = 'form-control'
+#         self.fields['state'].widget.attrs['class'] = 'form-control'
+#         self.fields['city'].widget.attrs['class'] = 'form-control'
+#         self.fields['pin_code'].widget.attrs['class'] = 'form-control'
+#         self.fields['latitude'].widget.attrs['class'] = 'form-control'
+#         self.fields['longitude'].widget.attrs['class'] = 'form-control'
+#         self.fields['description'].widget.attrs['class'] = 'form-control'
+#         self.fields['status'].widget.attrs['class'] = 'form-control'
+#         self.fields['date'].widget.attrs['autocomplete'] = 'off'
+#         self.fields['date'].input_formats = settings.DATE_INPUT_FORMATS
         
         
-        for field in self.fields:
-            if field == 'latitude' or field == 'longitude' or field == 'city' or field == 'pin_code':
-                self.fields[field].widget.attrs['readonly'] = 'readonly'
+#         for field in self.fields:
+#             if field == 'latitude' or field == 'longitude' or field == 'city' or field == 'pin_code':
+#                 self.fields[field].widget.attrs['readonly'] = 'readonly'
         
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:
-            self.fields['description'].required = False
-            self.fields['date'].widget.attrs['readonly'] = 'readonly'
-            self.fields['time'].widget.attrs['readonly'] = 'readonly'
-            # self.fields['status'].widget.attrs['disabled'] = 'disabled'
+#         instance = getattr(self, 'instance', None)
+#         if instance and instance.pk:
+#             self.fields['description'].required = False
+#             self.fields['date'].widget.attrs['readonly'] = 'readonly'
+#             self.fields['time'].widget.attrs['readonly'] = 'readonly'
+#             # self.fields['status'].widget.attrs['disabled'] = 'disabled'
 
-    # def __init__(self, *args, **kwargs):
-    #     super(UserReportForm, self).__init__(*args, **kwargs)
-        # for field in self.fields:
-        #     if field == 'latitude' or field == 'longitude':
-        #         self.fields[field].widget.attrs['readonly'] = 'readonly'
+#     # def __init__(self, *args, **kwargs):
+#     #     super(UserReportForm, self).__init__(*args, **kwargs)
+#         # for field in self.fields:
+#         #     if field == 'latitude' or field == 'longitude':
+#         #         self.fields[field].widget.attrs['readonly'] = 'readonly'
 
 
-class UserReportForm(forms.ModelForm):
+# class UserReportForm(forms.ModelForm):
     
-    upload_photovideo = forms.FileField(
-        widget=forms.FileInput(attrs={'class': 'form-control p-1'}), validators=[allow_only_images_video_validator])
-    time = forms.TimeField(widget=TimeInput(
-        attrs={'class': 'form-control'}), initial=datetime.datetime.now())
-    address = forms.CharField(widget=forms.TextInput(
-        attrs={'required': 'required', 'class': 'form-control'}))
-    description = forms.CharField(widget=forms.Textarea(
-        attrs={'area': '3', 'class': 'form-control'}))
-    # date = forms.DateTimeField(input_formats=['%Y-%m-%d'])
+#     upload_photovideo = forms.FileField(
+#         widget=forms.FileInput(attrs={'class': 'form-control p-1'}), validators=[allow_only_images_video_validator])
+#     time = forms.TimeField(widget=TimeInput(
+#         attrs={'class': 'form-control'}), initial=datetime.datetime.now())
+#     address = forms.CharField(widget=forms.TextInput(
+#         attrs={'required': 'required', 'class': 'form-control'}))
+#     description = forms.CharField(widget=forms.Textarea(
+#         attrs={'area': '3', 'class': 'form-control'}))
+#     # date = forms.DateTimeField(input_formats=['%Y-%m-%d'])
 
-    # latitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-    # longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-    class Meta:
-        model = UserReport
-        fields = [ 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude', 'date', 'time', 'status']
+#     # latitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+#     # longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+#     class Meta:
+#         model = UserReport
+#         fields = [ 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude', 'date', 'time', 'status']
         
-        # widgets = {
-        #     'date': DateInput(),
-        # }
+#         # widgets = {
+#         #     'date': DateInput(),
+#         # }
 
-    def __init__(self, *args, **kwargs):
-        # first call parent's constructor
-        super(UserReportForm, self).__init__(*args, **kwargs)
-        # there's a `fields` property now
-        self.fields['upload_photovideo'].required = False
-        self.fields['description'].required = False
-        self.fields['address'].required = False
-        self.fields['time'].required = False
-        self.fields['date'].required = False
+#     def __init__(self, *args, **kwargs):
+#         # first call parent's constructor
+#         super(UserReportForm, self).__init__(*args, **kwargs)
+#         # there's a `fields` property now
+#         self.fields['upload_photovideo'].required = False
+#         self.fields['description'].required = False
+#         self.fields['address'].required = False
+#         self.fields['time'].required = False
+#         self.fields['date'].required = False
         
-        self.fields['date'].widget.attrs['class'] = 'form-control datepickstart'
-        self.fields['time'].widget.attrs['class'] = 'form-control'
-        self.fields['address'].widget.attrs['class'] = 'form-control'
-        self.fields['country'].widget.attrs['class'] = 'form-control'
-        self.fields['state'].widget.attrs['class'] = 'form-control'
-        self.fields['city'].widget.attrs['class'] = 'form-control'
-        self.fields['pin_code'].widget.attrs['class'] = 'form-control'
-        self.fields['latitude'].widget.attrs['class'] = 'form-control'
-        self.fields['longitude'].widget.attrs['class'] = 'form-control'
-        self.fields['description'].widget.attrs['class'] = 'form-control'
-        self.fields['status'].widget.attrs['class'] = 'form-control'
-        self.fields['date'].widget.attrs['autocomplete'] = 'off'
-        self.fields['date'].input_formats = settings.DATE_INPUT_FORMATS
+#         self.fields['date'].widget.attrs['class'] = 'form-control datepickstart'
+#         self.fields['time'].widget.attrs['class'] = 'form-control'
+#         self.fields['address'].widget.attrs['class'] = 'form-control'
+#         self.fields['country'].widget.attrs['class'] = 'form-control'
+#         self.fields['state'].widget.attrs['class'] = 'form-control'
+#         self.fields['city'].widget.attrs['class'] = 'form-control'
+#         self.fields['pin_code'].widget.attrs['class'] = 'form-control'
+#         self.fields['latitude'].widget.attrs['class'] = 'form-control'
+#         self.fields['longitude'].widget.attrs['class'] = 'form-control'
+#         self.fields['description'].widget.attrs['class'] = 'form-control'
+#         self.fields['status'].widget.attrs['class'] = 'form-control'
+#         self.fields['date'].widget.attrs['autocomplete'] = 'off'
+#         self.fields['date'].input_formats = settings.DATE_INPUT_FORMATS
         
         
-        for field in self.fields:
-            if field == 'latitude' or field == 'longitude' or field == 'city' or field == 'pin_code':
-                self.fields[field].widget.attrs['readonly'] = 'readonly'
+#         for field in self.fields:
+#             if field == 'latitude' or field == 'longitude' or field == 'city' or field == 'pin_code':
+#                 self.fields[field].widget.attrs['readonly'] = 'readonly'
         
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:
-            self.fields['description'].required = False
-            self.fields['date'].widget.attrs['readonly'] = 'readonly'
-            self.fields['time'].widget.attrs['readonly'] = 'readonly'
+#         instance = getattr(self, 'instance', None)
+#         if instance and instance.pk:
+#             self.fields['description'].required = False
+#             self.fields['date'].widget.attrs['readonly'] = 'readonly'
+#             self.fields['time'].widget.attrs['readonly'] = 'readonly'
             
 
 class IncidentGeneralForm(forms.ModelForm):
+    upload_photovideo = forms.FileField(
+        widget=forms.FileInput(attrs={'class': 'form-control p-1'}), validators=[allow_only_images_video_validator])
+    time = forms.TimeField(widget=TimeInput(
+        attrs={'class': 'form-control'}), initial=datetime.datetime.now())
+    address = forms.CharField(widget=forms.TextInput(
+        attrs={'required': 'required', 'class': 'form-control'}))
+    description = forms.CharField(widget=forms.Textarea(
+        attrs={'area': '3', 'class': 'form-control'}))
+    
     class Meta:
         model = IncidentGeneral
-        fields = [ 'accident_factor', 'accident_subcategory', 'collision_type', 'collision_subcategory', 'crash_type', 'weather', 'light', 'severity', 'movement_code']
+        fields = [ 'accident_factor', 'collision_type',  'crash_type', 'weather', 'light', 'severity', 'movement_code', 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude', 'date', 'time', 'status']
 
     def __init__(self, *args, **kwargs):
         super(IncidentGeneralForm, self).__init__(*args, **kwargs)
         self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
-        self.fields['accident_subcategory'].widget.attrs['class'] = 'form-control'
+     
         self.fields['collision_type'].widget.attrs['class'] = 'form-control'
-        self.fields['collision_subcategory'].widget.attrs['class'] = 'form-control'
+     
         self.fields['weather'].widget.attrs['class'] = 'form-control'
         self.fields['light'].widget.attrs['class'] = 'form-control'
         self.fields['severity'].widget.attrs['class'] = 'form-control'
         self.fields['crash_type'].widget.attrs['class'] = 'form-control'
         self.fields['movement_code'].widget.attrs['class'] = 'form-control'
+        self.fields['upload_photovideo'].required = False
+        self.fields['description'].required = False
+        self.fields['address'].required = False
+        self.fields['time'].required = False
+        self.fields['date'].required = False
         
-        self.fields['accident_subcategory'].queryset = AccidentCausationSub.objects.none()
-        self.fields['collision_subcategory'].queryset = CollisionTypeSub.objects.none()
-
+        self.fields['date'].widget.attrs['class'] = 'form-control datepickstart'
+        self.fields['time'].widget.attrs['class'] = 'form-control'
+        self.fields['address'].widget.attrs['class'] = 'form-control'
+        self.fields['country'].widget.attrs['class'] = 'form-control'
+        self.fields['state'].widget.attrs['class'] = 'form-control'
+        self.fields['city'].widget.attrs['class'] = 'form-control'
+        self.fields['pin_code'].widget.attrs['class'] = 'form-control'
+        self.fields['latitude'].widget.attrs['class'] = 'form-control'
+        self.fields['longitude'].widget.attrs['class'] = 'form-control'
+        self.fields['description'].widget.attrs['class'] = 'form-control'
+        self.fields['status'].widget.attrs['class'] = 'form-control'
+        self.fields['date'].widget.attrs['autocomplete'] = 'off'
+        self.fields['date'].input_formats = settings.DATE_INPUT_FORMATS
+        
+        
+        for field in self.fields:
+            if field == 'latitude' or field == 'longitude' or field == 'city' or field == 'pin_code':
+                self.fields[field].widget.attrs['readonly'] = 'readonly'
+        
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['description'].required = False
+            self.fields['date'].widget.attrs['readonly'] = 'readonly'
+            self.fields['time'].widget.attrs['readonly'] = 'readonly'
+        
+      
         # if 'accident_factor' in self.data:
         #     try:
         #         accident_factor_id = int(self.data.get('accident_factor'))
@@ -250,20 +287,20 @@ class AccidentCausationForm(forms.ModelForm):
         self.fields['category'].widget.attrs['class'] = 'form-control'
     
 
-class AccidentCausationSubForm(forms.ModelForm):
+# class AccidentCausationSubForm(forms.ModelForm):
     
-    accident_factor = forms.ModelChoiceField(queryset=AccidentCausation.objects.all())
-    sub_category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control ', }))
+#     accident_factor = forms.ModelChoiceField(queryset=AccidentCausation.objects.all())
+#     sub_category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control ', }))
     
-    class Meta:
-        model = AccidentCausationSub
-        fields = [ 'accident_factor', 'sub_category']
+#     class Meta:
+#         model = AccidentCausationSub
+#         fields = [ 'accident_factor', 'sub_category']
 
-    def __init__(self, *args, **kwargs):
-        super(AccidentCausationSubForm, self).__init__(*args, **kwargs)
-        # self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
-        self.fields['sub_category'].widget.attrs['class'] = 'form-control'
-        self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
+#     def __init__(self, *args, **kwargs):
+#         super(AccidentCausationSubForm, self).__init__(*args, **kwargs)
+#         # self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
+#         self.fields['sub_category'].widget.attrs['class'] = 'form-control'
+#         self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
         
 class CollisionTypeForm(forms.ModelForm):
     class Meta:
@@ -276,20 +313,20 @@ class CollisionTypeForm(forms.ModelForm):
     
     
 
-class CollisionTypeSubForm(forms.ModelForm):
+# class CollisionTypeSubForm(forms.ModelForm):
     
-    collision_type = forms.ModelChoiceField(queryset=CollisionType.objects.all())
-    sub_category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control ', }))
+#     collision_type = forms.ModelChoiceField(queryset=CollisionType.objects.all())
+#     sub_category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control ', }))
     
-    class Meta:
-        model = CollisionTypeSub
-        fields = [ 'collision_type', 'sub_category']
+#     class Meta:
+#         model = CollisionTypeSub
+#         fields = [ 'collision_type', 'sub_category']
 
-    def __init__(self, *args, **kwargs):
-        super(CollisionTypeSubForm, self).__init__(*args, **kwargs)
-        # self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
-        self.fields['sub_category'].widget.attrs['class'] = 'form-control'
-        self.fields['collision_type'].widget.attrs['class'] = 'form-control'
+#     def __init__(self, *args, **kwargs):
+#         super(CollisionTypeSubForm, self).__init__(*args, **kwargs)
+#         # self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
+#         self.fields['sub_category'].widget.attrs['class'] = 'form-control'
+#         self.fields['collision_type'].widget.attrs['class'] = 'form-control'
 
 class CrashTypeForm(forms.ModelForm):
     class Meta:
