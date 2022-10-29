@@ -178,16 +178,16 @@ def user_report(request):
 @user_passes_test(check_role_admin)
 def user_report_pending(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = IncidentGeneral.objects.filter(user_report__status = 1).order_by('-updated_at')
+    incidentReports = IncidentGeneral.objects.filter(status = 1).order_by('-updated_at')
     paginator = Paginator(incidentReports, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     if request.method == 'POST':
         for i in incidentReports:
-            x = request.POST.get(str(i.user_report_id))
+            x = request.POST.get(str(i.id))
             print(x)
             if str(x) == 'on':
-                b = IncidentGeneral.objects.get(id=i.user_report_id)
+                b = IncidentGeneral.objects.get(id=i.id)
                 b.delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
@@ -201,16 +201,16 @@ def user_report_pending(request):
 @user_passes_test(check_role_admin)
 def user_report_approved(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = IncidentGeneral.objects.filter(user_report__status = 2).order_by('-updated_at')
+    incidentReports = IncidentGeneral.objects.filter(status = 2).order_by('-updated_at')
     paginator = Paginator(incidentReports, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     if request.method == 'POST':
         for i in incidentReports:
-            x = request.POST.get(str(i.user_report_id))
+            x = request.POST.get(str(i.id))
             print(x)
             if str(x) == 'on':
-                b = IncidentGeneral.objects.get(id=i.user_report_id)
+                b = IncidentGeneral.objects.get(id=i.id)
                 b.delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
@@ -224,16 +224,16 @@ def user_report_approved(request):
 @user_passes_test(check_role_admin)
 def user_report_rejected(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentReports = IncidentGeneral.objects.filter(user_report__status = 3).order_by('-updated_at')
+    incidentReports = IncidentGeneral.objects.filter(status = 3).order_by('-updated_at')
     paginator = Paginator(incidentReports, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     if request.method == 'POST':
         for i in incidentReports:
-            x = request.POST.get(str(i.user_report_id))
+            x = request.POST.get(str(i.id))
             print(x)
             if str(x) == 'on':
-                b = IncidentGeneral.objects.get(id=i.user_report_id)
+                b = IncidentGeneral.objects.get(id=i.id)
                 b.delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
@@ -2886,28 +2886,28 @@ def a_incident_report_media_view(request, id, media_id):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)
 def a_incident_report_general_edit(request, id=None):
-    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
+    
     general = get_object_or_404(IncidentGeneral, pk=id)
     if request.method == 'POST':
         general_instance = IncidentGeneralForm(request.POST  or None, request.FILES  or None, instance=general)
-        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
-        if general_instance.is_valid() and user_report.is_valid():
-            user_report.instance.username = request.user
+       
+        if general_instance.is_valid():
+            general_instance.instance.username = request.user
             general_instance.save()
-            user_report.save()
+            
             messages.success(request, 'Profile updated')
 
             return redirect('user_reports')
         else:
             print(general_instance.errors)
-            print(user_report.errors)
+        
 
     else:
         general_instance = IncidentGeneralForm(instance=general)
-        user_report = IncidentGeneralForm(instance=IncidentGeneral)
+        
     context = {
         'general_instance': general_instance,
-        'user_report' : user_report,
+  
         'general': general,
         'IncidentGeneral': IncidentGeneral
     }

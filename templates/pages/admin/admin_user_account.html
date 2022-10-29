@@ -100,8 +100,8 @@
                                             <td>{{users.middle_name}}</td>
                                             <td>{{users.last_name}}</td>
                                             <td>{% if users.role %}{{users.get_role}}{% endif %}</td>
-                                            <td>{{users.created_date}}</td>
-                                            <td>{{users.modified_date}}</td>
+                                            <td>{{users.created_at}}</td>
+                                            <td>{{users.updated_at}}</td>
                                             <td>
                                                 {% if users.status == 1 %}
                                                 <button type="button"

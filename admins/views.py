@@ -206,7 +206,7 @@ def admin_user_account_view(request, id):
         'profile': profile,
     }
 
-    return render(request, 'pages/admin_user_account_view.html', context) 
+    return render(request, 'pages/admin/admin_user_account_view.html', context) 
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_admin)

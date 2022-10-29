@@ -122,9 +122,9 @@
                                     <!-- Table Body  -->
                                     <tbody>
                                         {% for incident in incidentReports %}
-                                        {% if incident.user_report.user.username %}
+                                        {% if incident.user.username %}
                                         <tr>
-                                            {% if incident.user_report.status == 2 %}
+                                            {% if incident.status == 2 %}
                                             <td>
                                                 {% comment %} <input type="checkbox" name="{{incident.id}}" id="check" disabled> {% endcomment %}
                                             </td>
@@ -132,7 +132,7 @@
                                             <td><input type="checkbox" name="{{incident.user_report.id}}" id="check"></td>
                                             {% endif %}
                                            
-                                            <td>{{incident.user_report.user.username}}</td>
+                                            <td>{{incident.user.username}}</td>
                                             <td>{% if incident.user.role %}{{incident.user.get_role}}{% endif %}</td>
                                             <td>{{incident.description}}</td>
                                             <td>{{incident.address}}</td>
@@ -152,7 +152,7 @@
                                             <td>
                                                 <a href="{% url 'a_incident_report_general_view' incident.id %}"><i class='bx bxs-folder-open'
                                                     title="View"></i></a>
-                                                    {% if incident.user_report.status == 2 %} 
+                                                    {% if incident.status == 2 %} 
                                                 {% else %}     
                                                 <a href="#" data-toggle="modal" data-target="#deleteModal{{ incident.id }}"><i class='bx bx-trash'
                                                     data-toggle="tooltip" title="Delete" ></i></a>
@@ -430,7 +430,7 @@
                                                 <a href="{% url 'incident_report_general_view' incident.id %}"><i class='bx bxs-folder-open'
                                                     title="View"></i></a>
                        
-                                                    {% if incident.user_report.status == 2 %} 
+                                                    {% if incident.status == 2 %} 
                                                     {% else %}     
                                                     <a href="#" data-toggle="modal" data-target="#deleteModal{{ incident.id }}"><i class='bx bx-trash'
                                                         data-toggle="tooltip" title="Delete" ></i></a>
