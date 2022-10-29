@@ -3155,7 +3155,7 @@ def simple_upload(request):
                         
                         
                         if created:
-                            IncidentGeneral.save()
+                            
                             usergeneral.save()
                             userremarks.save()
                 messages.success(request, "The files has been uploaded to the database")
