@@ -3103,7 +3103,7 @@ def simple_upload(request):
             try:
                 for index, rows in data.iterrows():
                     
-                        userid = rows["User ID"] 
+                       
                         generalid = rows["User ID"]
                         date = rows["Date"] if rows["Date"] else datetime.date.today()
                         time = rows["Time"]
@@ -3126,22 +3126,17 @@ def simple_upload(request):
                         # general_instance = IncidentGeneral.objects.get(generalid=generalid)
                         
                         # get_or_create is used to eliminate forming or any duplicate record 
-                        IncidentGeneral, created = IncidentGeneral.objects.get_or_create(
+                        
+                        usergeneral, created = IncidentGeneral.objects.get_or_create(
                             user=request.user,
-                            userid=userid,
+                            generalid = generalid,
                             date=date,
                             time=time,
                             description=description,
                             address=address,
                             latitude=latitude,
                             longitude=longitude,
-                            status=status
-                        )
-                        
-                        usergeneral, created = IncidentGeneral.objects.get_or_create(
-                            user=request.user,
-                            user_report=IncidentGeneral.objects.get(userid=userid),
-                            generalid = generalid,
+                            status=status,
                             weather=weather,
                             light=light,
                             accident_factor=AccidentCausation.objects.get(category=accident_factor),
