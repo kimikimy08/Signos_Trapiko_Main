@@ -395,12 +395,12 @@ def GenerateInvoiceAccident(request):
         print(fromdate, todate)
     
         # incident_general_accident = IncidentGeneral.objects.filter(user_report__status = 2).values('accident_factor__category').annotate(Count('severity'), filter=Q(severity='Damage to Property'))
-        incident_general_accident = IncidentGeneral.objects.filter(user_report__status = 2, user_report__date__range=[fromdate, todate ])
-        incident_general_accident1 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Fatal', user_report__date__range=[fromdate, todate ] ).annotate(Count('severity'))
-        incident_general_accident2 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Damage to Property', user_report__date__range=[fromdate, todate ] ).annotate(Count('severity'))
-        incident_general_accident3 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Non-Fatal', user_report__date__range=[fromdate, todate ] ).annotate(Count('severity'))
-        incident_general_classification = IncidentGeneral.objects.filter(user_report__status = 2, severity="Damage to Property", user_report__date__range=[fromdate, todate ]).distinct('accident_factor')
-        incident_general_collision = IncidentGeneral.objects.filter(user_report__status = 2, severity="Damage to Property", user_report__date__range=[fromdate, todate ]).distinct('accident_factor') #you can filter using order_id as well
+        incident_general_accident = IncidentGeneral.objects.filter(status = 2, date__range=[fromdate, todate ])
+        incident_general_accident1 = IncidentGeneral.objects.filter(status = 2,severity='Fatal', date__range=[fromdate, todate ] ).annotate(Count('severity'))
+        incident_general_accident2 = IncidentGeneral.objects.filter(status = 2,severity='Damage to Property', date__range=[fromdate, todate ] ).annotate(Count('severity'))
+        incident_general_accident3 = IncidentGeneral.objects.filter(status = 2,severity='Non-Fatal', date__range=[fromdate, todate ] ).annotate(Count('severity'))
+        incident_general_classification = IncidentGeneral.objects.filter(status = 2, severity="Damage to Property", date__range=[fromdate, todate ]).distinct('accident_factor')
+        incident_general_collision = IncidentGeneral.objects.filter(status = 2, severity="Damage to Property", date__range=[fromdate, todate ]).distinct('accident_factor') #you can filter using order_id as well
             
     except:
         return HttpResponse("505 Not Found")
@@ -439,11 +439,11 @@ def GenerateInvoiceCollision(request):
         print(fromdate, todate)
     
         # incident_general_accident = IncidentGeneral.objects.filter(user_report__status = 2).values('accident_factor__category').annotate(Count('severity'), filter=Q(severity='Damage to Property'))
-        incident_general_collision = IncidentGeneral.objects.filter(user_report__status = 2, user_report__date__range=[fromdate, todate ])
-        incident_general_collision1 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Fatal', user_report__date__range=[fromdate, todate ] ).annotate(Count('severity'))
-        incident_general_collision2 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Damage to Property', user_report__date__range=[fromdate, todate ] ).annotate(Count('severity'))
-        incident_general_collision3 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Non-Fatal', user_report__date__range=[fromdate, todate ]).annotate(Count('severity'))
-        incident_general_classification = IncidentGeneral.objects.filter(user_report__status = 2, severity="Damage to Property", user_report__date__range=[fromdate, todate ]).distinct('accident_factor')
+        incident_general_collision = IncidentGeneral.objects.filter(status = 2, date__range=[fromdate, todate ])
+        incident_general_collision1 = IncidentGeneral.objects.filter(status = 2,severity='Fatal', date__range=[fromdate, todate ] ).annotate(Count('severity'))
+        incident_general_collision2 = IncidentGeneral.objects.filter(status = 2,severity='Damage to Property', date__range=[fromdate, todate ] ).annotate(Count('severity'))
+        incident_general_collision3 = IncidentGeneral.objects.filter(status = 2,severity='Non-Fatal', date__range=[fromdate, todate ]).annotate(Count('severity'))
+        incident_general_classification = IncidentGeneral.objects.filter(status = 2, severity="Damage to Property", date__range=[fromdate, todate ]).distinct('accident_factor')
 
            
             
@@ -484,10 +484,10 @@ def GenerateInvoiceVehicle(request):
         print(fromdate, todate)
     
         # incident_general_accident = IncidentGeneral.objects.filter(user_report__status = 2).values('accident_factor__category').annotate(Count('severity'), filter=Q(severity='Damage to Property'))
-        incident_vehicle = IncidentVehicle.objects.filter(incident_general__user_report__status = 2, incident_general__user_report__date__range=[fromdate, todate ])
-        incident_vehicle1 = IncidentVehicle.objects.filter(incident_general__user_report__status = 2,incident_general__severity='Fatal', incident_general__user_report__date__range=[fromdate, todate ] ).annotate(Count('incident_general__severity'))
-        incident_vehicle2 = IncidentVehicle.objects.filter(incident_general__user_report__status = 2,incident_general__severity='Damage to Property', incident_general__user_report__date__range=[fromdate, todate ] ).annotate(Count('incident_general__severity'))
-        incident_vehicle3 = IncidentVehicle.objects.filter(incident_general__user_report__status = 2,incident_general__severity='Non-Fatal', incident_general__user_report__date__range=[fromdate, todate ] ).annotate(Count('incident_general__severity'))
+        incident_vehicle = IncidentVehicle.objects.filter(incident_general__status = 2, incident_general__date__range=[fromdate, todate ])
+        incident_vehicle1 = IncidentVehicle.objects.filter(incident_general__status = 2,incident_general__severity='Fatal', incident_general__date__range=[fromdate, todate ] ).annotate(Count('incident_general__severity'))
+        incident_vehicle2 = IncidentVehicle.objects.filter(incident_general__status = 2,incident_general__severity='Damage to Property', incident_general__date__range=[fromdate, todate ] ).annotate(Count('incident_general__severity'))
+        incident_vehicle3 = IncidentVehicle.objects.filter(incident_general__status = 2,incident_general__severity='Non-Fatal', incident_general__date__range=[fromdate, todate ] ).annotate(Count('incident_general__severity'))
             # incident_general_classification = IncidentGeneral.objects.filter(user_report__status = 2, severity="Damage to Property").distinct('accident_factor')
            
     except:
@@ -891,12 +891,12 @@ def A_GenerateInvoiceAccident(request):
         print(fromdate, todate)
     
         # incident_general_accident = IncidentGeneral.objects.filter(user_report__status = 2).values('accident_factor__category').annotate(Count('severity'), filter=Q(severity='Damage to Property'))
-        incident_general_accident = IncidentGeneral.objects.filter(user_report__status = 2, user_report__date__range=[fromdate, todate ])
-        incident_general_accident1 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Fatal', user_report__date__range=[fromdate, todate ] ).annotate(Count('severity'))
-        incident_general_accident2 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Damage to Property', user_report__date__range=[fromdate, todate ] ).annotate(Count('severity'))
-        incident_general_accident3 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Non-Fatal', user_report__date__range=[fromdate, todate ] ).annotate(Count('severity'))
-        incident_general_classification = IncidentGeneral.objects.filter(user_report__status = 2, severity="Damage to Property", user_report__date__range=[fromdate, todate ]).distinct('accident_factor')
-        incident_general_collision = IncidentGeneral.objects.filter(user_report__status = 2, severity="Damage to Property", user_report__date__range=[fromdate, todate ]).distinct('accident_factor') #you can filter using order_id as well
+        incident_general_accident = IncidentGeneral.objects.filter(status = 2, date__range=[fromdate, todate ])
+        incident_general_accident1 = IncidentGeneral.objects.filter(status = 2,severity='Fatal', date__range=[fromdate, todate ] ).annotate(Count('severity'))
+        incident_general_accident2 = IncidentGeneral.objects.filter(status = 2,severity='Damage to Property', date__range=[fromdate, todate ] ).annotate(Count('severity'))
+        incident_general_accident3 = IncidentGeneral.objects.filter(status = 2,severity='Non-Fatal', date__range=[fromdate, todate ] ).annotate(Count('severity'))
+        incident_general_classification = IncidentGeneral.objects.filter(status = 2, severity="Damage to Property", date__range=[fromdate, todate ]).distinct('accident_factor')
+        incident_general_collision = IncidentGeneral.objects.filter(status = 2, severity="Damage to Property", date__range=[fromdate, todate ]).distinct('accident_factor') #you can filter using order_id as well
             
     except:
         return HttpResponse("505 Not Found")
@@ -935,11 +935,11 @@ def A_GenerateInvoiceCollision(request):
         print(fromdate, todate)
     
         # incident_general_accident = IncidentGeneral.objects.filter(user_report__status = 2).values('accident_factor__category').annotate(Count('severity'), filter=Q(severity='Damage to Property'))
-        incident_general_collision = IncidentGeneral.objects.filter(user_report__status = 2, user_report__date__range=[fromdate, todate ])
-        incident_general_collision1 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Fatal', user_report__date__range=[fromdate, todate ] ).annotate(Count('severity'))
-        incident_general_collision2 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Damage to Property', user_report__date__range=[fromdate, todate ] ).annotate(Count('severity'))
-        incident_general_collision3 = IncidentGeneral.objects.filter(user_report__status = 2,severity='Non-Fatal', user_report__date__range=[fromdate, todate ]).annotate(Count('severity'))
-        incident_general_classification = IncidentGeneral.objects.filter(user_report__status = 2, severity="Damage to Property", user_report__date__range=[fromdate, todate ]).distinct('accident_factor')
+        incident_general_collision = IncidentGeneral.objects.filter(status = 2, date__range=[fromdate, todate ])
+        incident_general_collision1 = IncidentGeneral.objects.filter(status = 2,severity='Fatal', date__range=[fromdate, todate ] ).annotate(Count('severity'))
+        incident_general_collision2 = IncidentGeneral.objects.filter(status = 2,severity='Damage to Property', date__range=[fromdate, todate ] ).annotate(Count('severity'))
+        incident_general_collision3 = IncidentGeneral.objects.filter(status = 2,severity='Non-Fatal', date__range=[fromdate, todate ]).annotate(Count('severity'))
+        incident_general_classification = IncidentGeneral.objects.filter(status = 2, severity="Damage to Property", date__range=[fromdate, todate ]).distinct('accident_factor')
 
            
             
