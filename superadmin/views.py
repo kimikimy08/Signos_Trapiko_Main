@@ -300,8 +300,8 @@ def super_user_account_edit(request, id=None):
 
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
-def super_user_account_delete(request, user_id):
-    user = User.objects.get(pk=user_id)
+def super_user_account_delete(request, id):
+    user = User.objects.get(pk=id)
     if user.role == 1 or user.role == 2:
         user.delete()
         return redirect('super_user_account')
