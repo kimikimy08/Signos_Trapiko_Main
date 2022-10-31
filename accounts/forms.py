@@ -1,6 +1,7 @@
 from django import forms
 from .models import User, UserProfile
 from django.core.validators import RegexValidator, MinLengthValidator
+from django.contrib.auth.hashers import make_password
 
 
 class DateInput(forms.DateInput):
@@ -103,9 +104,9 @@ class UserManagementForm(forms.ModelForm):
                             error_messages={'unique': ("Email already exists.")},)
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}),
                                error_messages={'unique': ("Username already exists.")},)
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control',}))
     #password = forms.CharField(validators=[MinLengthValidator(8),RegexValidator('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])$', message="Password should be a combination of Alphabets and Numbers")], widget=forms.PasswordInput(attrs={'placeholder': '********', 'style': 'width: 460px; '}))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password', 'class': 'form-control' }))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '********', 'class': 'form-control', }))
     role = forms.CharField(widget=forms.Select(choices=ROLE_CHOICE, attrs={ 'class': 'form-control', }))
     status = forms.CharField(widget=forms.Select(choices=STATUS_CHOICE, attrs={ 'class': 'form-control', }))
     
@@ -130,7 +131,73 @@ class UserManagementForm(forms.ModelForm):
             self.fields['confirm_password'].required = False
         
     def clean(self):
-        clean_data = super(UserForm, self).clean()
+        clean_data = super(UserManagementForm, self).clean()
+        password = clean_data.get('password')
+        confirm_password = clean_data.get('confirm_password')
+        
+        
+        
+        if password != confirm_password:
+            raise forms.ValidationError(
+                "Password and Confirm Password does not match!"
+            )
+    
+    def save(self, commit=True):
+        user = super(UserManagementForm, self).save(commit=False)
+        password = self.cleaned_data["password"]
+        confirm_password = self.cleaned_data["confirm_password"]
+        if password or confirm_password:
+            user.set_password(password)
+        if commit:
+            user.save()
+        return user
+
+
+
+class UserManagementForm1(forms.ModelForm):
+    
+    ROLE_CHOICE = (
+        (2, 'Admin'),
+        (3, 'Super Admin')
+    )
+    
+    ROLE_CHOICE_1 = (
+        (1, 'Member'),
+        (2, 'Admin'),
+        (3, 'Super Admin')
+    )
+    
+    STATUS_CHOICE = (
+        (1, 'Pending'),
+        (2, 'Active'),
+        (3, 'Deactive')
+    )
+    
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'form-control'}))
+    middle_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Middle Name', 'class': 'form-control'}))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control'}))
+    mobile_number = forms.CharField(max_length=15, validators=[RegexValidator(
+        '^\+[0-9]{1,3}\.?\s?\d{8,13}', message="Phone number must not consist of space and requires country code. eg : +639171234567")],widget=forms.TextInput(attrs={'placeholder': 'Mobile Number', 'class': 'form-control'}),
+                                    error_messages={'unique': ("Mobile Number already exists.")})
+    
+    email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Email', 'class': 'form-control'}),
+                            error_messages={'unique': ("Email already exists.")},)
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username', 'class': 'form-control'}),
+                               error_messages={'unique': ("Username already exists.")},)
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}))
+    #password = forms.CharField(validators=[MinLengthValidator(8),RegexValidator('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])$', message="Password should be a combination of Alphabets and Numbers")], widget=forms.PasswordInput(attrs={'placeholder': '********', 'style': 'width: 460px; '}))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password', 'class': 'form-control' }))
+    role = forms.CharField(widget=forms.Select(choices=ROLE_CHOICE, attrs={ 'class': 'form-control', }))
+   
+    
+    class Meta:
+        model = User
+        fields = ['first_name', 'middle_name', 'last_name', 'username', 'email', 'mobile_number', 'password', 'role']
+        
+    
+        
+    def clean(self):
+        clean_data = super(UserManagementForm1, self).clean()
         password = clean_data.get('password')
         confirm_password = clean_data.get('confirm_password')
         
@@ -150,7 +217,6 @@ class UserManagementForm(forms.ModelForm):
         user.set_password(self.cleaned_data['password2'])
         user.save()
         return user
-
 
 class UserUpdateForm(forms.ModelForm):
     ROLE_CHOICE = (

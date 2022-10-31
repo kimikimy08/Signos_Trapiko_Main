@@ -4,7 +4,7 @@ from accounts.models import UserProfile, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_super
 from django.contrib import messages
-from accounts.forms import UserForm, MemberForm, UserManagementForm, UserUpdateManagementForm, UserUpdateForm, ProfileMgmtUpdateForm
+from accounts.forms import UserForm, MemberForm, UserManagementForm, UserUpdateManagementForm, UserUpdateForm, ProfileMgmtUpdateForm, UserManagementForm1
 from accounts.utils import send_verfication_email, send_sms, detectUser
 from django.urls import reverse
 from django.core.paginator import Paginator
@@ -203,7 +203,7 @@ def super_user_account_superadmin(request):
 
 def super_user_account_add(request):
     if request.method == 'POST':
-        form = UserManagementForm(request.POST)
+        form = UserManagementForm1(request.POST)
         try:
             if form.is_valid():
                 
@@ -216,7 +216,8 @@ def super_user_account_add(request):
                 password = form.cleaned_data['password']
                 role = form.cleaned_data['role']
 
-                user = User(first_name=first_name, middle_name=middle_name, last_name=last_name, username=username, email=email, mobile_number=mobile_number, password=password, role=role)
+                user = User(first_name=first_name, middle_name=middle_name, last_name=last_name, username=username, email=email, mobile_number=mobile_number, role=role)
+                user.set_password(password)
                 user.save()
             
                 # send verification email
@@ -226,13 +227,16 @@ def super_user_account_add(request):
                 messages.success(request, 'You have signed up successfully! Please check your email to verify your account.')
                 print(user.password)
                 return redirect('super_user_account')
+            else:
+                print(form.errors)
+                print(form.non_field_errors)
         except Exception as e:
             print('invalid form')
             messages.error(request, str(e))
 
 
     else:
-        form = UserManagementForm()
+        form = UserManagementForm1()
     context = {
         'form' : form,
     }
