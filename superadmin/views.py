@@ -203,7 +203,7 @@ def super_user_account_superadmin(request):
 
 def super_user_account_add(request):
     if request.method == 'POST':
-        form = UserManagementForm(request.POST)
+        form = UserForm(request.POST)
         try:
             if form.is_valid():
                 

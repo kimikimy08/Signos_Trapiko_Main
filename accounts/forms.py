@@ -105,7 +105,7 @@ class UserManagementForm(forms.ModelForm):
                                error_messages={'unique': ("Username already exists.")},)
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}))
     #password = forms.CharField(validators=[MinLengthValidator(8),RegexValidator('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])$', message="Password should be a combination of Alphabets and Numbers")], widget=forms.PasswordInput(attrs={'placeholder': '********', 'style': 'width: 460px; '}))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '********', 'class': 'form-control', }))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password', 'class': 'form-control' }))
     role = forms.CharField(widget=forms.Select(choices=ROLE_CHOICE, attrs={ 'class': 'form-control', }))
     status = forms.CharField(widget=forms.Select(choices=STATUS_CHOICE, attrs={ 'class': 'form-control', }))
     
