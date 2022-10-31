@@ -6,6 +6,15 @@
    {% load static %}
    {% block styles %}
    <link href=" {% static 'css/datepicker.css' %} " rel="stylesheet"> 
+   <script src="https://code.iconify.design/iconify-icon/1.0.1/iconify-icon.min.js"></script>
+   <style>
+    .radius-location 
+    {   position: absolute; 
+        top: 11px; 
+        right: 15px; 
+        cursor: pointer; 
+    }
+   </style>
     {% endblock styles %}
     {% block form_if %}{% block form_else %}
     {% csrf_token %}
@@ -28,8 +37,12 @@
                     <div class="form-group col-md-12">
                         <label for="inputSeverity">Street Address</label>
                     {{form.address}}
+                    <span id="location_open" class="radius-location" onclick="getLocation()"><iconify-icon icon="mdi:target"></iconify-icon></span>
                     </div>
                 </div>
+                <div id="content">
+                    <div id="map"></div>
+                    </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         {% comment %} <label for="inputSeverity">City</label> {% endcomment %}
@@ -115,6 +128,47 @@
     {% comment %} <script script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&dummy=.js"></script> {% endcomment %}
     
     <script script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
+
+    <script>
+        var x = document.getElementById("id_information-address");
+        var current_location = sessionStorage.getItem("current_location")
+        if(current_location != ""){
+            x.value = current_location;
+        }
+        
+        function getLocation() {
+            if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+            } else { 
+            x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+        
+        function showPosition(position) {
+            var lat = position.coords.latitude
+            var lng = position.coords.longitude
+    
+            // var lat = '19.0713949'
+            // var lng = '72.9984126'
+    
+            // hit AJAX request to googlemaps api endpoint and get the location data using those lat and lng
+            var GOOGLE_API_KEY = "{{ GOOGLE_API_KEY }}"
+            var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+"+&key="+GOOGLE_API_KEY
+            
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function(response){
+                    var current_location = response.results[0].formatted_address
+                    x.value = current_location
+                    sessionStorage.setItem("current_location", current_location)
+                    window.location = '?lat='+lat+'&lng='+lng
+                }
+            })
+        }
+        </script>
+
+        
 
 
 {% endblock scripts %}

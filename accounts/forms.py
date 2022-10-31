@@ -103,7 +103,7 @@ class UserManagementForm(forms.ModelForm):
                             error_messages={'unique': ("Email already exists.")},)
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}),
                                error_messages={'unique': ("Username already exists.")},)
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control',}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}))
     #password = forms.CharField(validators=[MinLengthValidator(8),RegexValidator('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])$', message="Password should be a combination of Alphabets and Numbers")], widget=forms.PasswordInput(attrs={'placeholder': '********', 'style': 'width: 460px; '}))
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '********', 'class': 'form-control', }))
     role = forms.CharField(widget=forms.Select(choices=ROLE_CHOICE, attrs={ 'class': 'form-control', }))
@@ -130,7 +130,7 @@ class UserManagementForm(forms.ModelForm):
             self.fields['confirm_password'].required = False
         
     def clean(self):
-        clean_data = super(UserManagementForm, self).clean()
+        clean_data = super(UserForm, self).clean()
         password = clean_data.get('password')
         confirm_password = clean_data.get('confirm_password')
         
@@ -141,14 +141,14 @@ class UserManagementForm(forms.ModelForm):
                 "Password and Confirm Password does not match!"
             )
     
-    def save(self, commit=True):
-        user = super(UserManagementForm, self).save(commit=False)
-        password = self.cleaned_data["password"]
-        confirm_password = self.cleaned_data["confirm_password"]
-        if password or confirm_password:
-            user.set_password(password)
-        if commit:
-            user.save()
+    def save(self):
+        self.clean()
+        user = self.Meta.model(
+            username = self.cleaned_data['username'], 
+            email = self.cleaned_data['email'], 
+        )
+        user.set_password(self.cleaned_data['password2'])
+        user.save()
         return user
 
 
