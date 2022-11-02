@@ -16,7 +16,7 @@ from .forms import IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm,
 from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.forms.models import construct_instance
-from datetime import datetime
+from datetime import datetime, timezone
 from .resources import IncidentGeneraltResource, IncidentRemarkResources, IncidentPeopleResources, IncidentVehicleResources
 from tablib import Dataset
 from django.core.paginator import Paginator
@@ -27,21 +27,23 @@ import pandas as pd
 @user_passes_test(check_role_super_admin)
 def user_reports(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentGeneral = IncidentGeneral.objects.all().order_by('-updated_at')
-    paginator = Paginator(incidentGeneral, 10)
+    incidentReports = IncidentGeneral.objects.all().order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     if request.method == 'POST':
-        for i in incidentGeneral:
+        for i in incidentReports:
             x = request.POST.get(str(i.id))
             print(x)
             if str(x) == 'on':
                 b = IncidentGeneral.objects.get(id=i.id)
-                b.delete()
+                b.soft_delete()
+                # b.is_deleted = True
+                # b.deleted_at = timezone.now()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentGeneral': page_obj,
+        'incidentReports': page_obj,
         # 'IncidentGeneral': IncidentGeneral
     }
     return render(request, 'pages/user_report.html', context)
@@ -53,22 +55,23 @@ def user_reports_pending(request):
     profile = get_object_or_404(UserProfile, user=request.user)
 
     # incidentReports = IncidentGeneral.objects.filter(user_report__status = 1).order_by('-updated_at')
-    incidentGeneral = IncidentGeneral.objects.filter(status = 1).order_by('-updated_at')
-    paginator = Paginator(incidentGeneral, 10)
+    incidentReports = IncidentGeneral.objects.filter(status = 1).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     if request.method == 'POST':
-        for i in incidentGeneral:
+        for i in incidentReports:
             x = request.POST.get(str(i.id))
             print(x)
             if str(x) == 'on':
                 b = IncidentGeneral.objects.get(id=i.id)
-                b.delete()
+                b.soft_delete()
+                # b.is_deleted = True
+                # b.deleted_at = timezone.now()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentGeneral': page_obj,
-        'IncidentGeneral': IncidentGeneral
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -77,21 +80,21 @@ def user_reports_pending(request):
 @user_passes_test(check_role_super_admin)
 def user_reports_approved(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentGeneral = IncidentGeneral.objects.filter(status = 2).order_by('-updated_at')
-    paginator = Paginator(incidentGeneral, 10)
+    incidentReports = IncidentGeneral.objects.filter(status = 2).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     if request.method == 'POST':
-        for i in incidentGeneral:
+        for i in incidentReports:
             x = request.POST.get(str(i.id))
             print(x)
             if str(x) == 'on':
                 b = IncidentGeneral.objects.get(id=i.id)
-                b.delete()
+                b.soft_delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentGeneral': page_obj,
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -100,21 +103,21 @@ def user_reports_approved(request):
 @user_passes_test(check_role_super_admin)
 def user_reports_rejected(request):
     profile = get_object_or_404(UserProfile, user=request.user)
-    incidentGeneral = IncidentGeneral.objects.filter(status = 3).order_by('-updated_at')
-    paginator = Paginator(incidentGeneral, 10)
+    incidentReports = IncidentGeneral.objects.filter(status = 3).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     if request.method == 'POST':
-        for i in incidentGeneral:
+        for i in incidentReports:
             x = request.POST.get(str(i.id))
             print(x)
             if str(x) == 'on':
                 b = IncidentGeneral.objects.get(id=i.id)
-                b.delete()
+                b.soft_delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
-        'incidentGeneral': page_obj,
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/user_report.html', context)
 
@@ -133,7 +136,7 @@ def user_reports_today(request):
             print(x)
             if str(x) == 'on':
                 b = IncidentGeneral.objects.get(id=i.user_report_id)
-                b.delete()
+                b.soft_delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
@@ -146,8 +149,34 @@ def user_reports_today(request):
 def user_report_delete(request, id=None):
     incidentReports = get_object_or_404(IncidentGeneral, id=id)
     #user_report = IncidentGeneral.objects.all()
-    incidentReports.delete()
+    incidentReports.soft_delete()
+    messages.success(request, 'User Report successfully deleted')
     return redirect('user_reports')
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super_admin)
+def user_reports_today(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+    today = datetime.today().date()
+    incidentReports = IncidentGeneral.objects.filter(created_at__date=today).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.user_report_id))
+            print(x)
+            if str(x) == 'on':
+                b = IncidentGeneral.objects.get(id=i.user_report_id)
+                b.soft_delete()
+                messages.success(request, 'User Report successfully deleted')
+    context = {
+        'profile': profile,
+        'incidentReports': page_obj,
+        # 'page_obj':page_obj
+    }
+    return render(request, 'pages/user_report.html', context)
+
 
 
 
@@ -165,7 +194,7 @@ def user_report(request):
             print(x)
             if str(x) == 'on':
                 b = IncidentGeneral.objects.get(id=i.user_report_id)
-                b.delete()
+                b.soft_delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
@@ -188,7 +217,7 @@ def user_report_pending(request):
             print(x)
             if str(x) == 'on':
                 b = IncidentGeneral.objects.get(id=i.id)
-                b.delete()
+                b.soft_delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
@@ -211,7 +240,7 @@ def user_report_approved(request):
             print(x)
             if str(x) == 'on':
                 b = IncidentGeneral.objects.get(id=i.id)
-                b.delete()
+                b.soft_delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
@@ -234,7 +263,7 @@ def user_report_rejected(request):
             print(x)
             if str(x) == 'on':
                 b = IncidentGeneral.objects.get(id=i.id)
-                b.delete()
+                b.soft_delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
@@ -258,7 +287,7 @@ def user_report_today(request):
             print(x)
             if str(x) == 'on':
                 b = IncidentGeneral.objects.get(id=i.user_report_id)
-                b.delete()
+                b.soft_delete()
                 messages.success(request, 'User Report successfully deleted')
     context = {
         'profile': profile,
@@ -281,7 +310,7 @@ def my_report(request):
             print(x)
             if str(x) == 'on':
                 b = IncidentGeneral.objects.get(id=i.id)
-                b.delete()
+                b.soft_delete()
             messages.success(request, 'Report details successfully deleted')
         return redirect('my_report')
     context = {
@@ -297,9 +326,21 @@ def my_report(request):
 def my_report_pending(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incidentReports = IncidentGeneral.objects.filter(status=1, user=request.user)
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = IncidentGeneral.objects.get(id=i.id)
+                b.soft_delete()
+            messages.success(request, 'Report details successfully deleted')
+        return redirect('my_report')
     context = {
         'profile': profile,
-        'incidentReports': incidentReports,
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/member/member_myreport.html', context)
 
@@ -309,9 +350,21 @@ def my_report_pending(request):
 def my_report_approved(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incidentReports = IncidentGeneral.objects.filter(status=2, user=request.user)
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = IncidentGeneral.objects.get(id=i.id)
+                b.soft_delete()
+            messages.success(request, 'Report details successfully deleted')
+        return redirect('my_report')
     context = {
         'profile': profile,
-        'incidentReports': incidentReports,
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/member/member_myreport.html', context)
 
@@ -321,9 +374,21 @@ def my_report_approved(request):
 def my_report_rejected(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incidentReports = IncidentGeneral.objects.filter(status=3, user=request.user)
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        for i in incidentReports:
+            x = request.POST.get(str(i.id))
+            print(x)
+            if str(x) == 'on':
+                b = IncidentGeneral.objects.get(id=i.id)
+                b.soft_delete()
+            messages.success(request, 'Report details successfully deleted')
+        return redirect('my_report')
     context = {
         'profile': profile,
-        'incidentReports': incidentReports,
+        'incidentReports': page_obj,
     }
     return render(request, 'pages/member/member_myreport.html', context)
 
@@ -389,7 +454,7 @@ def my_report_view(request, id):
 def my_report_edit(request, id):
     user_report = get_object_or_404(IncidentGeneral, pk=id)
     if request.method == 'POST':
-        form = IncidentGeneralForm1(request.POST or None,
+        form = IncidentGeneralForm(request.POST or None,
                               request.FILES or None, instance=user_report)
         if form.is_valid():
             form.save()
@@ -397,7 +462,7 @@ def my_report_edit(request, id):
             return redirect('my_report')
         
     else:
-        form = IncidentGeneralForm1(instance=user_report)
+        form = IncidentGeneralForm(instance=user_report)
         # messages.error(request, 'Report details unsuccessfully updated')
     context = {
         'form': form,
@@ -411,12 +476,8 @@ def my_report_edit(request, id):
 @login_required(login_url='login')
 @user_passes_test(check_role_member)
 def my_report_delete(request, id):
-    user_report = get_object_or_404(IncidentGeneral, pk=id)
     incident_general = get_object_or_404(IncidentGeneral, pk=id)
-    incident_remark = get_object_or_404(IncidentRemark, pk=id)
-    incident_remark.delete()
-    incident_general.delete()
-    user_report.delete()
+    incident_general.soft_delete()
     messages.success(request, 'Report details successfully deleted')
     return redirect('my_report')
 
@@ -540,15 +601,6 @@ def incident_report_remarks(request):
     }
     return render(request, 'pages/incident_report_remarks.html', context)
 
-
-
-@login_required(login_url='login')
-@user_passes_test(check_role_super_admin)
-def user_report_delete(request, id=None):
-    incidentReports = get_object_or_404(IncidentGeneral, id=id)
-    #user_report = IncidentGeneral.objects.all()
-    incidentReports.delete()
-    return redirect('user_reports')
 
 
 # AJAX
@@ -2510,7 +2562,7 @@ def incident_report_general_edit(request, id=None):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
 def incident_report_remarks_edit(request, id=None):
-    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
+    incidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     remarks = get_object_or_404(IncidentRemark, pk=id)
     if request.method == 'POST':
@@ -2533,7 +2585,7 @@ def incident_report_remarks_edit(request, id=None):
         'remarks_instance': remarks_instance,
         'user_report' : user_report,
         'general': general,
-        'IncidentGeneral': IncidentGeneral
+        'incidentGeneral': incidentGeneral
     }
     
     return render(request, 'pages/incident_report_remarks_edit.html', context)
@@ -3563,27 +3615,111 @@ def a_simple_upload_additional(request):
 
 
     return render(request, 'pages/admin/a_input_additional.html')
-    # if request.method == 'POST':
-    #     incident_people = IncidentPeopleResources()
-    #     incident_vehicle = IncidentVehicleResources()
-    #     dataset = Dataset()
-    #     new_IncidentGeneral = request.FILES['myfile']
 
-    #     imported_data = dataset.load(new_IncidentGeneral.read(),format='xls')
-    #     #print(imported_data)
-    #     for data in imported_data:
-    #         value = IncidentPerson(incident_first_name=data[0],
-    #                                 incident_middle_name=data[1], incident_last_name=data[2], incident_age=data[3], incident_gender=data[4],
-    #                                 incident_address=data[5], incident_involvement=data[6], incident_id_presented=data[7], incident_id_number=data[8],
-    #                                 incident_injury=data[9], incident_driver_error=data[10], incident_alcohol_drugs=data[11], incident_seatbelt_helmet=data[12])
-    #         value1 = IncidentVehicle(classification=data[13],
-    #                                 vehicle_type=data[14], brand=data[15], plate_number=data[16],
-    #                                 engine_number=data[17], chassis_number=data[18], insurance_details=data[19], maneuver=data[20],
-    #                                 damage=data[21], defect=data[22], loading=data[23])
-                                    
-    #         value.save()
-    #         value1.save()
-    #         print(data[1])
-    # return render(request, 'input_additional.html')
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def sa_recycle_bin(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+    incidentReports = IncidentGeneral.all_objects.filter(is_deleted=True).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        if request.POST.get('Restore') == 'Restore':
+            for i in incidentReports:
+                x = request.POST.get(str(i.id))
+                print(x)
+                if str(x) == 'on':
+                    b = IncidentGeneral.all_objects.get(id=i.id)
+                    b.restore()
+                    # b.is_deleted = False
+                    # b.deleted_at = None
+                    messages.success(request, 'User Report successfully restored')
+        elif request.POST.get('Yes') == 'Yes':
+            for i in incidentReports:
+                x = request.POST.get(str(i.id))
+                print(x)
+                if str(x) == 'on':
+                    b = IncidentGeneral.all_objects.get(id=i.id)
+                    b.delete()
+                    # b.is_deleted = False
+                    # b.deleted_at = None
+                    messages.success(request, 'User Report successfully restored') 
+    context = {
+        'profile': profile,
+        'incidentReports': page_obj,
+        # 'IncidentGeneral': IncidentGeneral
+    }
+    return render(request, 'pages/super/sa_recycle_bin.html', context)
 
+@login_required(login_url='login')
+@user_passes_test(check_role_admin)
+def a_recycle_bin(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+    incidentReports = IncidentGeneral.all_objects.filter(is_deleted=True).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        if request.POST.get('Restore') == 'Restore':
+            for i in incidentReports:
+                x = request.POST.get(str(i.id))
+                print(x)
+                if str(x) == 'on':
+                    b = IncidentGeneral.all_objects.get(id=i.id)
+                    b.restore()
+                    # b.is_deleted = False
+                    # b.deleted_at = None
+                    messages.success(request, 'User Report successfully restored')
+        elif request.POST.get('Yes') == 'Yes':
+            for i in incidentReports:
+                x = request.POST.get(str(i.id))
+                print(x)
+                if str(x) == 'on':
+                    b = IncidentGeneral.all_objects.get(id=i.id)
+                    b.delete()
+                    # b.is_deleted = False
+                    # b.deleted_at = None
+                    messages.success(request, 'User Report successfully restored') 
+    context = {
+        'profile': profile,
+        'incidentReports': page_obj,
+        # 'IncidentGeneral': IncidentGeneral
+    }
+    return render(request, 'pages/admin/a_recycle_bin.html', context)
 
+@login_required(login_url='login')
+@user_passes_test(check_role_member)
+def m_recycle_bin(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+    incidentReports = IncidentGeneral.all_objects.filter(is_deleted=True, user=request.user).order_by('-updated_at')
+    paginator = Paginator(incidentReports, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        if request.POST.get('Restore') == 'Restore':
+            for i in incidentReports:
+                x = request.POST.get(str(i.id))
+                print(x)
+                if str(x) == 'on':
+                    b = IncidentGeneral.all_objects.get(id=i.id)
+                    b.restore()
+                    # b.is_deleted = False
+                    # b.deleted_at = None
+                    messages.success(request, 'User Report successfully restored')
+        elif request.POST.get('Yes') == 'Yes':
+            for i in incidentReports:
+                x = request.POST.get(str(i.id))
+                print(x)
+                if str(x) == 'on':
+                    b = IncidentGeneral.all_objects.get(id=i.id)
+                    b.delete()
+                    # b.is_deleted = False
+                    # b.deleted_at = None
+                    messages.success(request, 'User Report successfully restored') 
+    context = {
+        'profile': profile,
+        'incidentReports': page_obj,
+        # 'IncidentGeneral': IncidentGeneral
+    }
+    return render(request, 'pages/member/m_recycle_bin.html', context)

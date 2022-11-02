@@ -94,9 +94,11 @@
                                 <form id="form1" action="{% url 'user_reports' %}" enctype="multipart/form-data" method="post">
                                     {% csrf_token %}
                                     
-                                    {% if incidentReports %}
+                                    {% if page_obj %}
                                  
                         <div class="modal-footer">
+                            <a href="{% url 'a_recycle_bin'%}" title ="Recycle Bin"
+                            class="btn btn-sm btn-success">Recycle Bin</a>
                         <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#bulkdeleteModal">Bulk Delete</a>
                     </div>
                                 <table class="table table-bordered table-hover text-dark" id="user_report" width="100%"
@@ -121,7 +123,7 @@
 
                                     <!-- Table Body  -->
                                     <tbody>
-                                        {% for incident in incidentReports %}
+                                        {% for incident in page_obj %}
                                         {% if incident.user.username %}
                                         <tr>
                                             {% if incident.status == 2 %}
@@ -129,7 +131,7 @@
                                                 {% comment %} <input type="checkbox" name="{{incident.id}}" id="check" disabled> {% endcomment %}
                                             </td>
                                             {% else %}
-                                            <td><input type="checkbox" name="{{incident.user_report.id}}" id="check"></td>
+                                            <td><input type="checkbox" name="{{incident.id}}" id="check"></td>
                                             {% endif %}
                                            
                                             <td>{{incident.user.username}}</td>
@@ -154,7 +156,7 @@
                                                     title="View"></i></a>
                                                     {% if incident.status == 2 %} 
                                                 {% else %}     
-                                                <a href="#" data-toggle="modal" data-target="#deleteModal{{ incident.id }}"><i class='bx bx-trash'
+                                                <a href="#" data-toggle="modal" data-target="#deleteuserModal{{ incident.id }}"><i class='bx bx-trash'
                                                     data-toggle="tooltip" title="Delete" ></i></a>
                                                     {% endif %}
                                            
@@ -162,29 +164,29 @@
                                             
                                         </tr>
                                                 <!-- Delete Modal HTML -->
-                                <div class="modal fade" id="deleteuserModal{{ incident.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Delete this account?</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                            </div>
-                                        <div class="modal-body">
-                                            <h6>Do you want to delete the selected record? This process cannot be undone.</h6>
-                                        </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                
-                                    
-                                        
-                                                    <a class="btn btn-sm btn-danger" href="{% url 'user_report_delete' incident.id %}">Delete</a>
-                                            
+                                                <div class="modal fade" id="deleteuserModal{{ incident.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Delete this account?</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                            </div>
+                                                        <div class="modal-body">
+                                                            <h6>Are you sure you want to move this file to the Recycle Bin?</h6>
+                                                        </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                                                
+                                                    
+                                                        
+                                                                    <a class="btn btn-sm btn-danger" href="{% url 'super_user_account_delete' users.id %}">Yes</a>
+                                                            
+                                                                </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <!-- BULK Delete Modal HTML -->
 <div class="modal fade" id="bulkdeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -197,13 +199,13 @@
                     </button>
             </div>
         <div class="modal-body">
-            <h6>Do you want to delete the selected record? This process cannot be undone.</h6>
+            <h6>Are you sure you want to move this file to the Recycle Bin?</h6>
         </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                 
     
-                <input type="submit" class="btn btn-sm btn-danger" value="Bulk Delete">
+                <input type="submit" class="btn btn-sm btn-danger" value="Yes">
                     {% comment %} <a class="btn btn-sm btn-danger" href="{% url 'my_report_delete' incident.id %}">Delete</a> {% endcomment %}
             
                 </div>
@@ -240,52 +242,54 @@
         </div>
         <!-- End of Main Content  -->
 <!--Pagination-->
-{% if incidentReports %}
-<nav aria-label="Page navigation example">
-   <ul class="pagination justify-content-center">
-   {% if incidentReports.has_previous %}
-       <li class="page-item">
-       <a class="page-link" href="?page={{ incidentReports.previous_page_number }}">Previous</a>
-     </li>
-   {% else %}
-       <li class="page-item disabled">
-       <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
-     </li>
-   {% endif %}
+ <!--Pagination-->
+ {% if page_obj %}
+ <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+        <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      </li>
+    {% else %}
+        <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+      </li>
+    {% endif %}
 
-   {% if incidentReports.number|add:'-4' > 1 %}
-       <li class="page-item"><a class="page-link" href="?page={{ incidentReports.number|add:'-5' }}">&hellip;</a></li>
-   {% endif %}
+    {% if page_obj.number|add:'-4' > 1 %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'-5' }}">&hellip;</a></li>
+    {% endif %}
 
-   {% for i in incidentReports.paginator.page_range %}
-       {% if incidentReports.number == i %}
-           <li class="page-item active" aria-current="page">
-         <span class="page-link">
-           {{ i }}
-           <span class="sr-only">(current)</span>
-         </span>
-       </li>
-       {% elif i > incidentReports.number|add:'-5' and i < incidentReports.number|add:'5' %}
-            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-       {% endif %}
-   {% endfor %}
+    {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+            <li class="page-item active" aria-current="page">
+          <span class="page-link">
+            {{ i }}
+            <span class="sr-only">(current)</span>
+          </span>
+        </li>
+        {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %}
+             <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+    {% endfor %}
 
-   {% if incidentReports.paginator.num_pages > incidentReports.number|add:'4' %}
-      <li class="page-item"><a class="page-link" href="?page={{ incidentReports.number|add:'5' }}">&hellip;</a></li>
-   {% endif %}
+    {% if page_obj.paginator.num_pages > page_obj.number|add:'4' %}
+       <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'5' }}">&hellip;</a></li>
+    {% endif %}
 
-   {% if incidentReports.has_next %}
-       <li class="page-item">
-       <a class="page-link" href="?page={{ incidentReports.next_page_number }}">Next</a>
-     </li>
-   {% else %}
-       <li class="page-item disabled">
-       <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
-     </li>
-   {% endif %}
- </ul>
+    {% if page_obj.has_next %}
+        <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+      </li>
+    {% else %}
+        <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+      </li>
+    {% endif %}
+  </ul>
 </nav>
 {% endif %}
+<!--end of Pagination-->
 
         <!-- Scroll to Top-->
         <a class="scroll-to-top rounded" href="#scroll-up">
@@ -371,9 +375,11 @@
                                 <form id="form1" action="{% url 'user_reports' %}" enctype="multipart/form-data" method="post">
                                     {% csrf_token %}
                                     
-                                    {% if incidentGeneral %}
+                                    {% if incidentReports %}
                                     
                         <div class="modal-footer">
+                            <a href="{% url 'sa_recycle_bin'%}" title ="Recycle Bin"
+                            class="btn btn-sm btn-success">Recycle Bin</a>
                         <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#bulkdeleteModal">Bulk Delete</a>
                     </div>
                                 <table class="table table-bordered table-hover text-dark" id="user_report" width="100%"
@@ -399,7 +405,7 @@
                                     <!-- Table Body  -->
                                     <tbody>
                                         
-                                        {% for incident in incidentGeneral %}
+                                        {% for incident in incidentReports %}
                                         {% if incident.user.username %}
                                         <tr>
                                             {% if incident.status == 2 %}
@@ -407,7 +413,7 @@
                                                 {% comment %} <input type="checkbox" name="{{incident.id}}" id="check" disabled> {% endcomment %}
                                             </td>
                                             {% else %}
-                                            <td><input type="checkbox" name="{{incident.user_report.id}}" id="check"></td>
+                                            <td><input type="checkbox" name="{{incident.id}}" id="check"></td>
                                             {% endif %}
                                             <td>{{incident.user.username}}</td>
                                             <td>{% if incident.user.role %}{{incident.user.get_role}}{% endif %}</td>
@@ -439,7 +445,7 @@
                                             
                                         </tr>
                                                 <!-- Delete Modal HTML -->
-                                <div class="modal fade" id="deleteuserModal{{ incident.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
+                                <div class="modal fade" id="deleteModal{{ incident.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -449,14 +455,14 @@
                                                     </button>
                                             </div>
                                         <div class="modal-body">
-                                            <h6>Do you want to delete the selected record? This process cannot be undone.</h6>
+                                            <h6>Are you sure you want to move this file to the Recycle Bin?</h6>
                                         </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                                                 
                                     
                                         
-                                                    <a class="btn btn-sm btn-danger" href="{% url 'user_report_delete' incident.id %}">Delete</a>
+                                                    <a class="btn btn-sm btn-danger" href="{% url 'user_report_delete' incident.id %}">Yes</a>
                                             
                                                 </div>
                                         </div>
@@ -474,13 +480,13 @@
                     </button>
             </div>
         <div class="modal-body">
-            <h6>Do you want to delete the selected record? This process cannot be undone.</h6>
+            <h6>Are you sure you want to move this file to the Recycle Bin?</h6>
         </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                 
     
-                <input type="submit" class="btn btn-sm btn-danger" value="Bulk Delete">
+                <input type="submit" class="btn btn-sm btn-danger" value="Yes">
                     {% comment %} <a class="btn btn-sm btn-danger" href="{% url 'my_report_delete' incident.id %}">Delete</a> {% endcomment %}
             
                 </div>
@@ -516,52 +522,54 @@
         <!-- End of Main Content  -->
 
 <!--Pagination-->
-{% if incidentReports %}
-<nav aria-label="Page navigation example">
-   <ul class="pagination justify-content-center">
-   {% if incidentReports.has_previous %}
-       <li class="page-item">
-       <a class="page-link" href="?page={{ incidentReports.previous_page_number }}">Previous</a>
-     </li>
-   {% else %}
-       <li class="page-item disabled">
-       <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
-     </li>
-   {% endif %}
+ <!--Pagination-->
+ {% if incidentReports %}
+ <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+    {% if incidentReports.has_previous %}
+        <li class="page-item">
+        <a class="page-link" href="?page={{ incidentReports.previous_page_number }}">Previous</a>
+      </li>
+    {% else %}
+        <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+      </li>
+    {% endif %}
 
-   {% if incidentReports.number|add:'-4' > 1 %}
-       <li class="page-item"><a class="page-link" href="?page={{ incidentReports.number|add:'-5' }}">&hellip;</a></li>
-   {% endif %}
+    {% if incidentReports.number|add:'-4' > 1 %}
+        <li class="page-item"><a class="page-link" href="?page={{ incidentReports.number|add:'-5' }}">&hellip;</a></li>
+    {% endif %}
 
-   {% for i in incidentReports.paginator.page_range %}
-       {% if incidentReports.number == i %}
-           <li class="page-item active" aria-current="page">
-         <span class="page-link">
-           {{ i }}
-           <span class="sr-only">(current)</span>
-         </span>
-       </li>
-       {% elif i > incidentReports.number|add:'-5' and i < incidentReports.number|add:'5' %}
-            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-       {% endif %}
-   {% endfor %}
+    {% for i in incidentReports.paginator.page_range %}
+        {% if incidentReports.number == i %}
+            <li class="page-item active" aria-current="page">
+          <span class="page-link">
+            {{ i }}
+            <span class="sr-only">(current)</span>
+          </span>
+        </li>
+        {% elif i > incidentReports.number|add:'-5' and i < incidentReports.number|add:'5' %}
+             <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+    {% endfor %}
 
-   {% if incidentReports.paginator.num_pages > incidentReports.number|add:'4' %}
-      <li class="page-item"><a class="page-link" href="?page={{ incidentReports.number|add:'5' }}">&hellip;</a></li>
-   {% endif %}
+    {% if incidentReports.paginator.num_pages > incidentReports.number|add:'4' %}
+       <li class="page-item"><a class="page-link" href="?page={{ incidentReports.number|add:'5' }}">&hellip;</a></li>
+    {% endif %}
 
-   {% if incidentReports.has_next %}
-       <li class="page-item">
-       <a class="page-link" href="?page={{ incidentReports.next_page_number }}">Next</a>
-     </li>
-   {% else %}
-       <li class="page-item disabled">
-       <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
-     </li>
-   {% endif %}
- </ul>
+    {% if incidentReports.has_next %}
+        <li class="page-item">
+        <a class="page-link" href="?page={{ incidentReports.next_page_number }}">Next</a>
+      </li>
+    {% else %}
+        <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+      </li>
+    {% endif %}
+  </ul>
 </nav>
 {% endif %}
+<!--end of Pagination-->
         <!-- Scroll to Top-->
         <a class="scroll-to-top rounded" href="#scroll-up">
             <i class='bx bxs-up-arrow'></i>

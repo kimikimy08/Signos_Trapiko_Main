@@ -166,13 +166,10 @@ def admin_dashboard(request):
 def superadmin_dashboard(request):
     fromdate = request.POST.get('fromdate')
     todate = request.POST.get('todate')
-    incidentReports_pending = IncidentGeneral.objects.filter(
-        status=1)
+    incidentReports_pending = IncidentGeneral.objects.filter(status=1)
     today = datetime.today().date()
-    incidentReports_today = IncidentGeneral.objects.filter(
-        date=today)
-    incidentReports_approved = IncidentGeneral.objects.filter(
-        status=2)
+    incidentReports_today = IncidentGeneral.objects.filter(created_at__date=today)
+    incidentReports_approved = IncidentGeneral.objects.filter(status=2)
     incidentReports = IncidentGeneral.objects.all()
     incident_general = IncidentGeneral.objects.filter(status='2')
     incident_vehicle = IncidentVehicle.objects.filter(

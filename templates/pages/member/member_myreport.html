@@ -87,6 +87,8 @@
                         
                         {% if incidentReports %}
                         <div class="modal-footer">
+                            <a href="{% url 'm_recycle_bin'%}" title ="Recycle Bin"
+                            class="btn btn-sm btn-success">Recycle Bin</a>
                         <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#bulkdeleteModal">Bulk Delete</a>
                     </div>
                             {% comment %} {% endif %} {% endcomment %}

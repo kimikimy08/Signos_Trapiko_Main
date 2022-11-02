@@ -110,7 +110,7 @@ def super_profile_edit(request):
 def super_user_account(request):
     form = UserManagementForm(request.POST)
     m_form = MemberForm(request.POST, request.FILES)
-    user = User.objects.all().order_by('-last_login')
+    user = User.objects.filter(is_deleted=False).order_by('-last_login')
     paginator = Paginator(user, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -120,7 +120,9 @@ def super_user_account(request):
             print(x)
             if str(x) == 'on':
                 b = User.objects.get(id=i.id)
-                b.delete()
+                b.status = 2
+                b.is_active = 'False'
+                b.soft_delete()
             messages.success(request, 'User successfully deleted')
     context = {
         'form': form,
@@ -133,7 +135,7 @@ def super_user_account(request):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
 def super_user_account_member(request):
-    user = User.objects.filter(role = 1).order_by('-last_login')
+    user = User.objects.filter(role = 1, is_deleted=False).order_by('-last_login')
     form = UserManagementForm(request.POST)
     paginator = Paginator(user, 10)
     page_number = request.GET.get('page')
@@ -144,7 +146,9 @@ def super_user_account_member(request):
             print(x)
             if str(x) == 'on':
                 b = User.objects.get(id=i.id)
-                b.delete()
+                b.status = 2
+                b.is_active = 'False'
+                b.soft_delete()
             messages.success(request, 'User successfully deleted')
     context = {
         'form': form,
@@ -157,7 +161,7 @@ def super_user_account_member(request):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
 def super_user_account_admin(request):
-    user = User.objects.filter(role = 2).order_by('-last_login')
+    user = User.objects.filter(role = 2, is_deleted=False).order_by('-last_login')
     form = UserManagementForm(request.POST)
     paginator = Paginator(user, 10)
     page_number = request.GET.get('page')
@@ -168,7 +172,9 @@ def super_user_account_admin(request):
             print(x)
             if str(x) == 'on':
                 b = User.objects.get(id=i.id)
-                b.delete()
+                b.status = 2
+                b.is_active = 'False'
+                b.soft_delete()
             messages.success(request, 'User successfully deleted')
     context = {
         'form': form,
@@ -181,7 +187,7 @@ def super_user_account_admin(request):
 @login_required(login_url = 'login')
 @user_passes_test(check_role_super)
 def super_user_account_superadmin(request):
-    user = User.objects.filter(role = 3).order_by('-last_login')
+    user = User.objects.filter(role = 3, is_deleted=False).order_by('-last_login')
     form = UserManagementForm(request.POST)
     paginator = Paginator(user, 10)
     page_number = request.GET.get('page')
@@ -192,7 +198,9 @@ def super_user_account_superadmin(request):
             print(x)
             if str(x) == 'on':
                 b = User.objects.get(id=i.id)
-                b.delete()
+                b.status = 2
+                b.is_active = 'False'
+                b.soft_delete()
             messages.success(request, 'User successfully deleted')
     context = {
         'form': form,
@@ -303,8 +311,47 @@ def super_user_account_edit(request, id=None):
 def super_user_account_delete(request, id):
     user = User.objects.get(pk=id)
     if user.role == 1 or user.role == 2:
-        user.delete()
+        user.status = 2
+        user.is_active = 'False'
+        user.soft_delete()
+        
         return redirect('super_user_account')
     else:
         messages.error(request, 'Unable to Delete Super Admin')
         return redirect('super_user_account')
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def sa_recycle_bin_user(request):
+    user = User.objects.filter(is_deleted=True).order_by('-last_login')
+    paginator = Paginator(user, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        if request.POST.get('Restore') == 'Restore':
+            for i in user:
+                x = request.POST.get(str(i.id))
+                print(x)
+                if str(x) == 'on':
+                    b = User.objects.get(id=i.id)
+                    b.status = 1
+                    b.is_active = 'True'
+                    b.restore()
+                    # b.is_deleted = False
+                    # b.deleted_at = None
+                    messages.success(request, 'User Report successfully restored')
+        elif request.POST.get('Yes') == 'Yes':
+            for i in user:
+                x = User.POST.get(str(i.id))
+                print(x)
+                if str(x) == 'on':
+                    b = User.objects.get(id=i.id)
+                    b.delete()
+                    # b.is_deleted = False
+                    # b.deleted_at = None
+                    messages.success(request, 'User Report successfully restored') 
+    context = {
+        'user': user,
+        'page_obj':page_obj
+    }
+    return render(request, 'pages/super/sa_recycle_bin_user.html', context)

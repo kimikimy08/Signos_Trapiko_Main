@@ -9,9 +9,32 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSGeometry, fromstr
 from django.contrib.gis.db import models as gismodels
 from django.contrib.gis.geos import Point
+from accounts.managers import SoftDeleteManager
+from django.utils import timezone
 
 
-class AccidentCausation(models.Model):
+class SoftDeleteModel(models.Model):
+    is_deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True, default=None)
+    objects = SoftDeleteManager()
+    all_objects = models.Manager()
+
+    def soft_delete(self):
+        self.is_deleted = True
+        self.deleted_at = timezone.now()
+        self.save()
+
+    def restore(self):
+        self.is_deleted = False
+        self.deleted_at = None
+        self.save()
+
+    class Meta:
+        abstract = True
+        
+        
+
+class AccidentCausation(SoftDeleteModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     category = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -20,7 +43,7 @@ class AccidentCausation(models.Model):
     def __str__(self):
         return self.category
 
-class CollisionType(models.Model):
+class CollisionType(SoftDeleteModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     category = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -30,7 +53,7 @@ class CollisionType(models.Model):
         return self.category
 
 
-class CrashType(models.Model):
+class CrashType(SoftDeleteModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     crash_type = models.CharField(max_length=250, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -39,7 +62,7 @@ class CrashType(models.Model):
     def __str__(self):
         return self.crash_type
 
-class IncidentGeneral(models.Model):
+class IncidentGeneral(SoftDeleteModel):
     PENDING = 1
     APPROVED = 2
     REJECTED = 3
@@ -136,7 +159,7 @@ class IncidentGeneral(models.Model):
     
     # post_save.connect(create_user_report_general, sender=UserReport) 
 
-class IncidentPerson(models.Model):
+class IncidentPerson(SoftDeleteModel):
     GENDER = (
         ('Female', 'Female'),
         ('Male', 'Male'),
@@ -200,12 +223,13 @@ class IncidentPerson(models.Model):
     incident_driver_error =  models.CharField(choices=DRIVER_ERROR,max_length=250, blank=True, null=True)
     incident_alcohol_drugs =  models.CharField(choices=ALCOHOL_DRUGS, max_length=250,blank=True, null=True)
     incident_seatbelt_helmet =  models.CharField(choices=SEATBELT_HELMET,max_length=250, blank=True, null=True)
+    incident_photo_id = models.ImageField(upload_to='incident_report/people/id')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
 
-class IncidentVehicle(models.Model):
+class IncidentVehicle(SoftDeleteModel):
     CLASSIFICATION = (
         ('Diplomat', 'Diplomat'),
         ('Government', 'Government'),
@@ -300,10 +324,10 @@ class IncidentVehicle(models.Model):
     def __int__(self):
         return self.id
 
-class IncidentMedia(models.Model):
+class IncidentMedia(SoftDeleteModel):
     incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE, null=True, blank=True)
     media_description = models.TextField(max_length=250, blank=True)
-    incident_upload_photovideo = models.ImageField(default='user.jpeg', upload_to='incident_report/image')
+    incident_upload_photovideo = models.ImageField(upload_to='incident_report/image')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -312,7 +336,7 @@ class IncidentMedia(models.Model):
     
     
 
-class IncidentRemark(models.Model):
+class IncidentRemark(SoftDeleteModel):
     incident_general = models.OneToOneField(IncidentGeneral, on_delete=models.CASCADE, null=True, blank=True)
     responder =  models.CharField(max_length=250, blank=True)
     action_taken = models.TextField(max_length=250, blank=True)
@@ -330,7 +354,7 @@ class IncidentRemark(models.Model):
     # post_save.connect(create_user_report_remark, sender=IncidentGeneral) 
 
 
-class Incident(models.Model):
+class Incident(SoftDeleteModel):
     incident_general = models.OneToOneField(IncidentGeneral, on_delete=models.CASCADE)
     incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.SET_NULL, blank=True, null=True)
     incident_person = models.ForeignKey(IncidentPerson, on_delete=models.SET_NULL, blank=True, null=True)
