@@ -152,6 +152,10 @@ class IncidentGeneral(SoftDeleteModel):
                     img = img.resize((new_width, new_height))
                     img.save(self.upload_photovideo.path)
 
+        if self.latitude and self.longitude:
+            self.geo_location = Point(float(self.longitude), float(self.latitude))
+            return super(IncidentGeneral, self).save(*args, **kwargs)
+
     # @receiver(post_save, sender=UserReport)
     # def create_user_report_general(sender, instance, created, **kwargs):
     #     if created:

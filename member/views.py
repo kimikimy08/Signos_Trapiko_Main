@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from accounts.models import UserProfile, User 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_member
-from accounts.forms import MemberForm, UserUpdateForm
+from accounts.forms import MemberForm, UserUpdateForm, ProfileMgmtUpdateForm
 from django.contrib import messages
 
 from incidentreport.models import IncidentGeneral
@@ -67,7 +67,7 @@ def member_profile_edit(request):
     user = User.objects.get(username = request.user.username)
     profile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':
-        profile_form = MemberForm(request.POST  or None, request.FILES  or None, instance=profile)
+        profile_form = ProfileMgmtUpdateForm(request.POST  or None, request.FILES  or None, instance=profile)
         user_form = UserUpdateForm(request.POST  or None, instance=request.user)
         if profile_form.is_valid() and user_form.is_valid():
             user_form.instance.username = request.user
@@ -88,7 +88,7 @@ def member_profile_edit(request):
             print(user_form.errors)
 
     else:
-        profile_form = MemberForm(instance=profile)
+        profile_form = ProfileMgmtUpdateForm(instance=profile)
         user_form = UserUpdateForm(instance=request.user, initial={"email": user.email, 
                                                         "username": user.username})
     context = {

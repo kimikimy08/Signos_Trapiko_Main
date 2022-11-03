@@ -7,6 +7,12 @@
 <link href="{% static 'css/m_myreports.css' %}" rel="stylesheet">
 <link href="{% static 'css/m_reports.css' %}" rel="stylesheet">
 
+<style>
+  .required-field::after {
+      content: " *";
+      color: red;
+    }
+</style>
 
 {% endblock styles %}
 
@@ -115,14 +121,14 @@
                             <div class="card p-5">
 
                                 <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                      <label for="inputbirth">Role</label>
-                                      {{user_form.role}}
-                                    </div>
-                                     <div class="form-group col-md-6">
-                                      <label for="inputmobile">Status</label>
-                                      {{user_form.status}}
-                                    </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="inputbirth" class="required-field">Role</label>
+                                    {{user_form.role}}
+                                  </div>
+                                   <div class="form-group col-md-6">
+                                    <label for="inputmobile" class="required-field">Status</label>
+                                    {{user_form.status}}
+                                  </div>
                                 </div>
                            
 

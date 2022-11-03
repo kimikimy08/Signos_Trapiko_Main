@@ -137,7 +137,58 @@ class TimeInput(forms.TimeInput):
 #             self.fields['date'].widget.attrs['readonly'] = 'readonly'
 #             self.fields['time'].widget.attrs['readonly'] = 'readonly'
             
+class UserForm(forms.ModelForm):
+    upload_photovideo = forms.FileField(
+        widget=forms.FileInput(attrs={'class': 'form-control p-1'}), validators=[allow_only_images_video_validator])
+    date = forms.DateField(initial=datetime.date.today)
+    
+    time = forms.TimeField(widget=TimeInput(
+        attrs={'class': 'form-control'}), initial=datetime.datetime.now())
+    address = forms.CharField(widget=forms.TextInput(
+        attrs={'required': 'required', 'class': 'form-control'}))
+    description = forms.CharField(widget=forms.Textarea(
+        attrs={'area': '3', 'class': 'form-control'}))
+    
+    class Meta:
+        model = IncidentGeneral
+        fields = ['date','time', 'accident_factor', 'collision_type',  'crash_type', 'weather', 'light', 'severity', 'movement_code', 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude', 'date', 'time', 'status']
 
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
+     
+        self.fields['collision_type'].widget.attrs['class'] = 'form-control'
+     
+        self.fields['weather'].widget.attrs['class'] = 'form-control'
+        self.fields['light'].widget.attrs['class'] = 'form-control'
+        self.fields['severity'].widget.attrs['class'] = 'form-control'
+        self.fields['crash_type'].widget.attrs['class'] = 'form-control'
+        self.fields['movement_code'].widget.attrs['class'] = 'form-control'
+        
+        self.fields['date'].widget.attrs['class'] = 'form-control datepickstart'
+        self.fields['time'].widget.attrs['class'] = 'form-control'
+        self.fields['address'].widget.attrs['class'] = 'form-control'
+        self.fields['country'].widget.attrs['class'] = 'form-control'
+        self.fields['state'].widget.attrs['class'] = 'form-control'
+        self.fields['city'].widget.attrs['class'] = 'form-control'
+        self.fields['pin_code'].widget.attrs['class'] = 'form-control'
+        self.fields['latitude'].widget.attrs['class'] = 'form-control'
+        self.fields['longitude'].widget.attrs['class'] = 'form-control'
+        self.fields['description'].widget.attrs['class'] = 'form-control'
+        self.fields['status'].widget.attrs['class'] = 'form-control'
+        self.fields['date'].widget.attrs['autocomplete'] = 'off'
+        self.fields['date'].input_formats = settings.DATE_INPUT_FORMATS
+        
+        
+        for field in self.fields:
+            if field == 'latitude' or field == 'longitude' or field == 'city' or field == 'pin_code':
+                self.fields[field].widget.attrs['readonly'] = 'readonly'
+        
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['description'].required = False
+            self.fields['date'].widget.attrs['readonly'] = 'readonly'
+            self.fields['time'].widget.attrs['readonly'] = 'readonly'
 class IncidentGeneralForm(forms.ModelForm):
     upload_photovideo = forms.FileField(
         widget=forms.FileInput(attrs={'class': 'form-control p-1'}), validators=[allow_only_images_video_validator])
@@ -163,11 +214,7 @@ class IncidentGeneralForm(forms.ModelForm):
         self.fields['severity'].widget.attrs['class'] = 'form-control'
         self.fields['crash_type'].widget.attrs['class'] = 'form-control'
         self.fields['movement_code'].widget.attrs['class'] = 'form-control'
-        self.fields['upload_photovideo'].required = False
-        self.fields['description'].required = False
-        self.fields['address'].required = False
-        self.fields['time'].required = False
-        self.fields['date'].required = False
+        
         
         self.fields['date'].widget.attrs['class'] = 'form-control datepickstart'
         self.fields['time'].widget.attrs['class'] = 'form-control'

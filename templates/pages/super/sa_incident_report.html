@@ -30,7 +30,13 @@
         select {
             cursor: pointer;
         }
+        .required-field::after {
+            content: " *";
+            color: red;
+          }
     </style>
+
+    
 
 </head>
 
@@ -84,11 +90,11 @@
                                     
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="inputEmail4">Date</label>
+                                                    <label for="inputEmail4" class="required-field">Date</label>
                                                     {{form.date }}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <label for="inputPassword4">Time</label>
+                                                    <label for="inputPassword4" class="required-field">Time</label>
                                                     {{form.time}}
                                                 </div>
                                             </div>
@@ -96,7 +102,7 @@
 
                                             <!--==================LOCATION=====================-->
                                             <div class="form-group">
-                                                <label for="inputAddress">Street Address</label>
+                                                <label for="inputAddress" class="required-field">Street Address</label>
                                                 {{form.address}}
                                             </div>
                                             <div class="form-row">
@@ -125,31 +131,31 @@
                                             <hr>
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="inputWeather">Weather</label>
+                                                    <label for="inputWeather" class="required-field">Weather</label>
                                                     {{form_general.weather}}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <label for="inputLight">Light</label>
+                                                    <label for="inputLight" class="required-field">Light</label>
                                                     {{form_general.light}}
                                                 </div>
                                             </div>
                                             <!-- ================================= -->
                                             <hr>
                                             <div class="form-group">
-                                                <label for="inputSeverity">Severity</label>
+                                                <label for="inputSeverity" class="required-field">Severity</label>
                                                 {{form_general.severity}}
                                             </div>
 
                                             <div class="form-row">
                                                 <div class="form-group col-md-12">
-                                                    <label for="inputAccident">Accident Factor</label>
+                                                    <label for="inputAccident" class="required-field">Accident Factor</label>
                                                     {{form_general.accident_factor}}
                                                 </div>
                                             </div>
                                             
                                             <div class="form-row">
                                                 <div class="form-group col-md-12">
-                                                    <label for="inputCollision">Collision Type</label>
+                                                    <label for="inputCollision" class="required-field">Collision Type</label>
                                                     {{form_general.collision_type}}
                                                 </div>
                                             </div>
@@ -157,7 +163,7 @@
                                             <!-- ================================= -->
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="inputCrashType">Crash Type</label>
+                                                    <label for="inputCrashType" class="required-field">Crash Type</label>
                                                     {{form_general.crash_type}}
                                                 </div>
                                                 <div class="form-group col-md-6">
@@ -166,7 +172,7 @@
                                                 </div>
 
                                                 <div class="form-group col-md-12">
-                                                    <label for="inputDescription">Description</label>
+                                                    <label for="inputDescription" class="required-field">Description</label>
                                                     {{form.description}}
                                                 </div>
                                             </div>
@@ -190,7 +196,7 @@
                                                 <input type="text" class="form-control" id="inputEncodersEmail" placeholder="---">
                                             </div>
                                             <div class="form-group">
-                                                <label for="inputTFTTM">TFTTM First Responder Name</label>
+                                                <label for="inputTFTTM" class="required-field">TFTTM First Responder Name</label>
                                                 {{form_remarks.responder}}
                                             </div>
                                             <div class="form-group">
@@ -250,62 +256,6 @@
         console.log(date)
     </script>
     <script>
-
-        $("#id_accident_factor").change(function () {
-            const url = $("#form_incidentgeneral").attr("data-acc-url");  // get the url of the `load_cities` view
-            const accidentId = $(this).val();  // get the selected country ID from the HTML input
-        
-            $.ajax({                       // initialize an AJAX request
-                url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
-                data: {
-                    'accident_factor_id': accidentId       // add the country id to the GET parameters
-                },
-                success: function (data) {
-                    let select_element = $('#id_accident_subcategory'); //Sub_category select  
-                    //console.log(data) // `data` is the return of the `load_cities` view function
-                    $(select_element).html(data);  // replace the contents of the city input with the data that came from the server
-        
-                    let html_data = '';
-                    data.forEach(function (accident_subcategory) {
-                        html_data += `<option value="${accident_subcategory.id}">${accident_subcategory.sub_category}</option>`
-                    });
-                    console.log(html_data);
-                    $("#id_accident_subcategory").html(html_data);
-        
-                }
-            });
-            console.log(data);
-        });
-
-        $("#id_collision_type").change(function () {
-            const url = $("#form_incidentgeneral").attr("data-acc-url");  // get the url of the `load_cities` view
-            const collisionId = $(this).val();  // get the selected country ID from the HTML input
-        
-            $.ajax({                       // initialize an AJAX request
-                url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
-                data: {
-                    'collision_type_id': collisionId       // add the country id to the GET parameters
-                },
-                success: function (data) {  
-                    //console.log(data) // `data` is the return of the `load_cities` view function
-                    $("#id_collision_subcategory").html(data);  // replace the contents of the city input with the data that came from the server
-        
-                    let html_data = '<option value="">---------</option>';
-                    data.forEach(function (collision_subcategory) {
-                        html_data += `<option value="${collision_subcategory.id}">${collision_subcategory.sub_category}</option>`
-                        
-                    });
-                    console.log(html_data);
-                    // $("#id_general-collision_subcategory").html(html_data);
-                    // if ($("#id_general-collision_subcategory").find(html_data).length <= 1){
-                    //     $("#id_general-collision_subcategory").disable=true;
-                    // }
-        
-                }
-            });
-        
-        });
-
         //jQuery time
         var current_fs, next_fs, previous_fs; //fieldsets
         var left, opacity, scale; //fieldset properties which we will animate

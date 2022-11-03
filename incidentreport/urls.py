@@ -121,4 +121,7 @@ urlpatterns = [
     path('incidentReports/recycle_bin/', views.sa_recycle_bin, name='sa_recycle_bin'),
     path('incidentReport/recycle_bin/', views.a_recycle_bin, name='a_recycle_bin'),
     path('myReport/recycle_bin/', views.m_recycle_bin, name='m_recycle_bin'),
+    
+    path('incidentReports/template/', views.sa_template, name='sa_template'),
+    path('incidentReport/template/', views.a_template, name='a_template'),
 ]

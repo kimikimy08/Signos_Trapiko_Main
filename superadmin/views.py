@@ -4,7 +4,7 @@ from accounts.models import UserProfile, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_super
 from django.contrib import messages
-from accounts.forms import UserForm, MemberForm, UserManagementForm, UserUpdateManagementForm, UserUpdateForm, ProfileMgmtUpdateForm, UserManagementForm1
+from accounts.forms import UserForm, MemberForm, UserManagementForm, UserUpdateManagementForm, UserUpdateForm, ProfileMgmtUpdateForm, UserManagementForm1, ProfileMgmtUpdateFormEdit
 from accounts.utils import send_verfication_email, send_sms, detectUser
 from django.urls import reverse
 from django.core.paginator import Paginator
@@ -72,7 +72,7 @@ def super_profile_edit(request):
     user = User.objects.get(username = request.user.username)
     profile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':
-        profile_form = MemberForm(request.POST  or None, request.FILES  or None, instance=profile)
+        profile_form = ProfileMgmtUpdateForm(request.POST  or None, request.FILES  or None, instance=profile)
         user_form = UserUpdateForm(request.POST  or None, instance=request.user)
         if profile_form.is_valid() and user_form.is_valid():
             user_form.instance.username = request.user
@@ -93,7 +93,7 @@ def super_profile_edit(request):
             print(user_form.errors)
 
     else:
-        profile_form = MemberForm(instance=profile)
+        profile_form = ProfileMgmtUpdateForm(instance=profile)
         user_form = UserUpdateForm(instance=request.user, initial={"email": user.email, 
                                                         "username": user.username})
     context = {
@@ -264,7 +264,7 @@ def super_user_account_edit(request, id=None):
     user =  get_object_or_404(User, pk=id)
     profile = get_object_or_404(UserProfile, pk=id)
     if request.method == 'POST':
-        profile_form = ProfileMgmtUpdateForm(request.POST  or None, request.FILES  or None, instance=profile)
+        profile_form = ProfileMgmtUpdateFormEdit(request.POST  or None, request.FILES  or None, instance=profile)
         user_form = UserUpdateManagementForm(request.POST  or None,  instance=user)
         if profile_form.is_valid() and user_form.is_valid():
             user_form.instance.username = request.user
@@ -293,7 +293,7 @@ def super_user_account_edit(request, id=None):
             print(user_form.errors)
 
     else:
-        profile_form = ProfileMgmtUpdateForm(instance=profile)
+        profile_form = ProfileMgmtUpdateFormEdit(instance=profile)
         user_form = UserUpdateManagementForm(instance=user, initial={"email": user.email, 
                                                         "username": user.username})
     context = {

@@ -169,6 +169,9 @@ footer {
      <table class="table" style="width:100%">
           <thead>
               <tr>
+                <th scope="col">DATE</th>
+                <th scope="col">TIME</th>
+                <th scope="col">ADDRESS</th>
                   <th scope="col">COLLISION TYPE</th>
                   {% comment %} <th scope="col">COLLISION TYPE SUB-CATEGORY</th> {% endcomment %}
                   <th scope="col">SEVERITY</th>
@@ -178,6 +181,9 @@ footer {
               {% for i in incident_general_collision %}
             
               <tr>
+                <td scope="row">{{i.date}}</td>
+                <td scope="row">{{i.time}}</td>
+                <td scope="row">{{i.address}}</td>
                   <td scope="row">{{i.collision_type.category}}</td>
                   {% comment %} <td scope="row">{{i.collision_subcategory.sub_category}}</td> {% endcomment %}
                   <td>{{i.severity}}</td>

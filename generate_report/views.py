@@ -17,6 +17,7 @@ from xhtml2pdf import pisa
 import os
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_admin, check_role_super, check_role_member, check_role_super_admin
+from generate_report.models import GenerateReport
 
 # Create your views here.
 @login_required(login_url='login')
@@ -389,8 +390,11 @@ def generate_reports(request):
 @user_passes_test(check_role_super)
 def GenerateInvoiceAccident(request):
     try:
-        fromdate = request.POST.get('fromdate')
-        todate = request.POST.get('todate')
+        if request.method == 'POST':
+            fromdate = request.POST.get('fromdate')
+            todate = request.POST.get('todate')
+            report = GenerateReport(user=request.user, fromdate=fromdate, todate=todate, report="Accident Causation PDF")
+            report.save()
             
         print(fromdate, todate)
     
@@ -401,7 +405,9 @@ def GenerateInvoiceAccident(request):
         incident_general_accident3 = IncidentGeneral.objects.filter(status = 2,severity='Non-Fatal', date__range=[fromdate, todate ] ).annotate(Count('severity'))
         incident_general_classification = IncidentGeneral.objects.filter(status = 2, severity="Damage to Property", date__range=[fromdate, todate ]).distinct('accident_factor')
         incident_general_collision = IncidentGeneral.objects.filter(status = 2, severity="Damage to Property", date__range=[fromdate, todate ]).distinct('accident_factor') #you can filter using order_id as well
-            
+        
+        
+        report1 = GenerateReport.objects.all().order_by('-created_at')[:1]
     except:
         return HttpResponse("505 Not Found")
     data = {
@@ -411,6 +417,7 @@ def GenerateInvoiceAccident(request):
         'incident_general_accident1': incident_general_accident1,
         'incident_general_accident2': incident_general_accident2,
         'incident_general_accident3': incident_general_accident3,
+        'report1':report1
             # 'amount': order_db.total_amount,
     }
     pdf = render_to_pdf('pages/generate_report_pdf_accident.html', data)
@@ -444,7 +451,9 @@ def GenerateInvoiceCollision(request):
         incident_general_collision2 = IncidentGeneral.objects.filter(status = 2,severity='Damage to Property', date__range=[fromdate, todate ] ).annotate(Count('severity'))
         incident_general_collision3 = IncidentGeneral.objects.filter(status = 2,severity='Non-Fatal', date__range=[fromdate, todate ]).annotate(Count('severity'))
         incident_general_classification = IncidentGeneral.objects.filter(status = 2, severity="Damage to Property", date__range=[fromdate, todate ]).distinct('accident_factor')
-
+        report = GenerateReport(user=request.user, fromdate=fromdate, todate=todate, report="Collision Type PDF")
+        report.save()
+        report1 = GenerateReport.objects.all().order_by('-created_at')[:0]      
            
             
     except:
@@ -456,6 +465,7 @@ def GenerateInvoiceCollision(request):
         'incident_general_collision1': incident_general_collision1,
         'incident_general_collision2': incident_general_collision2,
         'incident_general_collision3': incident_general_collision3,
+        'report1': report1
             # 'amount': order_db.total_amount,
     }
     pdf = render_to_pdf('pages/generate_report_pdf_collision.html', data)

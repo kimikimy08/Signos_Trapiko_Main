@@ -14,6 +14,12 @@
         right: 15px; 
         cursor: pointer; 
     }
+
+    .required-field::after {
+        content: " *";
+        color: red;
+      }
+
    </style>
     {% endblock styles %}
     {% block form_if %}{% block form_else %}
@@ -23,11 +29,11 @@
             <div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="inputWeather">Date</label>
+                        <label for="inputWeather" class="required-field">Date</label>
                         {{form.date}}
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="inputLight">Time</label>
+                        <label for="inputLight" class="required-field">Time</label>
                         {{form.time}}
                     </div>
                 </div>
@@ -35,7 +41,7 @@
                 <hr>
                 <div class="form-row">
                     <div class="form-group col-md-12">
-                        <label for="inputSeverity">Street Address</label>
+                        <label for="inputSeverity" class="required-field">Street Address</label>
                     {{form.address}}
                     <span id="location_open" class="radius-location" onclick="getLocation()"><iconify-icon icon="mdi:target"></iconify-icon></span>
                     </div>
@@ -63,7 +69,7 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12">
-                        <label for="inputSeverity">Description</label>
+                        <label for="inputSeverity" class="required-field">Description</label>
                     {{form.description}}
                     </div>
                 </div>
@@ -71,7 +77,7 @@
                     <div class="form-group col-md-12">
                         
                         {{form.upload_photovideo}}
-                        <small for="inputSeverity">Upload Photo and Video related to the incident for further investigation</small>
+                        <small for="inputSeverity" class="required-field">Upload Photo and Video related to the incident for further investigation</small>
                     </div>
                 </div>
 

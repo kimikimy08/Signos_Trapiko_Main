@@ -336,6 +336,19 @@ class ProfileMgmtUpdateForm(forms.ModelForm):
         self.fields['birthdate'].required = False
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
+            self.fields['birthdate'].required = False
+
+class ProfileMgmtUpdateFormEdit(forms.ModelForm):
+    birthdate = forms.DateField(widget=DateInput(attrs={'class': 'form-control ', }))
+    class Meta:
+        model = UserProfile
+        fields = ['birthdate']
+    
+    def __init__(self, *args, **kwargs):
+        super(ProfileMgmtUpdateFormEdit, self).__init__(*args, **kwargs)
+        self.fields['birthdate'].required = False
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
             self.fields['birthdate'].widget.attrs['readonly'] = True
     
 

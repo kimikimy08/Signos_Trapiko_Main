@@ -12,7 +12,7 @@ from accounts.views import check_role_admin, check_role_super, check_role_member
 from incidentreport.models import  IncidentGeneral, IncidentRemark, IncidentMedia, IncidentPerson, IncidentVehicle, AccidentCausation, CollisionType, CrashType
 from django.contrib import messages
 
-from .forms import IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm, AccidentCausationForm,  CollisionTypeForm, CrashTypeForm
+from .forms import IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm, AccidentCausationForm,  CollisionTypeForm, CrashTypeForm,UserForm
 from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.forms.models import construct_instance
@@ -628,7 +628,7 @@ def incident_report_remarks(request):
 #         #  ("media", IncidentMediaForm),
 #          ("remarks", IncidentRemarksForm)]
 
-FORMS1 = [("information", IncidentGeneralForm)]
+FORMS1 = [("information", UserForm)]
 
 # TEMPLATES = {"information": "pages/super/incident_report_user.html",
 #                 "general": "pages/super/incident_report_general.html",
@@ -1965,6 +1965,14 @@ def sa_incidentreports(request):
                 messages.success(request,"Data Save Successfully")
                 request.session['latest__id'] = incident_general.id
                 return redirect('sa_incidentreports_additional')
+            
+            else:
+                messages.error(request,"Data Not Save Successfully")
+                print(form.errors)
+                print(form_general.errors)
+                print(form_remarks.errors)
+                return redirect('sa_incidentreports')
+                
             
         except Exception as e:
             print('invalid form')
@@ -3723,3 +3731,13 @@ def m_recycle_bin(request):
         # 'IncidentGeneral': IncidentGeneral
     }
     return render(request, 'pages/member/m_recycle_bin.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_super)
+def sa_template(request):
+    return render(request, 'pages/super/sa_template.html')
+
+@login_required(login_url='login')
+@user_passes_test(check_role_admin)
+def a_template(request):
+    return render(request, 'pages/admin/a_template.html')
