@@ -16,7 +16,7 @@ from .forms import IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm,
 from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.forms.models import construct_instance
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from .resources import IncidentGeneraltResource, IncidentRemarkResources, IncidentPeopleResources, IncidentVehicleResources
 from tablib import Dataset
 from django.core.paginator import Paginator
@@ -3632,6 +3632,12 @@ def sa_recycle_bin(request):
     paginator = Paginator(incidentReports, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    # today = datetime.today().date()
+    # delete_expiration = today - incidentReports.created_at__date
+    # delete_expiration = IncidentGeneral.all_objects.filter(deleted_at__lte=datetime.now()-timedelta(days=30))
+    # print (delete_expiration)
+    
+    
     if request.method == 'POST':
         if request.POST.get('Restore') == 'Restore':
             for i in incidentReports:

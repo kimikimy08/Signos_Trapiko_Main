@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+<link href="{% static 'css/admin_dashboard.css' %}" rel="stylesheet">
+
+{% endblock styles %}
+
+
+
+{% block content %}
+
+
+<!-- Page Wrapper -->
+
+{% include 'includes/sa_sidebar.html' %}
+    
+
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            {% include 'includes/navbar.html' %}
+
+
+
+            <!-- ===== MAIN CONTENT  ===== -->
+        
+            <div class="container bootdey mb-5">
+                <div class="email-app">
+                 
+                    <main>
+                        <p class="text-center">Compose Message</p>
+                        <form action="{% url 'sent_message'  %}" enctype="multipart/form-data" method="post">
+                            {% csrf_token %}
+                            <div class="form-row mb-3">
+                                <label for="to" class="col-2 col-sm-1 col-form-label">To:</label>
+                                <div class="col-10 col-sm-11">
+                                    {{form.to_email}}
+                                </div>
+                                <label for="to" class="col-2 col-sm-1 col-form-label">Subject:</label>
+                                <div class="col-10 col-sm-11">
+                                    {{form.subject}}
+                                </div>
+                            </div>
+                       
+                        <div class="row">
+                            <div class="col-sm-11 ml-auto">
+                                
+                                <div class="form-group mt-4">
+                                    {{form.message}}
+                                </div>
+                                <div class="form-group text-center">
+                                    <button type="submit" class="btn btn-success ">Send</button>
+                                    <button type="submit" class="btn btn-dark">Discard</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    </main>
+                </div>
+                </div>
+            <!-- End of Main Content  -->
+
+
+          
+
+        </div>
+        <!-- End of Main Content  -->
+
+
+        <!-- Scroll to Top-->
+        <a class="scroll-to-top rounded" href="#scroll-up">
+            <i class='bx bxs-up-arrow'></i>
+        </a>
+        <!-- End of Scroll to Top-->
+
+{% include 'includes/alerts_frame.html' %}
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+
+<!-- Include formset plugin - including jQuery dependency -->
+
+
+{% endblock scripts %}
+

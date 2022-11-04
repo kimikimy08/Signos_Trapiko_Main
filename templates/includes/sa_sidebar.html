@@ -101,14 +101,14 @@
     </li>
 
      <!-- Inbox -->
-     {% comment %} <li class="nav-item">
-        <a class="nav-link" href="#">
+     <li class="nav-item">
+        <a class="nav-link" href="{% url 'sent_message' %}">
             <i class="fa-solid fa-inbox"></i>
             <span class="">Inbox</span></a>
     </li>
 
     <!-- Settings  -->
-    <li class="nav-item">
+    {% comment %} <li class="nav-item">
         <a class="nav-link" href="#">
             <i class="bx bx-cog"></i>
             <span class="">Settings</span></a>

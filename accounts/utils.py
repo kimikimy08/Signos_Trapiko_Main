@@ -35,6 +35,21 @@ def send_verfication_email(request, user, mail_subject, email_template):
     mail.content_subtype = "html"
     mail.send()
 
+def send_verfication_email(request, user, mail_subject, email_template, user_from):
+    from_email = settings.DEFAULT_FROM_EMAIL
+    current_site = get_current_site(request)
+    message = render_to_string(email_template, {
+        'user' : user,
+        'domain' : current_site,
+        'user_from': user_from
+        # 'uid' : urlsafe_base64_encode(force_bytes(user.pk)),
+        # 'token' : default_token_generator.make_token(user)
+    })
+    to_email = user.email
+    mail = EmailMessage(mail_subject, message, from_email, to=[to_email])
+    mail.content_subtype = "html"
+    mail.send()
+
 def send_sms(user_code,phone_number):
     account_sid = 'AC544a74e1519b84282c6d22e90d4dbe12'
     auth_token = '058ea780845da159b017ced55f4668de'

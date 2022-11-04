@@ -134,9 +134,9 @@
 
                             </form>
                             <hr>
-                            {% comment %} <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
-                            </div> {% endcomment %}
+                            <div class="text-center">
+                                <a class="small" href="{% url 'forgot_password' %}">Forgot Password?</a>
+                            </div>
                             <div class="text-center">
                                 <a class="small" href="{% url 'login' %}">Already have an account? Login!</a>
                             </div>
