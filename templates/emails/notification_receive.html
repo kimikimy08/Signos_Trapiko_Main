@@ -41,10 +41,10 @@
       <td>
         <h2 style="text-align: center;">Notification</h2>
         {% comment %} <h4 style="text-align: center;">Your Username is: {{user.username}}</h4> {% endcomment %}
-        <p style="text-align: center;">{{user_from.username}} has sent a message in Signos Trapiko. Please login to Signos Trapiko and reply through the Inbox.</p>
-        {% comment %} <div style="text-align: center; padding-top:20px">
-          <a href="http://{{domain}}{% url 'reset_validate' uidb64=uid token=token %}" class="activate-btn" style="color: #fff; ">Reset Password Now</a>
-        </div> {% endcomment %}
+        <p style="text-align: center;">You can reply to this message in Signos Trapiko. Please log in to the <a href="http://{{domain}}">website</a> and repy through the Inbox.</p>
+        <div style="text-align: center; padding-top:20px">
+          {% comment %} <a href="http://{{domain}}{% url 'reset_validate' uidb64=uid token=token %}" class="activate-btn" style="color: #fff; ">Reset Password Now</a> {% endcomment %}
+        </div> 
       </td> 
     </tr>
   </table>
@@ -53,9 +53,14 @@
       <tr>
         <td align="center" style="padding: 15px 15px; color: #fff;">
           <p>© {% now "Y" %} Link Technologies, Inc. All Rights Reserved.</p>
-          <a href="http://{{domain}}" style="color:#fff;">Visit Website</a>      
+          <a href="http://{{domain}}" style="color:#fff;">Visit Website</a> 
         </td>
       </tr>
+      <tfoot>
+        <td style="padding: 15px 15px; color: #fff;">
+          <p>This email contains confidential information for the sole use of intended recipient/s. If you are not the intended recipient, please contact the sender, delete this email and maintain the confidentiality of what you may have read.</p>
+        </td>
+      </tfoot>
   </table> 
 </div>
 </body>

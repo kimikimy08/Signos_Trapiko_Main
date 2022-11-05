@@ -20,11 +20,13 @@ import pandas as pd
 from incidentreport.models import IncidentGeneral, IncidentRemark, IncidentMedia, IncidentPerson, IncidentVehicle, AccidentCausation, CollisionType, CrashType
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_admin, check_role_super, check_role_member, check_role_super_admin
+from django.views.decorators.cache import cache_control
 
 # Create your views here.
 
 
 @login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def admin_dashboard(request):
     fromdate = request.POST.get('fromdate')
@@ -162,6 +164,7 @@ def admin_dashboard(request):
 
 
 @login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_super)
 def superadmin_dashboard(request):
     fromdate = request.POST.get('fromdate')
@@ -298,6 +301,7 @@ def superadmin_dashboard(request):
 
 
 @login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_super_admin)
 def index_map(request):
     fromdate = request.POST.get('fromdate')
@@ -367,6 +371,7 @@ def index_map(request):
 
 
 @login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def index_map_admin(request):
     fromdate = request.POST.get('fromdate')

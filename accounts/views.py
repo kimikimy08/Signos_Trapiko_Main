@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import User, UserProfile
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -11,7 +11,8 @@ from django.core.exceptions import PermissionDenied
 from .forms import UserForm, MemberForm
 from .utils import send_verfication_email, send_sms, detectUser
 from incidentreport.models import IncidentGeneral
-
+from django.views.decorators.cache import cache_control
+from  django.contrib.auth import logout
 
 
 
@@ -193,7 +194,14 @@ def logout(request):
     messages.info(request, "You are logged out.")
     return redirect('login')
 
+# def AutoLogoutUse(request):
+#     logout(request)
+#     request.user = None
+#     messages.info(request, ".")
+#     return HttpResponseRedirect('/')
+
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def myAccount(request):
     user = request.user
     redirectUrl = detectUser(user)
@@ -201,6 +209,7 @@ def myAccount(request):
 
 
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_member)
 def member_dashboard(request):
     profile = get_object_or_404(UserProfile, user=request.user)
@@ -214,11 +223,13 @@ def member_dashboard(request):
     return render(request, 'pages/member/member_profile.html')
 
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def admin_dashboard(request):
     return render(request, 'pages/a_Dashboard.html')
 
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_super)
 def superadmin_dashboard(request):
     return render(request, 'pages/sa_Dashboard.html')

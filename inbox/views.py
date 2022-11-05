@@ -6,9 +6,11 @@ from .forms import SentMessage
 from django.contrib import messages
 from .models import Sent
 from accounts.utils import send_verfication_email, send_sms, detectUser
+from django.views.decorators.cache import cache_control
 
 # Create your views here.
 @login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def sent_message(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':

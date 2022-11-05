@@ -6,9 +6,11 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from accounts.forms import UserForm, MemberForm, UserManagementForm, UserUpdateForm, ProfileMgmtUpdateForm, UserUpdateManagementForm
 from incidentreport.models import IncidentGeneral
+from django.views.decorators.cache import cache_control
 
 # Create your views here.
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def admin_profile(request):
     profile = get_object_or_404(UserProfile, user=request.user)
@@ -22,6 +24,7 @@ def admin_profile(request):
     return render(request, 'pages/admin/admin_profile.html', context)
 
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def admin_profile_pending(request):
     profile = get_object_or_404(UserProfile, user=request.user)
@@ -35,6 +38,7 @@ def admin_profile_pending(request):
     return render(request, 'pages/admin/admin_profile.html', context)
 
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def admin_profile_approved(request):
     profile = get_object_or_404(UserProfile, user=request.user)
@@ -48,6 +52,7 @@ def admin_profile_approved(request):
     return render(request, 'pages/admin/admin_profile.html', context)
 
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def admin_profile_rejected(request):
     profile = get_object_or_404(UserProfile, user=request.user)
@@ -62,6 +67,7 @@ def admin_profile_rejected(request):
 
 
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def admin_profile_edit(request):
     user = User.objects.get(username = request.user.username)
@@ -101,6 +107,7 @@ def admin_profile_edit(request):
 
 
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def admin_user_account(request):
     form = UserManagementForm(request.POST)
@@ -125,6 +132,7 @@ def admin_user_account(request):
     return render(request, 'pages/admin/admin_user_account.html', context)
 
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def admin_user_account_member(request):
     user = User.objects.filter(role = 1).order_by('-last_login')
@@ -149,6 +157,7 @@ def admin_user_account_member(request):
     return render(request, 'pages/admin/admin_user_account.html', context)
 
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def admin_user_account_admin(request):
     user = User.objects.filter(role = 2).order_by('-last_login')
@@ -173,6 +182,7 @@ def admin_user_account_admin(request):
     return render(request, 'pages/admin/admin_user_account.html', context)
 
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def admin_user_account_superadmin(request):
     user = User.objects.filter(role = 3).order_by('-last_login')
@@ -197,6 +207,7 @@ def admin_user_account_superadmin(request):
 
 
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def admin_user_account_view(request, id):
     user = get_object_or_404(User, pk=id)
@@ -256,6 +267,7 @@ def admin_user_account_edit(request, id=None):
     return render(request, 'pages/admin/admin_user_account_edit.html', context)
 
 @login_required(login_url = 'login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def admin_user_account_delete(request, id=None):
     user = User.objects.get(pk=id)

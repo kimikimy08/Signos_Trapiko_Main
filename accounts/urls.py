@@ -14,4 +14,6 @@ urlpatterns = [
     path('reset_validate/<uidb64>/<token>/', views.reset_validate, name='reset_validate'),
     path('reset_password/', views.reset_password, name='reset_password'),
     
+    # path('autologout/', views.AutoLogoutUser, name='autologout'),
+    
 ]

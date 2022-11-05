@@ -18,6 +18,7 @@ import os
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_admin, check_role_super, check_role_member, check_role_super_admin
 from generate_report.models import GenerateReport
+from django.views.decorators.cache import cache_control
 
 # Create your views here.
 @login_required(login_url='login')
@@ -387,6 +388,7 @@ def generate_reports(request):
 #     return None
 
 @login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_super)
 def GenerateInvoiceAccident(request):
     try:
@@ -437,6 +439,7 @@ def GenerateInvoiceAccident(request):
     return render(request, 'pages/generate_report_sa.html')
 
 @login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_super)
 def GenerateInvoiceCollision(request):
     try:
@@ -485,6 +488,7 @@ def GenerateInvoiceCollision(request):
     return render(request, 'pages/generate_report_sa.html')
 
 @login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_super)
 def GenerateInvoiceVehicle(request):
     try:
@@ -526,6 +530,7 @@ def GenerateInvoiceVehicle(request):
     return render(request, 'pages/generate_report_sa.html')
 
 @login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def generate_report(request):
     return render(request, 'pages/generate_report_a.html')
@@ -892,6 +897,7 @@ def render_to_pdf(template_src, context_dict={}):
     return None
 
 @login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def A_GenerateInvoiceAccident(request):
     try:
@@ -936,6 +942,7 @@ def A_GenerateInvoiceAccident(request):
     return render(request, 'pages/generate_report_a.html')
 
 @login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def A_GenerateInvoiceCollision(request):
     try:
@@ -981,6 +988,7 @@ def A_GenerateInvoiceCollision(request):
     return render(request, 'pages/generate_report_a.html')
 
 @login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
 def A_GenerateInvoiceVehicle(request):
     try:
