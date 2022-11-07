@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'incidentreport',
     'generate_report',
     'dashboard',
+    'inbox'
     # 'livereload'
     
 ]
