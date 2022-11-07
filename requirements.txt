@@ -13,7 +13,15 @@ django-heroku==0.3.1
 django-import-export==2.9.0
 django-js-asset==2.0.0
 django-multiselectfield==0.1.12
+django-storages==1.13.1
 folium==0.13.0
+google-api-core==2.10.2
+google-auth==2.14.0
+google-cloud-core==2.3.2
+google-cloud-storage==2.5.0
+google-crc32c==1.5.0
+google-resumable-media==2.4.0
+googleapis-common-protos==1.56.4
 gunicorn==20.1.0
 idna==2.10
 matplotlib==3.5.2

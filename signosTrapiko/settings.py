@@ -23,6 +23,20 @@ TEMPLATE_DIR = Path(BASE_DIR, "templates")
 # remove
 # STATIC_DIR = Path(BASE_DIR, "static")
 
+from google.oauth2 import service_account
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    os.path.join(BASE_DIR, 'credentials.json')
+)
+
+###configuration for media file storing and reriving media file from gcloud 
+DEFAULT_FILE_STORAGE='signosTrapiko.gcloud.GoogleCloudMediaFileStorage'
+GS_PROJECT_ID = 'signostrapiko-364212'
+GS_BUCKET_NAME = 'signos_trapiko'
+MEDIA_ROOT = "media/"
+UPLOAD_ROOT = 'media/uploads/'
+MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_BUCKET_NAME)
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -178,8 +192,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # ]
 # STATIC_ROOT = Path(BASE_DIR, 'staticfiles')
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = Path(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = Path(BASE_DIR, 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

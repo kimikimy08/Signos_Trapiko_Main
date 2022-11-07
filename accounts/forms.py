@@ -327,9 +327,10 @@ class UserUpdateManagementForm(forms.ModelForm):
 
 class ProfileMgmtUpdateForm(forms.ModelForm):
     birthdate = forms.DateField(widget=DateInput(attrs={'class': 'form-control ', }))
+    profile_picture = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control p-1'} ) )
     class Meta:
         model = UserProfile
-        fields = ['birthdate']
+        fields = ['birthdate', 'profile_picture']
     
     def __init__(self, *args, **kwargs):
         super(ProfileMgmtUpdateForm, self).__init__(*args, **kwargs)
@@ -340,6 +341,7 @@ class ProfileMgmtUpdateForm(forms.ModelForm):
 
 class ProfileMgmtUpdateFormEdit(forms.ModelForm):
     birthdate = forms.DateField(widget=DateInput(attrs={'class': 'form-control ', }))
+    upload_id = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control p-1'} ) )
     class Meta:
         model = UserProfile
         fields = ['birthdate']

@@ -8,7 +8,6 @@ from accounts.forms import UserForm, MemberForm, UserManagementForm, UserUpdateM
 from accounts.utils import send_verfication_email, send_sms, detectUser
 from django.urls import reverse
 from django.core.paginator import Paginator
-
 from incidentreport.models import IncidentGeneral
 
 # Create your views here.
