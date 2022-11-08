@@ -20,6 +20,8 @@
     <body oncontextmenu="return false">
 
       
+  {% block auto-logout %}
+  {% endblock auto-logout %}  
 
        <section class="h-100 gradient-form">
           <div class="container py-5 h-100">
@@ -131,6 +133,33 @@
         
     </body>
 
+  <!-- include Modal -->
+  {% include 'modals/logout.html' %}
+  {% include 'modals/logout_info.html' %}
+  {% include 'modals/logout_warning.html' %}
 
+  <!-- include messages from backend(login) -->
+{% if form.errors %}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    swal("Denied !", "Enter your data correctly", "info")
+</script>
+{% endif %}
+  
+  <!-- Auto logout-->
+  {% for message in messages %}
+          {% if message.tags == 'info' %}
+          <script
+    src="https://code.jquery.com/jquery-3.6.1.min.js"
+    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+    crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+            $('#infoModal').modal('show');
+        });
+    </script>
+          {% endif %}
+  {% endfor %}
+  
 
 </html>

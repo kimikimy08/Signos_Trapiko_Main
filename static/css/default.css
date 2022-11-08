@@ -314,3 +314,21 @@ footer {
     text-align: right;
 }
 /* ========== END OF MAIN CONTENT */
+
+
+.btn-modal{
+    width: 70px;
+
+}
+
+.note-warning {
+    font-size: 12px;
+}
+
+#btn-30min, #btn-ok-logout {
+    width: 80px;
+}
+
+.note-info {
+    font-size: 13px;
+}

@@ -28,6 +28,7 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   
 
+
     <!-- Default CSS -->
    <link href="{% static 'css/vendor/bootstrap.min.css' %} " rel="stylesheet">
     <link href="{% static 'css/vendor/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
@@ -38,6 +39,9 @@
     {% block styles %}
 
     {% endblock styles %}
+
+    <!-- Script to close offcanvas when the button is clicked -->
+    
 
    {% comment %} <!-- Default CSS -->
     <link href="{% static 'css/vendor/bootstrap.min.css' %} " rel="stylesheet">
@@ -116,8 +120,83 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     
 
-    
+    <script>
+        jQuery(#offcanvasRight, .offcanvas-body a).click(function(){
+            console.log($(this).attr('href'));
+            jQuery('.offcanvas').offcanvas('hide');
+        });
+    </script>
 
 </body>
 
+<!-- Footer  -->
+<footer>
+    <div class="text-center p-3"> Copyright &copy 2022-2023, QC-TFTTM. All Rights Reserved. </div>
+</footer>
+<!-- End of Footer  -->
+
+
+</div>
+<!-- End of Content Wrapper  -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+{% block auto-logout %}
+<!-- Button to call 'logout warning' -->
+<button id="warning" class="btn" data-toggle="modal" data-target="#warningModal" style="display: none;"></button>
+<!-- Auto Logout button Hidden(informative after auto logout) -->
+<a id="info" href="/accounts/autologout" class="btn" style="display:none;"></a>
+{% endblock auto-logout %}
+
+<!-- include Modal -->
+{% include 'modals/logout.html' %}
+{% include 'modals/logout_info.html' %}
+{% include 'modals/logout_warning.html' %}
+
+
+
+<!-- include messages from backend(success) -->
+{% for message in messages %}
+    {% if message.tags == 'success' %}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        var m = "{{ message }}";
+        swal("Perfect !", m, "success")
+    </script>
+    {% elif message.tags == 'danger' %}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        var m = "{{ message }}";
+        swal("Error", m, "error")
+    </script>
+    {% elif message.tags == 'warning' %}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        var m = "{{ message }}";
+        swal("Warning", m, "warning")
+    </script>
+    {% endif %} 
+{% endfor %}
+
+
+<!-- Auto logout-->
+{% for message in messages %}
+        {% if message.tags == 'info' %}
+        <script
+  src="https://code.jquery.com/jquery-3.6.1.min.js"
+  integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+  crossorigin="anonymous"></script>
+  <script>
+      $(document).ready(function(){
+          $('#infoModal').modal('show');
+      });
+  </script>
+        {% endif %}
+{% endfor %}
+
+
 </html>
+
+
+

@@ -141,7 +141,7 @@
                                             <td>
                                                 <a href="{% url 'super_user_account_view' users.id  %}"><i class='bx bxs-folder-open'
                                                     title="View"></i></a>
-                                                    <a href="#" data-toggle="modal" data-target="#deleteuserModal{{ users.id }}"><i class='bx bx-trash'
+                                                    <a href="#" data-toggle="modal" data-target="#deleteModal{{ users.id }}"><i class='bx bx-trash'
                                                         data-toggle="tooltip" title="Delete" ></i></a>
                                                         
                                             </td>
@@ -169,8 +169,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                         <!-- Delete Modal HTML -->
-                                <div class="modal fade" id="deleteuserModal{{ users.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
+                                         <!-- Modal Delete Confirmation  -->
+                                        {% include 'modals/delete.html' %}
+
+                                {% comment %} <div class="modal fade" id="deleteuserModal{{ users.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -192,7 +194,7 @@
                                                 </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> {% endcomment %}
                                 
                                        {% endfor %}
                                     </tbody>
@@ -280,7 +282,7 @@
 
 
 
-            {% include 'includes/alerts_frame.html' %}
+            {% comment %} {% include 'includes/alerts_frame.html' %} {% endcomment %}
 
             {% endblock %}
 

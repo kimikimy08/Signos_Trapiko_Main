@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
@@ -172,11 +173,22 @@ class User(AbstractBaseUser, SoftDeleteModel):
             user_status = 'Deactivated'
         return user_status
 
+def user_directory_path(instance, filename):
+    date1=datetime.now()
+    filename = date1.strftime("%Y_%m_%d_%H_%M_%S_%f")
+    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename>
+    return 'user_{0}/{1}/profile'.format(instance.user.id, filename)
+
+def user_directory_path_id(instance, filename):
+    date1=datetime.now()
+    filename = date1.strftime("%Y_%m_%d_%H_%M_%S_%f")
+    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename>
+    return 'user_{0}/{1}/id'.format(instance.user.id, filename)
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     birthdate = models.DateField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='users/profile_pictures')
-    upload_id = models.ImageField(upload_to='member/id')
+    profile_picture = models.ImageField(upload_to=user_directory_path)
+    upload_id = models.ImageField(upload_to=user_directory_path_id)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

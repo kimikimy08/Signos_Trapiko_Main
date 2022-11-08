@@ -313,7 +313,7 @@ def super_user_account_delete(request, id):
         user.status = 2
         user.is_active = 'False'
         user.soft_delete()
-        
+        messages.success(request, 'User successfully deleted')
         return redirect('super_user_account')
     else:
         messages.error(request, 'Unable to Delete Super Admin')

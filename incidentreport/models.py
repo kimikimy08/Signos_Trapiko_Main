@@ -11,7 +11,16 @@ from django.contrib.gis.db import models as gismodels
 from django.contrib.gis.geos import Point
 from accounts.managers import SoftDeleteManager
 from django.utils import timezone
+from django.core.files.storage import default_storage as storage
+from io import BytesIO
+from django.core.files.base import ContentFile
+from datetime import datetime
 
+def user_directory_path_incimage(instance, filename):
+    date1=datetime.now()
+    filename = date1.strftime("%Y_%m_%d_%H_%M_%S_%f")
+    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename>
+    return 'user_{0}/{1}/incident_report/image'.format(instance.user.id, filename)
 
 class SoftDeleteModel(models.Model):
     is_deleted = models.BooleanField(default=False)
@@ -115,7 +124,7 @@ class IncidentGeneral(SoftDeleteModel):
     latitude = models.FloatField(max_length=20, blank=True, null=True)
     longitude = models.FloatField(max_length=20, blank=True, null=True)
     geo_location = gismodels.PointField(blank=True, null=True, srid=4326) # New field
-    upload_photovideo = models.FileField(upload_to='incident_report/image', blank=True, null=True)
+    upload_photovideo = models.FileField(upload_to=user_directory_path_incimage, blank=True, null=True)
     date = models.DateField(auto_now_add=False, auto_now=False, blank=True, null=True)
     time = models.TimeField(auto_now_add=False, auto_now=False, blank=True, null=True)
     status = models.PositiveSmallIntegerField(choices=STATUS, blank=True, null=True)
@@ -141,16 +150,42 @@ class IncidentGeneral(SoftDeleteModel):
     
     def save(self, *args, **kwargs):
         super(IncidentGeneral, self).save(*args, **kwargs)
-        if self.upload_photovideo:
-            if  ".jpg" in self.upload_photovideo.url or ".png" in self.upload_photovideo.url:
-             #check if image exists before resize
-                img = Image.open(self.upload_photovideo.path)
+        # if self.upload_photovideo:
+        #     if  ".jpg" in self.upload_photovideo.url or ".png" in self.upload_photovideo.url:
+        #      #check if image exists before resize
+        #         img = Image.open(self.upload_photovideo.path)
 
-                if img.height > 1080 or img.width > 1920:
-                    new_height = 720
-                    new_width = int(new_height / img.height * img.width)
-                    img = img.resize((new_width, new_height))
-                    img.save(self.upload_photovideo.path)
+        #         if img.height > 1080 or img.width > 1920:
+        #             new_height = 720
+        #             new_width = int(new_height / img.height * img.width)
+        #             img = img.resize((new_width, new_height))
+        #             img.save(self.upload_photovideo.path)
+        # image_read = storage.open(self.upload_photovideo.name, "r")
+        # image = Image.open(image_read)
+        # if image.height > 200 or image.width > 200:
+        #     size = 200, 200
+            
+        #     # Create a buffer to hold the bytes
+        #     imageBuffer = BytesIO()
+
+        #     # Resize  
+        #     image.thumbnail(size, Image.ANTIALIAS)
+
+        #     # Save the image as jpeg to the buffer
+        #     image.save(imageBuffer, image.format)
+
+        #     # Check whether it is resized
+        #     image.show()
+
+        #     # Save the modified image
+        #     user = User.objects.get(pk=self.pk)
+        #     user.upload_photovideo.save(self.profile_image.name, ContentFile(imageBuffer.getvalue()))
+
+        #     image_read = storage.open(user.profile_image.name, "r")
+        #     image = Image.open(image_read)
+        #     image.show()
+
+        #     image_read.close()
 
         if self.latitude and self.longitude:
             self.geo_location = Point(float(self.longitude), float(self.latitude))

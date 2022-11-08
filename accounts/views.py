@@ -194,11 +194,11 @@ def logout(request):
     messages.info(request, "You are logged out.")
     return redirect('login')
 
-# def AutoLogoutUse(request):
-#     logout(request)
-#     request.user = None
-#     messages.info(request, ".")
-#     return HttpResponseRedirect('/')
+def AutoLogoutUser(request):
+    logout(request)
+    request.user = None
+    messages.info(request, ".")
+    return HttpResponseRedirect('/')
 
 @login_required(login_url = 'login')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

@@ -2461,7 +2461,7 @@ def simple_upload(request):
             data = request.FILES['myfile']
             
             if not data.name.endswith('.csv'):
-                messages.warning(request, 'The wrong file type was uploaded')
+                messages.warning(request, 'Wrong file type was uploaded')
                 return redirect('user_reports')
             else: 
                 data = pd.read_csv(data, header=0, encoding="UTF-8", na_values=[' '])
