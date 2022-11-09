@@ -86,7 +86,7 @@
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
                                                     <label for="inputEmail4">Date</label>
-                                                    {{form.date}}
+                                                    {{form.date }}
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="inputPassword4">Time</label>
@@ -142,25 +142,16 @@
                                             </div>
 
                                             <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputAccident">Accident Factor</label>
+                                                <div class="form-group col-md-12">
+                                                    <label for="inputAccident" class="required-field">Accident Factor</label>
                                                     {{form_general.accident_factor}}
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputAccident">Accident Factor Sub Category</label>
-                                                    {{form_general.accident_subcategory}}
                                                 </div>
                                             </div>
                                             
                                             <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputCollision">Collision Type</label>
+                                                <div class="form-group col-md-12">
+                                                    <label for="inputCollision" class="required-field">Collision Type</label>
                                                     {{form_general.collision_type}}
-                                                </div>
-
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputCollision">Collision Sub Category</label>
-                                                    {{form_general.collision_subcategory}}
                                                 </div>
                                             </div>
                                             

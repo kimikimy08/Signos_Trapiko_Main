@@ -15,7 +15,7 @@
     <div class="sidebar-heading">Analytics</div>
 
     <!-- Dashboard -->
-    <li class="nav-item">
+    <li class="{% if '/adashboard/' == request.path %} nav-item active {% else %} nav-item {% endif %}">
         <a class="nav-link" href="{% url 'admin_dashboard' %}">
             <i class="bx bx-grid-alt"></i>
             <span class="">Dashboard</span></a>
@@ -28,35 +28,36 @@
     <div class="sidebar-heading">Manage</div>
 
     <!-- Reports -->
-    <li class="nav-item">
+
+
+    <li class="nav-item" id="showReports">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReports"
             aria-expanded="true" aria-controls="collapseReports">
             <i class="bx bx-collection"></i>
             <span>Reports</span>
         </a>
         <!-- Reports Sub-Menu  -->
-        <div id="collapseReports" class="collapse" data-parent="#accordionSidebar">
+        <div id="collapseReports" class="collapse show" data-parent="#accordionSidebar" data-bs-parent="#showReports">
             <div class="bg-white py-2 collapse-inner">
                 <a class="{% if '/userReport/' == request.path %} collapse-item active {% else %} collapse-item{% endif %} " href="{% url 'user_report' %}">
                     <i class='bx bx-user-voice'></i>
                     <span>User Report</span></a>
-                    <a class="collapse-item" href="{% url 'a_incidentreports' %}">
-                        <i class='bx bxs-car-crash'></i>
-                        <span>Incident Report</span></a>
-                <a class="collapse-item" href="{% url 'generate_report' %}">
+                <a class="{% if '/incidentreport/' == request.path %} collapse-item active {% else %} collapse-item{% endif %}" href="{% url 'a_incidentreports' %}">
+                    <i class='bx bxs-car-crash'></i>
+                    <span>Incident Report</span></a>
+                <a class="{% if '/generate_report/' == request.path %} collapse-item active {% else %} collapse-item{% endif %}" href="{% url 'generate_report' %}">
                     <i class='bx bxs-file-pdf'></i>
                     <span>Generate Report</span></a>
-                    <a class="collapse-item" href="{% url 'a_template' %}">
+                    <a class="{% if '/incidentReport/template/' == request.path %} collapse-item active {% else %} collapse-item{% endif %}" href="{% url 'a_template' %}">
                         <i class='bx bxs-file-pdf'></i>
                         <span>Download Template</span></a>
             </div>
         </div>
-        
     </li>
 
 
     <!-- User Accounts-->
-    <li class="{% if '/userAccount/' == request.path %} nav-item active {% else %} nav-item {% endif %} ">
+    <li class="{% if '/admins/userAccount/' == request.path %} nav-item active {% else %} nav-item {% endif %}">
         <a class="nav-link" href="{% url 'admin_user_account' %}">
             <i class='bx bxs-user-detail'></i>
             <span class="">User Accounts</span></a>
@@ -71,13 +72,13 @@
         <!-- Reports Sub-Menu  -->
         <div id="collapseAttributes" class="collapse show" data-parent="#accordionSidebar" data-bs-parent="#showAttributes">
             <div class="bg-white py-2 collapse-inner">
-                <a class="{% if '/userReports/' == request.path %} collapse-item active {% else %} collapse-item{% endif %} " href="{% url 'attributes_builder_accident_admin' %}">
+                <a class="{% if '/attributes_builder/accident_factor/' == request.path %} collapse-item active {% else %} collapse-item{% endif %}" href="{% url 'attributes_builder_accident_admin' %}">
                     <i class='bx bx-user-voice'></i>
                     <span>Accident Factor</span></a>
-                <a class="collapse-item" href="{% url 'attributes_builder_collision_admin' %}">
+                <a class="{% if '/attributes_builder/collision_type/' == request.path %} collapse-item active {% else %} collapse-item{% endif %}" href="{% url 'attributes_builder_collision_admin' %}">
                     <i class='bx bxs-car-crash'></i>
                     <span>Collision Type</span></a>
-                <a class="collapse-item" href="{% url 'attributes_builder_crash_admin' %}">
+                <a class="{% if '/attributes_builder/crash/' == request.path %} collapse-item active {% else %} collapse-item{% endif %}" href="{% url 'attributes_builder_crash_admin' %}">
                     <i class='bx bxs-file-pdf'></i>
                     <span>Crash Type</span></a>
             </div>
@@ -94,19 +95,19 @@
     </div>
 
     <!-- My Profile-->
-    <li class="{% if '/admins/profile' == request.path %} nav-item active {% else %} nav-item {% endif %}">
+    <li class="{% if '/admins/profile/' == request.path %} nav-item active {% else %} nav-item {% endif %}">
         <a class="nav-link" href="{% url 'admin_profile' %}">
             <i class='bx bx-user'></i>
             <span class="">My Profile</span></a>
     </li>
 
      <!-- Inbox -->
-     {% comment %} <li class="nav-item">
-        <a class="nav-link" href="#">
+    <li class="{% if '/inbox/sent_message/' == request.path %} nav-item active {% else %} nav-item {% endif %}">
+        <a class="nav-link" href="{% url 'a_sent_message' %}">
             <i class="fa-solid fa-inbox"></i>
             <span class="">Inbox</span></a>
     </li>
-
+ {% comment %} 
     <!-- Settings  -->
     <li class="nav-item">
         <a class="nav-link" href="#">

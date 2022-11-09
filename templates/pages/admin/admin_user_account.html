@@ -8,7 +8,6 @@
 <link href="{% static 'css/m_reports.css' %}" rel="stylesheet">
 
 
-
 {% endblock styles %}
 
 {% block content %}
@@ -25,6 +24,16 @@
             <div id="content">
 
                 {% include 'includes/navbar.html' %}
+                <!-- Breadcrumb  -->
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-white border mb-4 shadow rounded-0">
+                        <li class="breadcrumb-item">Manage</li>
+                        <li class="breadcrumb-item">User Accounts</li>
+                        <!-- <li class="breadcrumb-item active"><a href="#">Page</a></li> -->
+                        <li class="breadcrumb-item active" aria-current="page">All Users</li>
+                    </ol>
+                </nav>
+                <!-- End of Breadcrumb  -->
 
 
 
@@ -38,6 +47,15 @@
                         <div class="pg-title p-2 flex-grow-1 bd-highlight">
                             <h4>User Account Management</h4>
                         </div>
+                        <div class="p-2 bd-highlight">
+                            <a href="{% url 'super_user_account_add' %}" title ="Add User"
+                                class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight">
+                                <i class='bx bx-user-plus'></i> Add User</a>
+                            <!-- <a href="#add2"
+                                class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight"
+                                data-toggle="modal" data-toggle="tooltip">
+                                <i class='bx bx-user-plus'></i> Add User</a> -->
+                        </div>
                     </div>
 
                     <!-- User Report Table  -->
@@ -46,30 +64,31 @@
                         <div class="card-header py-3">
                             <ul class="nav nav-pills card-header-pills">
                                 <li class="nav-item">
-                                    <a class="{% if '/admins/userAccount/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account' %}">All Users</a>
+                                    <a class="{% if '/admins/userAccount' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account' %}">All Users</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="{% if '/admins/userAccount/member/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account_member' %}">Members</a>
+                                    <a class="{% if '/admins/userAccount/member' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account_member' %}">Members</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="{% if '/admins/userAccount/admin/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account_admin' %}">Admin</a>
+                                    <a class="{% if '/admins/userAccount/admin' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account_admin' %}">Admin</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="{% if '/admins/userAccount/superadmin/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account_superadmin' %}">Super Admin</a>
+                                    <a class="{% if '/admins/userAccount/superadmin' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account_superadmin' %}">Super Admin</a>
                                 </li>
                             </ul>
                         </div>
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                <form id="form1" action="{% url 'admin_user_account' %}" enctype="multipart/form-data" method="post">
+                                <form id="form1" action="{% url 'super_user_account' %}" enctype="multipart/form-data" method="post">
                                     {% csrf_token %}
                                     
                                     {% if page_obj %}
                                     <div class="modal-footer">
-                                 
-                                            <input type="submit" class="btn btn-sm btn-danger" value="Bulk Delete">
-                                        </div>
+                                        <a href="{% url 'a_recycle_bin_user'%}" title ="Recycle Bin"
+                            class="btn btn-sm btn-success">Recycle Bin</a>
+                                        <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#bulkdeleteModal">Bulk Delete</a>
+                                    </div>
                                 <table class="table table-bordered table-hover text-dark" id="user_report" width="100%"
                                     style="cursor: pointer;" cellspacing="0">
 
@@ -84,6 +103,7 @@
                                             <th>Role</th>
                                             <th>Created Date</th>
                                             <th>Modified Date</th>
+                                            <th>Last Login Date</th>
                                             <th>Status</th>
                                             <th>Settings</th>
                                         </tr>
@@ -94,7 +114,14 @@
                                         {% for users in page_obj %}
                 
                                         <tr>
-                                            <td><input type="checkbox" name="{{users.id}}" id="check"></td>
+                                            {% if users.role == 2 or users.role == 3 %}
+                                        <td>
+                                            {% comment %} <input type="checkbox" name="{{incident.id}}" id="check" disabled> {% endcomment %}
+                                        </td>
+                                        {% else %}
+                                        <td><input type="checkbox" name="{{users.id}}" id="check"></td>
+                                        {% endif %}
+                                            
                                             <td>{{users.username}}</td>
                                             <td>{{users.first_name}}</td>
                                             <td>{{users.middle_name}}</td>
@@ -102,6 +129,7 @@
                                             <td>{% if users.role %}{{users.get_role}}{% endif %}</td>
                                             <td>{{users.created_at}}</td>
                                             <td>{{users.updated_at}}</td>
+                                            <td>{{users.last_login}}</td>
                                             <td>
                                                 {% if users.status == 1 %}
                                                 <button type="button"
@@ -113,19 +141,23 @@
                                                 <button type="button"
                                                     class="btn btn-secondary rounded-pill">{{users.get_status}}</button>
                                                 {% endif %}
+
+                                               
                                               
                                             </td>
                                             <td>
-                                                <a href="{% url 'admin_user_account_view' users.id  %}"><i class='bx bxs-folder-open'
+                                                <a href="{% url 'super_user_account_view' users.id  %}"><i class='bx bxs-folder-open'
                                                     title="View"></i></a>
-                       
-                                                        <a href="#" data-toggle="modal" data-target="#deleteuserModal{{ users.id }}"><i class='bx bx-trash'
-                                                            data-toggle="tooltip" title="Delete" ></i></a>
+                                                    <a href="#" data-toggle="modal" data-target="#deleteModal{{ users.id }}"><i class='bx bx-trash'
+                                                        data-toggle="tooltip" title="Delete" ></i></a>
+                                                        
                                             </td>
                                         </tr>
+                     
+                                         <!-- Modal Delete Confirmation  -->
+                                        {% include 'modals/delete.html' %}
 
-                                         <!-- Delete Modal HTML -->
-                                <div class="modal fade" id="deleteuserModal{{ users.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
+                                {% comment %} <div class="modal fade" id="deleteuserModal{{ users.id }}" tabindex="-1" role="dialog" aria-labelledby="usermodal" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -142,12 +174,15 @@
                                                 
                                     
                                         
-                                                    <a class="btn btn-sm btn-danger" href="{% url 'admin_user_account_delete' users.id %}">Delete</a>
+                                                    <a class="btn btn-sm btn-danger" href="{% url 'super_user_account_delete' users.id %}">Delete</a>
                                             
                                                 </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> {% endcomment %}
+
+                                                                <!-- BULK Delete Modal HTML -->
+{% include 'modals/bulkdelete.html' %}   
                                 
                                        {% endfor %}
                                     </tbody>
@@ -157,6 +192,8 @@
                                 {% else %}
 
                                 <h5 class="text-center">No User Added.</h5>
+
+                                
                                      
                                 {% endif %}
                             </form>
@@ -164,64 +201,67 @@
                         </div>
                     </div>
                     <!-- End of User Report Table  -->
+                   
 
+         <!--Pagination-->
+         {% if page_obj %}
+         <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+              </li>
+            {% else %}
+                <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+              </li>
+            {% endif %}
+    
+            {% if page_obj.number|add:'-4' > 1 %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+    
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li class="page-item active" aria-current="page">
+                  <span class="page-link">
+                    {{ i }}
+                    <span class="sr-only">(current)</span>
+                  </span>
+                </li>
+                {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %}
+                     <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+    
+            {% if page_obj.paginator.num_pages > page_obj.number|add:'4' %}
+               <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'5' }}">&hellip;</a></li>
+            {% endif %}
+    
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+              </li>
+            {% else %}
+                <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+        <!--end of Pagination-->
+
+                </div>
                 <!-- End of Page Content -->
 
                 <!-- ===== END OF CONTENT  ===== -->
 
 
-            
+            </div>
             <!-- End of Main Content  -->
 
-            {% if page_obj %}
-            <nav aria-label="Page navigation example">
-               <ul class="pagination justify-content-center">
-               {% if page_obj.has_previous %}
-                   <li class="page-item">
-                   <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                 </li>
-               {% else %}
-                   <li class="page-item disabled">
-                   <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
-                 </li>
-               {% endif %}
-       
-               {% if page_obj.number|add:'-4' > 1 %}
-                   <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'-5' }}">&hellip;</a></li>
-               {% endif %}
-       
-               {% for i in page_obj.paginator.page_range %}
-                   {% if page_obj.number == i %}
-                       <li class="page-item active" aria-current="page">
-                     <span class="page-link">
-                       {{ i }}
-                       <span class="sr-only">(current)</span>
-                     </span>
-                   </li>
-                   {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %}
-                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-                   {% endif %}
-               {% endfor %}
-       
-               {% if page_obj.paginator.num_pages > page_obj.number|add:'4' %}
-                  <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'5' }}">&hellip;</a></li>
-               {% endif %}
-       
-               {% if page_obj.has_next %}
-                   <li class="page-item">
-                   <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                 </li>
-               {% else %}
-                   <li class="page-item disabled">
-                   <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
-                 </li>
-               {% endif %}
-             </ul>
-           </nav>
-           {% endif %}
 
-        </div>
-    </div>
             <!-- Scroll to Top-->
             <a class="scroll-to-top rounded" href="#scroll-up">
                 <i class='bx bxs-up-arrow'></i>
@@ -229,8 +269,8 @@
             <!-- End of Scroll to Top-->
 
 
-            {% comment %} {% include 'includes/alerts_frame.html' %} {% endcomment %}
 
+            {% comment %} {% include 'includes/alerts_frame.html' %} {% endcomment %}
 
             {% endblock %}
 

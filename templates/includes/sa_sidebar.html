@@ -18,7 +18,7 @@
     <div class="sidebar-heading">Analytics</div>
 
     <!-- Dashboard -->
-    <li class="nav-item">
+    <li class="{% if '/sdashboard/' == request.path %} nav-item active {% else %} nav-item {% endif %}">
         <a class="nav-link" href="{% url 'superadmin_dashboard' %}">
             <i class="bx bx-grid-alt"></i>
             <span class="">Dashboard</span></a>
@@ -43,13 +43,13 @@
                 <a class="{% if '/userReports/' == request.path %} collapse-item active {% else %} collapse-item{% endif %} " href="{% url 'user_reports' %}">
                     <i class='bx bx-user-voice'></i>
                     <span>User Report</span></a>
-                <a class="collapse-item" href="{% url 'sa_incidentreports' %}">
+                <a class="{% if '/incidentreports/' == request.path %} collapse-item active {% else %} collapse-item{% endif %}" href="{% url 'sa_incidentreports' %}">
                     <i class='bx bxs-car-crash'></i>
                     <span>Incident Report</span></a>
-                <a class="collapse-item" href="{% url 'generate_reports' %}">
+                <a class="{% if '/generate_reports/' == request.path %} collapse-item active {% else %} collapse-item{% endif %}" href="{% url 'generate_reports' %}">
                     <i class='bx bxs-file-pdf'></i>
                     <span>Generate Report</span></a>
-                    <a class="collapse-item" href="{% url 'sa_template' %}">
+                    <a class="{% if '/incidentReports/template/' == request.path %} collapse-item active {% else %} collapse-item{% endif %}" href="{% url 'sa_template' %}">
                         <i class='bx bxs-file-pdf'></i>
                         <span>Download Template</span></a>
             </div>
@@ -57,7 +57,7 @@
     </li>
 
     <!-- User Accounts-->
-    <li class="{% if '/userAccounts/' == request.path %} nav-item active {% else %} nav-item {% endif %}">
+    <li class="{% if '/superadmin/userAccounts/' == request.path %} nav-item active {% else %} nav-item {% endif %}">
         <a class="nav-link" href="{% url 'super_user_account' %}">
             <i class='bx bxs-user-detail'></i>
             <span class="">User Accounts</span></a>
@@ -71,13 +71,13 @@
         <!-- Reports Sub-Menu  -->
         <div id="collapseAttributes" class="collapse show" data-parent="#accordionSidebar" data-bs-parent="#showAttributes">
             <div class="bg-white py-2 collapse-inner">
-                <a class="{% if '/userReports/' == request.path %} collapse-item active {% else %} collapse-item{% endif %} " href="{% url 'attributes_builder_accident' %}">
+                <a class="{% if '/attributes_builders/accident_factor/' == request.path %} collapse-item active {% else %} collapse-item{% endif %}" href="{% url 'attributes_builder_accident' %}">
                     <i class='bx bx-user-voice'></i>
                     <span>Accident Factor</span></a>
-                <a class="collapse-item" href="{% url 'attributes_builder_collision' %}">
+                <a class="{% if '/attributes_builders/collision_type/' == request.path %} collapse-item active {% else %} collapse-item{% endif %}" href="{% url 'attributes_builder_collision' %}">
                     <i class='bx bxs-car-crash'></i>
                     <span>Collision Type</span></a>
-                <a class="collapse-item" href="{% url 'attributes_builder_crash' %}">
+                <a class="{% if '/attributes_builders/crash/' == request.path %} collapse-item active {% else %} collapse-item{% endif %}" href="{% url 'attributes_builder_crash' %}">
                     <i class='bx bxs-file-pdf'></i>
                     <span>Crash Type</span></a>
             </div>
@@ -94,14 +94,14 @@
     </div>
 
     <!-- My Profile-->
-    <li class="{% if '/superadmin/profiles' == request.path %} nav-item active {% else %} nav-item {% endif %}">
+    <li class="{% if '/superadmin/profiles/' == request.path %} nav-item active {% else %} nav-item {% endif %}">
         <a class="nav-link" href="{% url 'super_profile' %}">
             <i class='bx bx-user'></i>
             <span class="">My Profile</span></a>
     </li>
 
      <!-- Inbox -->
-     <li class="nav-item">
+     <li class="{% if '/inbox/sent_messages/' == request.path %} nav-item active {% else %} nav-item {% endif %}">
         <a class="nav-link" href="{% url 'sent_message' %}">
             <i class="fa-solid fa-inbox"></i>
             <span class="">Inbox</span></a>

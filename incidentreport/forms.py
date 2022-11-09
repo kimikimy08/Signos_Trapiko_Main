@@ -312,6 +312,8 @@ class IncidentMediaForm(forms.ModelForm):
         super(IncidentMediaForm, self).__init__(*args, **kwargs)
         self.fields['media_description'].widget.attrs['class'] = 'form-control'
         self.fields['incident_upload_photovideo'].widget.attrs['class'] = 'form-control'
+        self.fields['media_description'].required = False
+        self.fields['incident_upload_photovideo'].required = False
 
 
 class IncidentRemarksForm(forms.ModelForm):
@@ -383,4 +385,58 @@ class CrashTypeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CrashTypeForm, self).__init__(*args, **kwargs)
         self.fields['crash_type'].widget.attrs['class'] = 'form-control'
+        
+        
+class IncidentGeneralForm_admin_super(forms.ModelForm):
+    upload_photovideo = forms.FileField(
+        widget=forms.FileInput(attrs={'class': 'form-control p-1'}), validators=[allow_only_images_video_validator])
+    time = forms.TimeField(widget=TimeInput(
+        attrs={'class': 'form-control'}), initial=datetime.datetime.now())
+    address = forms.CharField(widget=forms.TextInput(
+        attrs={'required': 'required', 'class': 'form-control'}))
+    description = forms.CharField(widget=forms.Textarea(
+        attrs={'area': '3', 'class': 'form-control'}))
+    
+    class Meta:
+        model = IncidentGeneral
+        fields = [ 'accident_factor', 'collision_type',  'crash_type', 'weather', 'light', 'severity', 'movement_code', 'description', 'upload_photovideo', 'address', 'country', 'state', 'city', 'pin_code', 'latitude', 'longitude', 'date', 'time', 'status']
+
+    def __init__(self, *args, **kwargs):
+        super(IncidentGeneralForm_admin_super, self).__init__(*args, **kwargs)
+        self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
+     
+        self.fields['collision_type'].widget.attrs['class'] = 'form-control'
+     
+        self.fields['weather'].widget.attrs['class'] = 'form-control'
+        self.fields['light'].widget.attrs['class'] = 'form-control'
+        self.fields['severity'].widget.attrs['class'] = 'form-control'
+        self.fields['crash_type'].widget.attrs['class'] = 'form-control'
+        self.fields['movement_code'].widget.attrs['class'] = 'form-control'
+        
+        
+        self.fields['date'].widget.attrs['class'] = 'form-control datepickstart'
+        self.fields['time'].widget.attrs['class'] = 'form-control'
+        self.fields['address'].widget.attrs['class'] = 'form-control'
+        self.fields['country'].widget.attrs['class'] = 'form-control'
+        self.fields['state'].widget.attrs['class'] = 'form-control'
+        self.fields['city'].widget.attrs['class'] = 'form-control'
+        self.fields['pin_code'].widget.attrs['class'] = 'form-control'
+        self.fields['latitude'].widget.attrs['class'] = 'form-control'
+        self.fields['longitude'].widget.attrs['class'] = 'form-control'
+        self.fields['description'].widget.attrs['class'] = 'form-control'
+        self.fields['status'].widget.attrs['class'] = 'form-control'
+        self.fields['date'].widget.attrs['autocomplete'] = 'off'
+        self.fields['date'].input_formats = settings.DATE_INPUT_FORMATS
+        self.fields['upload_photovideo'].required = False
+        
+        
+        for field in self.fields:
+            if field == 'latitude' or field == 'longitude' or field == 'city' or field == 'pin_code':
+                self.fields[field].widget.attrs['readonly'] = 'readonly'
+        
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['description'].required = False
+            self.fields['date'].widget.attrs['readonly'] = 'readonly'
+            self.fields['time'].widget.attrs['readonly'] = 'readonly'
 

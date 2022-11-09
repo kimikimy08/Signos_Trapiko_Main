@@ -79,6 +79,16 @@
                                 <div class="form-group col-md-12">
                                     <label class="required-field">Mobile Number</label>
                                     {{form.mobile_number}}
+                                    {% if form.mobile_number.errors %}
+                                      <ul class="error-list" style="font-size: 10px; padding-left: 0px; padding-right: 10px;">
+                                      
+                                        <li style="color:red">{{form.mobile_number.errors}}</li>
+                                      {% endif %}
+                                      {% if form.mobile_number.validation_messages %}
+                                        <li style="color:red">{{form.mobile_number.validation_messages}}</li>
+                                      
+                                    </ul>
+                                    {% endif %} 
                                 </div>
 
                             </div>
@@ -87,6 +97,13 @@
                                 <div class="form-group col-md-12">
                                     <label class="required-field">Username</label>
                                     {{form.username}}
+                                    {% if form.username.errors %}
+                                  <ul class="error-list" style="font-size: 10px; padding-left: 0px;">
+                                    
+                                      <li style="color:red">{{form.username.errors}}</li>
+                                    
+                                  </ul>
+                                  {% endif %}
                                 </div>
                             </div>
 
@@ -94,6 +111,13 @@
                                 <div class="form-group col-md-12">
                                     <label class="required-field">Email Address</label>
                                     {{form.email}}
+                                    {% if form.email.errors %}
+                                  <ul class="error-list" style="font-size: 10px; padding-left: 0px;">
+                                    
+                                      <li style="color:red">{{form.email.errors}}</li>
+                                  
+                                  </ul>
+                                  {% endif %}
                                 </div>
                             </div>
 
@@ -101,6 +125,13 @@
                                 <div class="form-group col-md-12">
                                     <label class="required-field">Password</label>
                                     {{form.password}}
+                                    {% if form.password.errors %}
+                                      <ul class="error-list" style="font-size: 10px; padding-left: 0px;">
+                                        
+                                            <li style="color:red">{{form.password.errors}}</li>
+                                          
+                                        </ul>
+                                    {% endif %}
                                 </div>
                             </div>
 
@@ -108,6 +139,13 @@
                                 <div class="form-group col-md-12">
                                     <label class="required-field">Confirm Password</label>
                                     {{form.confirm_password}}
+                                    {% if form.non_field_errors %}
+                                      <ul class="error-list" style="font-size: 10px; padding-left: 0px;">
+                  
+                                        <li style="color:red">{{form.non_field_errors}}</li>
+                                      
+                                      </ul>
+                                      {% endif %}
                                 </div>
                             </div>
 

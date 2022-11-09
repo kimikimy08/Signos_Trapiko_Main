@@ -35,7 +35,7 @@ def send_verfication_email(request, user, mail_subject, email_template):
     mail.content_subtype = "html"
     mail.send()
 
-def send_verfication_email(request, user, mail_subject, email_template, user_from):
+def send_verfication_email_inbox(request, user, mail_subject, email_template, user_from):
     from_email = settings.DEFAULT_FROM_EMAIL
     current_site = get_current_site(request)
     message = render_to_string(email_template, {

@@ -2,7 +2,7 @@ from django import forms
 from .models import User, UserProfile
 from django.core.validators import RegexValidator, MinLengthValidator
 from django.contrib.auth.hashers import make_password
-
+from django.contrib.auth.password_validation import validate_password
 
 class DateInput(forms.DateInput):
     input_type = 'date'
@@ -21,7 +21,7 @@ class UserForm(forms.ModelForm):
                             error_messages={'unique': ("Email already exists.")},)
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username', 'class': 'form-control'}),
                                error_messages={'unique': ("Username already exists.")},)
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}), validators=[validate_password])
     #password = forms.CharField(validators=[MinLengthValidator(8),RegexValidator('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])$', message="Password should be a combination of Alphabets and Numbers")], widget=forms.PasswordInput(attrs={'placeholder': '********', 'style': 'width: 460px; '}))
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password', 'class': 'form-control' }))
     class Meta:
@@ -104,7 +104,7 @@ class UserManagementForm(forms.ModelForm):
                             error_messages={'unique': ("Email already exists.")},)
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}),
                                error_messages={'unique': ("Username already exists.")},)
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control',}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control',}), validators=[validate_password])
     #password = forms.CharField(validators=[MinLengthValidator(8),RegexValidator('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])$', message="Password should be a combination of Alphabets and Numbers")], widget=forms.PasswordInput(attrs={'placeholder': '********', 'style': 'width: 460px; '}))
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '********', 'class': 'form-control', }))
     role = forms.CharField(widget=forms.Select(choices=ROLE_CHOICE, attrs={ 'class': 'form-control', }))
@@ -184,7 +184,7 @@ class UserManagementForm1(forms.ModelForm):
                             error_messages={'unique': ("Email already exists.")},)
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username', 'class': 'form-control'}),
                                error_messages={'unique': ("Username already exists.")},)
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}), validators=[validate_password])
     #password = forms.CharField(validators=[MinLengthValidator(8),RegexValidator('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])$', message="Password should be a combination of Alphabets and Numbers")], widget=forms.PasswordInput(attrs={'placeholder': '********', 'style': 'width: 460px; '}))
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password', 'class': 'form-control' }))
     role = forms.CharField(widget=forms.Select(choices=ROLE_CHOICE, attrs={ 'class': 'form-control', }))

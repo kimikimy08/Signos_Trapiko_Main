@@ -159,13 +159,17 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete this account?</h5>
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-trash-alt"></i>&nbsp;&nbsp; Delete Incident</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                     </button>
             </div>
-        <div class="modal-body">
-            <h6>Do you want to delete the selected record? This process cannot be undone.</h6>
+            <div class="modal-body text-center">
+                <div class="text-center text-danger"><i class="far fa-times-circle fa-5x mb-4 mt-2"></i></div>
+                <div class="text-center text-danger">
+                    <span>Do you want to delete this incident report?</span>
+                    {% comment %} <div class="text-dark mt-3 mb-2">Customer: <strong>{{users.username}}</strong></div> {% endcomment %}
+                </div>
         </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -180,31 +184,9 @@
 </div>
 
 
+
 <!-- BULK Delete Modal HTML -->
-<div class="modal fade" id="bulkdeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete this account?</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                    </button>
-            </div>
-        <div class="modal-body">
-            <h6>Do you want to delete the selected record? This process cannot be undone.</h6>
-        </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                
-    
-                <input type="submit" class="btn btn-sm btn-danger" value="Bulk Delete">
-                    {% comment %} <a class="btn btn-sm btn-danger" href="{% url 'my_report_delete' incident.id %}">Delete</a> {% endcomment %}
-            
-                </div>
-        </div>
-    </div>
-</div>
-                               
+{% include 'modals/bulkdelete.html' %}                   
 
                                 <!-- End of Modals  -->
                                {% endfor %}

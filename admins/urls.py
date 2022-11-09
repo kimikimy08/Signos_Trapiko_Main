@@ -24,4 +24,5 @@ urlpatterns = [
     path('userAccounts/view/<int:id>/', views.admin_user_account_view, name='admin_user_account_view'),
     path('userAccounts/edit/<int:id>/', views.admin_user_account_edit, name='admin_user_account_edit'),
     path('userAccounts/delete/<int:id>/', views.admin_user_account_delete, name='admin_user_account_delete'),
+    path('userAccounts/recycle_bin/', views.a_recycle_bin_user, name='a_recycle_bin_user'),
 ]
