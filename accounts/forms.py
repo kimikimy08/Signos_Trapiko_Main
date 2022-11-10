@@ -353,6 +353,21 @@ class ProfileMgmtUpdateFormEdit(forms.ModelForm):
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
             self.fields['birthdate'].widget.attrs['readonly'] = True
+            
+class ProfileMgmtUpdateFormEdit_1(forms.ModelForm):
+    birthdate = forms.DateField(widget=DateInput(attrs={'class': 'form-control ', }))
+    upload_id = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control p-1'} ) )
+    class Meta:
+        model = UserProfile
+        fields = ['birthdate', 'upload_id', 'profile_picture']
+    
+    def __init__(self, *args, **kwargs):
+        super(ProfileMgmtUpdateFormEdit, self).__init__(*args, **kwargs)
+        self.fields['birthdate'].required = False
+        self.fields['upload_id'].required = False
+        self.fields['profile_picture'].required = False
+        instance = getattr(self, 'instance', None)
+        
     
 
     

@@ -4,7 +4,7 @@ from accounts.models import UserProfile, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_super
 from django.contrib import messages
-from accounts.forms import UserForm, MemberForm, UserManagementForm, UserUpdateManagementForm, UserUpdateForm, ProfileMgmtUpdateForm, UserManagementForm1, ProfileMgmtUpdateFormEdit
+from accounts.forms import UserForm, MemberForm, UserManagementForm, UserUpdateManagementForm, UserUpdateForm, ProfileMgmtUpdateForm, UserManagementForm1, ProfileMgmtUpdateFormEdit, ProfileMgmtUpdateFormEdit_1
 from accounts.utils import send_verfication_email, send_sms, detectUser
 from django.urls import reverse
 from django.core.paginator import Paginator
@@ -71,7 +71,7 @@ def super_profile_edit(request):
     user = User.objects.get(username = request.user.username)
     profile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':
-        profile_form = ProfileMgmtUpdateFormEdit(request.POST  or None, request.FILES  or None, instance=profile)
+        profile_form = ProfileMgmtUpdateFormEdit_1(request.POST  or None, request.FILES  or None, instance=profile)
         user_form = UserUpdateForm(request.POST  or None, instance=request.user)
         if profile_form.is_valid() and user_form.is_valid():
             user_form.instance.username = request.user
@@ -92,7 +92,7 @@ def super_profile_edit(request):
             print(user_form.errors)
 
     else:
-        profile_form = ProfileMgmtUpdateFormEdit(instance=profile)
+        profile_form = ProfileMgmtUpdateFormEdit_1(instance=profile)
         user_form = UserUpdateForm(instance=request.user, initial={"email": user.email, 
                                                         "username": user.username})
     context = {
