@@ -91,6 +91,16 @@
                                      <div class="form-group col-md-6">
                                       <label for="inputmobile">Mobile Number</label>
                                       {{user_form.mobile_number}}
+                                      {% if user_form.mobile_number.errors %}
+                                      <ul class="error-list" style="font-size: 10px; padding-left: 0px; padding-right: 10px;">
+                                      
+                                        <li style="color:red">{{user_form.mobile_number.errors}}</li>
+                                      {% endif %}
+                                      {% if user_form.mobile_number.validation_messages %}
+                                        <li style="color:red">{{user_form.mobile_number.validation_messages}}</li>
+                                      
+                                    </ul>
+                                    {% endif %} 
                                     </div>
                                 </div>
 
@@ -98,6 +108,7 @@
                                     <div class="form-group col-md-12">
                                       <label for="inputbirth">Upload Profile Picture</label>
                                       {{profile_form.profile_picture}}
+                                      
                                     </div>
                                 </div>
 
@@ -115,10 +126,24 @@
                                     <div class="form-group col-md-6">
                                       <label for="inputemail" name="username">Username</label>
                                       {{user_form.username}}
+                                      {% if user_form.username.errors %}
+                                  <ul class="error-list" style="font-size: 10px; padding-left: 0px;">
+                                    
+                                      <li style="color:red">{{user_form.username.errors}}</li>
+                                    
+                                  </ul>
+                                  {% endif %}
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="inputemail" name="email">Email</label>
                                         {{user_form.email}}
+                                        {% if user_form.email.errors %}
+                                  <ul class="error-list" style="font-size: 10px; padding-left: 0px;">
+                                    
+                                      <li style="color:red">{{user_form.email.errors}}</li>
+                                  
+                                  </ul>
+                                  {% endif %}
                                       </div>
                                       
                                     {% comment %} <div class="form-group col-md-6">
