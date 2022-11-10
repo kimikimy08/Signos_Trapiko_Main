@@ -272,7 +272,7 @@ class IncidentPerson(SoftDeleteModel):
     incident_driver_error =  models.CharField(choices=DRIVER_ERROR,max_length=250, blank=True, null=True)
     incident_alcohol_drugs =  models.CharField(choices=ALCOHOL_DRUGS, max_length=250,blank=True, null=True)
     incident_seatbelt_helmet =  models.CharField(choices=SEATBELT_HELMET,max_length=250, blank=True, null=True)
-    incident_photo_id = models.ImageField(upload_to=path_and_rename('upload/incident/'))
+    incident_photo_id = models.FileField(upload_to=path_and_rename('upload/incident/'), blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -376,7 +376,7 @@ class IncidentVehicle(SoftDeleteModel):
 class IncidentMedia(SoftDeleteModel):
     incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE, null=True, blank=True)
     media_description = models.TextField(max_length=250, blank=True)
-    incident_upload_photovideo = models.ImageField(upload_to=path_and_rename('upload/incident/'))
+    incident_upload_photovideo = models.FileField(upload_to=path_and_rename('upload/incident/'), blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
