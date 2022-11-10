@@ -1,4 +1,6 @@
 from datetime import datetime
+import os
+from uuid import uuid4
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
@@ -11,6 +13,19 @@ from django.utils import timezone
 from .managers import SoftDeleteManager
 # Create your models here.
 
+
+def path_and_rename(path):
+    def wrapper(instance, filename):
+        ext = filename.split('.')[-1]
+        # get filename
+        if instance.pk:
+            filename = '{}.{}'.format(instance.pk, ext)
+        else:
+            # set filename as random string
+            filename = '{}.{}'.format(uuid4().hex, ext)
+        # return the whole path to the file
+        return os.path.join(path, filename)
+    return wrapper
 class SoftDeleteModel(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True, default=None)
@@ -173,22 +188,13 @@ class User(AbstractBaseUser, SoftDeleteModel):
             user_status = 'Deactivated'
         return user_status
 
-def user_directory_path(instance, filename):
-    date1=datetime.now()
-    filename = date1.strftime("%Y_%m_%d_%H_%M_%S_%f")
-    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename>
-    return 'user_{0}/{1}/profile'.format(instance.user.id, filename)
 
-def user_directory_path_id(instance, filename):
-    date1=datetime.now()
-    filename = date1.strftime("%Y_%m_%d_%H_%M_%S_%f")
-    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename>
-    return 'user_{0}/{1}/id'.format(instance.user.id, filename)
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     birthdate = models.DateField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to=user_directory_path)
-    upload_id = models.ImageField(upload_to=user_directory_path_id)
+    profile_picture = models.FileField(upload_to=path_and_rename('upload/user/profile_pic/'), blank=True, null=True)
+    upload_id = models.FileField(upload_to=path_and_rename('upload/user/id/'), blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

@@ -15,12 +15,22 @@ from django.core.files.storage import default_storage as storage
 from io import BytesIO
 from django.core.files.base import ContentFile
 from datetime import datetime
+from uuid import uuid4
 
-def user_directory_path_incimage(instance, filename):
-    date1=datetime.now()
-    filename = date1.strftime("%Y_%m_%d_%H_%M_%S_%f")
-    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename>
-    return 'user_{0}/{1}/incident_report/image'.format(instance.user.id, filename)
+
+
+def path_and_rename(path):
+    def wrapper(instance, filename):
+        ext = filename.split('.')[-1]
+        # get filename
+        if instance.pk:
+            filename = '{}.{}'.format(instance.pk, ext)
+        else:
+            # set filename as random string
+            filename = '{}.{}'.format(uuid4().hex, ext)
+        # return the whole path to the file
+        return os.path.join(path, filename)
+    return wrapper
 
 class SoftDeleteModel(models.Model):
     is_deleted = models.BooleanField(default=False)
@@ -124,7 +134,7 @@ class IncidentGeneral(SoftDeleteModel):
     latitude = models.FloatField(max_length=20, blank=True, null=True)
     longitude = models.FloatField(max_length=20, blank=True, null=True)
     geo_location = gismodels.PointField(blank=True, null=True, srid=4326) # New field
-    upload_photovideo = models.FileField(upload_to=user_directory_path_incimage, blank=True, null=True)
+    upload_photovideo = models.FileField(upload_to=path_and_rename('upload/incident/'), blank=True, null=True)
     date = models.DateField(auto_now_add=False, auto_now=False, blank=True, null=True)
     time = models.TimeField(auto_now_add=False, auto_now=False, blank=True, null=True)
     status = models.PositiveSmallIntegerField(choices=STATUS, blank=True, null=True)
@@ -262,7 +272,7 @@ class IncidentPerson(SoftDeleteModel):
     incident_driver_error =  models.CharField(choices=DRIVER_ERROR,max_length=250, blank=True, null=True)
     incident_alcohol_drugs =  models.CharField(choices=ALCOHOL_DRUGS, max_length=250,blank=True, null=True)
     incident_seatbelt_helmet =  models.CharField(choices=SEATBELT_HELMET,max_length=250, blank=True, null=True)
-    incident_photo_id = models.ImageField(upload_to='incident_report/people/id')
+    incident_photo_id = models.ImageField(upload_to=path_and_rename('upload/incident/'))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -366,7 +376,7 @@ class IncidentVehicle(SoftDeleteModel):
 class IncidentMedia(SoftDeleteModel):
     incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE, null=True, blank=True)
     media_description = models.TextField(max_length=250, blank=True)
-    incident_upload_photovideo = models.ImageField(upload_to='incident_report/image')
+    incident_upload_photovideo = models.ImageField(upload_to=path_and_rename('upload/incident/'))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

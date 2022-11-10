@@ -455,6 +455,7 @@ def my_report_edit(request, id):
         form = IncidentGeneralForm(request.POST or None,
                               request.FILES or None, instance=user_report)
         if form.is_valid():
+            request.FILES
             form.save()
             messages.success(request, 'Report details successfully updated')
             return redirect('my_report')
