@@ -1204,7 +1204,7 @@ def sa_incidentreports(request):
                 incident_general.status = 2
                 incident_general.save()
                 
-                incident_remarks = IncidentRemark(incident_general=incident_general,responder=responder,action_taken=action_taken)
+                incident_remarks = IncidentRemark(incident_general=incident_general, responder=responder,action_taken=action_taken)
                 incident_remarks.save()
                 
                 
@@ -1843,7 +1843,8 @@ def incident_report_remarks_edit(request, id=None):
         'remarks_instance': remarks_instance,
         'user_report' : user_report,
         'general': general,
-        'incidentGeneral': incidentGeneral
+        'incidentGeneral': incidentGeneral,
+        'remarks':remarks
     }
     
     return render(request, 'pages/incident_report_remarks_edit.html', context)
@@ -2265,7 +2266,8 @@ def a_incident_report_remarks_edit(request, id=None):
         'remarks_instance': remarks_instance,
         'user_report' : user_report,
         'general': general,
-        'IncidentGeneral': IncidentGeneral
+        'IncidentGeneral': IncidentGeneral, 
+        'remarks':remarks
     }
     
     return render(request, 'pages/a_incident_report_remarks_edit.html', context)

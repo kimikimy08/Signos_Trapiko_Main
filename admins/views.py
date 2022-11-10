@@ -248,12 +248,26 @@ def admin_user_account_edit(request, id=None):
             # my_form.username = request.user.username
             profile_form.save()
             user_form.save(commit=False)
-            if user is not None and user.status == 3:
+            if user.status == 3:
                 user.is_active = False
-                user.status = User.INACTIVE
+                user.status = User.DEACTIVATED
                 user.save()
                 messages.success(request, 'Profile updated')
                 messages.success(request, 'Account is Inactive')
+                return redirect('admin_user_account')
+            elif user.status == 2:
+                user.is_active = False
+                user.soft_delete()
+                user.save()
+                messages.success(request, 'Profile updated')
+                messages.success(request, 'Account is Deleted')
+                return redirect('admin_user_account')
+            elif user.status == 1:
+                user.is_active = True
+                user.status = User.ACTIVE
+                user.save()
+                messages.success(request, 'Profile updated')
+                messages.success(request, 'Account is Active')
                 return redirect('admin_user_account')
             else:
 

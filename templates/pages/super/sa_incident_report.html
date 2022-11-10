@@ -75,139 +75,123 @@
                         <form id="msform" action="{% url 'sa_incidentreports' %}" method="post" enctype="multipart/form-data" >
                             {% csrf_token %}
                             <!-- progressbar -->
-                            <ul id="progressbar">
+                            {% comment %} <ul id="progressbar">
                                 <li class="active">General</li>
                                 <li>Remarks</li>
-                            </ul>
+                            </ul> {% endcomment %}
 
                             <!-- ========================================================== FIELDSETS ============================================ -->
+                            
                             
                             <!-- GENERAL -->
                             <fieldset>
                                 <h2 class="fs-title">General</h2>
                                 <div class="table-responsive">
                                     <table>
-                                    
-                                            <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputEmail4" class="required-field">Date</label>
-                                                    {{form.date }}
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputPassword4" class="required-field">Time</label>
-                                                    {{form.time}}
-                                                </div>
-                                            </div>
-                                            <hr>
-
-                                            <!--==================LOCATION=====================-->
-                                            <div class="form-group">
-                                                <label for="inputAddress" class="required-field">Street Address</label>
-                                                {{form.address}}
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputCity">City</label>
-                                                    {{form.city}}
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputZip">Zip</label>
-                                                    {{form.pin_code}}
-                                                </div>
-                                            </div>
-
-                                            <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputSeverity">Latitude</label>
-                                                    {{form.latitude}}
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputSeverity">Longitude</label>
-                                                    {{form.longitude}}
-                                                </div>
-                                            </div>
-
-                                            <!-- ================WEATHER================= -->
-                                            <hr>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputWeather" class="required-field">Weather</label>
-                                                    {{form_general.weather}}
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputLight" class="required-field">Light</label>
-                                                    {{form_general.light}}
-                                                </div>
-                                            </div>
-                                            <!-- ================================= -->
-                                            <hr>
-                                            <div class="form-group">
-                                                <label for="inputSeverity" class="required-field">Severity</label>
-                                                {{form_general.severity}}
-                                            </div>
-
-                                            <div class="form-row">
-                                                <div class="form-group col-md-12">
-                                                    <label for="inputAccident" class="required-field">Accident Factor</label>
-                                                    {{form_general.accident_factor}}
-                                                </div>
-                                            </div>
+                                        <div class="table-responsive">
+                                            <table>
                                             
-                                            <div class="form-row">
-                                                <div class="form-group col-md-12">
-                                                    <label for="inputCollision" class="required-field">Collision Type</label>
-                                                    {{form_general.collision_type}}
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- ================================= -->
-                                            <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputCrashType" class="required-field">Crash Type</label>
-                                                    {{form_general.crash_type}}
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="inputMovement">Movement Code</label>
-                                                    {{form_general.movement_code}}
-                                                </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <label for="inputEmail4" class="required-field">Date</label>
+                                                            {{form.date}}
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label for="inputPassword4" class="required-field">Time</label>
+                                                            {{form.time}}
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+            
+                                                    <!--==================LOCATION=====================-->
+                                                    <div class="form-group">
+                                                        <label for="inputAddress" class="required-field">Street Address</label>
+                                                        {{form.address}}
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <label for="inputCity">City</label>
+                                                            {{form.city}}
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label for="inputZip">Zip</label>
+                                                            {{form.pin_code}}
+                                                        </div>
+                                                    </div>
+            
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <label for="inputSeverity">Latitude</label>
+                                                            {{form.latitude}}
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label for="inputSeverity">Longitude</label>
+                                                            {{form.longitude}}
+                                                        </div>
+                                                    </div>
+            
+                                                    <!-- ================WEATHER================= -->
+                                                    <hr>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <label for="inputWeather" class="required-field">Weather</label>
+                                                            {{form_general.weather}}
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label for="inputLight" class="required-field">Light</label>
+                                                            {{form_general.light}}
+                                                        </div>
+                                                    </div>
+                                                    <!-- ================================= -->
+                                                    <hr>
+                                                    <div class="form-group">
+                                                        <label for="inputSeverity" class="required-field">Severity</label>
+                                                        {{form_general.severity}}
+                                                    </div>
+            
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-12">
+                                                            <label for="inputCollision" class="required-field">Accident Factor</label>
+                                                            {{form_general.accident_factor}}
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-12">
+                                                            <label for="inputCollision" class="required-field">Collision Type</label>
+                                                            {{form_general.collision_type}}
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- ================================= -->
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <label for="inputCrashType" class="required-field">Crash Type</label>
+                                                            {{form_general.crash_type}}
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label for="inputMovement">Movement Code</label>
+                                                            {{form_general.movement_code}}
+                                                        </div>
+            
+                                                        <div class="form-group col-md-12">
+                                                            <label for="inputDescription" class="required-field">Description</label>
+                                                            {{form.description}}
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <label for="inputTFTTM" class="required-field">TFTTM First Responder Name</label>
+                                                        {{form_remarks.responder}}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="inputActionsTaken">Actions Taken</label>
+                                                        {{form_remarks.action_taken}}
+                                                    </div>
+                                            </table>
+                                        </div>
 
-                                                <div class="form-group col-md-12">
-                                                    <label for="inputDescription" class="required-field">Description</label>
-                                                    {{form.description}}
-                                                </div>
-                                            </div>
-                                    </table>
-                                </div>
-
-                                <input type="button" name="next" class="next action-button" value="Next"/>
-                            </fieldset>
-
-                            
-
-                        
-                            <!-- REMARKS -->
-                            <fieldset>
-                                <h2 class="fs-title">Remarks</h2>
-                                <div class="table-responsive">
-                                    <table>
-                                        
-                                            <div class="form-group">
-                                                <label for="inputEncodersEmail">Encoder's Email</label>
-                                                <input type="text" class="form-control" id="inputEncodersEmail" placeholder="---">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="inputTFTTM" class="required-field">TFTTM First Responder Name</label>
-                                                {{form_remarks.responder}}
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="inputActionsTaken">Actions Taken</label>
-                                                {{form_remarks.action_taken}}
-                                            </div>
-                                        
-                                    </table>
-                                </div>  
-                                <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
-                                <input type="submit" name="submit" class="submit action-button" value="Submit"/>
+                                <button class="next action-button next_button" >Proceed and Save</button>
                             </fieldset>
                         
                         </form>
@@ -257,83 +241,112 @@
     </script>
     <script>
         //jQuery time
-        var current_fs, next_fs, previous_fs; //fieldsets
-        var left, opacity, scale; //fieldset properties which we will animate
-        var animating; //flag to prevent quick multi-click glitches
         
-
-        $(".next").click(function(){
-            if(animating) return false;
-            animating = true;
-    
-            current_fs = $(this).parent();
-            next_fs = $(this).parent().next();
-    
-            //activate next step on progressbar using the index of next_fs
-            $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
-    
-            //show the next fieldset
-            next_fs.show();
-            //hide the current fieldset with style
-            current_fs.animate({opacity: 0}, {
-                step: function(now, mx) {
-                    //as the opacity of current_fs reduces to 0 - stored in "now"
-                    //1. scale current_fs down to 80%
-                    scale = 1 - (1 - now) * 0.2;
-                    //2. bring next_fs from the right(50%)
-                    left = (now * 50)+"%";
-                    //3. increase opacity of next_fs to 1 as it moves in
-                    opacity = 1 - now;
-                    current_fs.css({
-                'transform': 'scale('+scale+')',
-                'position': 'absolute'
-              });
-                    next_fs.css({'left': left, 'opacity': opacity});
-                },
-                duration: 800,
-                complete: function(){
-                    current_fs.hide();
-                    animating = false;
-                },
-                //this comes from the custom easing plugin
-                easing: 'easeInOutBack'
+        var next_click=document.querySelectorAll(".next_button");
+        var main_form=document.querySelectorAll(".main");
+        var step_list = document.querySelectorAll(".progress-bar li");
+        var num = document.querySelector(".step-number");
+        let formnumber=0;
+        
+        next_click.forEach(function(next_click_form){
+            next_click_form.addEventListener('click',function(){
+                if(!validateform()){
+                    return false
+                }
+               formnumber++;
+               updateform();
+               progress_forward();
+               contentchange();
+            });
+        }); 
+        
+        var back_click=document.querySelectorAll(".back_button");
+        back_click.forEach(function(back_click_form){
+            back_click_form.addEventListener('click',function(){
+               formnumber--;
+               updateform();
+               progress_backward();
+               contentchange();
             });
         });
-    
-        $(".previous").click(function(){
-            if(animating) return false;
-            animating = true;
-    
-            current_fs = $(this).parent();
-            previous_fs = $(this).parent().prev();
-    
-            //de-activate current step on progressbar
-            $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
-    
-            //show the previous fieldset
-            previous_fs.show();
-            //hide the current fieldset with style
-            current_fs.animate({opacity: 0}, {
-                step: function(now, mx) {
-                    //as the opacity of current_fs reduces to 0 - stored in "now"
-                    //1. scale previous_fs from 80% to 100%
-                    scale = 0.8 + (1 - now) * 0.2;
-                    //2. take current_fs to the right(50%) - from 0%
-                    left = ((1-now) * 50)+"%";
-                    //3. increase opacity of previous_fs to 1 as it moves in
-                    opacity = 1 - now;
-                    current_fs.css({'left': left});
-                    previous_fs.css({'transform': 'scale('+scale+')', 'opacity': opacity});
-                },
-                duration: 800,
-                complete: function(){
-                    current_fs.hide();
-                    animating = false;
-                },
-                //this comes from the custom easing plugin
-                easing: 'easeInOutBack'
+        
+        var username=document.querySelector("#user_name");
+        var shownname=document.querySelector(".shown_name");
+         
+        
+        var submit_click=document.querySelectorAll(".submit_button");
+        submit_click.forEach(function(submit_click_form){
+            submit_click_form.addEventListener('click',function(){
+               shownname.innerHTML= username.value;
+               formnumber++;
+               updateform(); 
             });
         });
+        
+        var heart=document.querySelector(".fa-heart");
+        heart.addEventListener('click',function(){
+           heart.classList.toggle('heart');
+        });
+        
+        
+        var share=document.querySelector(".fa-share-alt");
+        share.addEventListener('click',function(){
+           share.classList.toggle('share');
+        });
+        
+         
+        
+        function updateform(){
+            main_form.forEach(function(mainform_number){
+                mainform_number.classList.remove('active');
+            })
+            main_form[formnumber].classList.add('active');
+        } 
+         
+        function progress_forward(){
+            // step_list.forEach(list => {
+                
+            //     list.classList.remove('active');
+                 
+            // }); 
+            
+             
+            num.innerHTML = formnumber+1;
+            step_list[formnumber].classList.add('active');
+        }  
+        
+        function progress_backward(){
+            var form_num = formnumber+1;
+            step_list[form_num].classList.remove('active');
+            num.innerHTML = form_num;
+        } 
+         
+        var step_num_content=document.querySelectorAll(".step-number-content");
+        
+         function contentchange(){
+             step_num_content.forEach(function(content){
+                content.classList.remove('active'); 
+                content.classList.add('d-none');
+             }); 
+             step_num_content[formnumber].classList.add('active');
+         } 
+         
+         
+        function validateform(){
+            validate=true;
+            var validate_inputs=document.querySelectorAll(".main.active input");
+            validate_inputs.forEach(function(vaildate_input){
+                vaildate_input.classList.remove('warning');
+                if(vaildate_input.hasAttribute('require')){
+                    if(vaildate_input.value.length==0){
+                        validate=false;
+                        vaildate_input.classList.add('warning');
+                    }
+                }
+            });
+            return validate;
+            
+        }
 
         
     

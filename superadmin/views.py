@@ -226,6 +226,7 @@ def super_user_account_add(request):
                 user = User(first_name=first_name, middle_name=middle_name, last_name=last_name, username=username, email=email, mobile_number=mobile_number, role=role)
                 user.set_password(password)
                 user.save()
+                
             
                 # send verification email
                 mail_subject = 'Please Activate Your Account'
@@ -277,12 +278,26 @@ def super_user_account_edit(request, id=None):
             # my_form.username = request.user.username
             profile_form.save()
             user_form.save(commit=False)
-            if user is not None and user.status == 3:
+            if user.status == 3:
                 user.is_active = False
-                user.status = User.INACTIVE
+                user.status = User.DEACTIVATED
                 user.save()
                 messages.success(request, 'Profile updated')
                 messages.success(request, 'Account is Inactive')
+                return redirect('super_user_account')
+            elif user.status == 2:
+                user.is_active = False
+                user.soft_delete()
+                user.save()
+                messages.success(request, 'Profile updated')
+                messages.success(request, 'Account is Deleted')
+                return redirect('super_user_account')
+            elif user.status == 1:
+                user.is_active = True
+                user.status = User.ACTIVE
+                user.save()
+                messages.success(request, 'Profile updated')
+                messages.success(request, 'Account is Active')
                 return redirect('super_user_account')
             else:
 

@@ -323,6 +323,7 @@ class IncidentRemarksForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(IncidentRemarksForm, self).__init__(*args, **kwargs)
+        self.fields['responder'].required = True
         self.fields['responder'].widget.attrs['class'] = 'form-control'
         self.fields['action_taken'].widget.attrs['class'] = 'form-control'
         
@@ -334,22 +335,7 @@ class AccidentCausationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AccidentCausationForm, self).__init__(*args, **kwargs)
         self.fields['category'].widget.attrs['class'] = 'form-control'
-    
 
-# class AccidentCausationSubForm(forms.ModelForm):
-    
-#     accident_factor = forms.ModelChoiceField(queryset=AccidentCausation.objects.all())
-#     sub_category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control ', }))
-    
-#     class Meta:
-#         model = AccidentCausationSub
-#         fields = [ 'accident_factor', 'sub_category']
-
-#     def __init__(self, *args, **kwargs):
-#         super(AccidentCausationSubForm, self).__init__(*args, **kwargs)
-#         # self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
-#         self.fields['sub_category'].widget.attrs['class'] = 'form-control'
-#         self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
         
 class CollisionTypeForm(forms.ModelForm):
     class Meta:
@@ -360,22 +346,7 @@ class CollisionTypeForm(forms.ModelForm):
         super(CollisionTypeForm, self).__init__(*args, **kwargs)
         self.fields['category'].widget.attrs['class'] = 'form-control'
     
-    
 
-# class CollisionTypeSubForm(forms.ModelForm):
-    
-#     collision_type = forms.ModelChoiceField(queryset=CollisionType.objects.all())
-#     sub_category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control ', }))
-    
-#     class Meta:
-#         model = CollisionTypeSub
-#         fields = [ 'collision_type', 'sub_category']
-
-#     def __init__(self, *args, **kwargs):
-#         super(CollisionTypeSubForm, self).__init__(*args, **kwargs)
-#         # self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
-#         self.fields['sub_category'].widget.attrs['class'] = 'form-control'
-#         self.fields['collision_type'].widget.attrs['class'] = 'form-control'
 
 class CrashTypeForm(forms.ModelForm):
     class Meta:
@@ -390,12 +361,14 @@ class CrashTypeForm(forms.ModelForm):
 class IncidentGeneralForm_admin_super(forms.ModelForm):
     upload_photovideo = forms.FileField(
         widget=forms.FileInput(attrs={'class': 'form-control p-1'}), validators=[allow_only_images_video_validator])
+    date = forms.DateField(widget=forms.DateInput(
+        attrs={'required': 'required', 'class': 'form-control'}))
     time = forms.TimeField(widget=TimeInput(
-        attrs={'class': 'form-control'}), initial=datetime.datetime.now())
+        attrs={'required': 'required', 'class': 'form-control'}), initial=datetime.datetime.now())
     address = forms.CharField(widget=forms.TextInput(
         attrs={'required': 'required', 'class': 'form-control'}))
     description = forms.CharField(widget=forms.Textarea(
-        attrs={'area': '3', 'class': 'form-control'}))
+        attrs={'required': 'required', 'area': '3', 'class': 'form-control'}))
     
     class Meta:
         model = IncidentGeneral
@@ -412,6 +385,12 @@ class IncidentGeneralForm_admin_super(forms.ModelForm):
         self.fields['severity'].widget.attrs['class'] = 'form-control'
         self.fields['crash_type'].widget.attrs['class'] = 'form-control'
         self.fields['movement_code'].widget.attrs['class'] = 'form-control'
+        self.fields['weather'].required = True
+        self.fields['light'].required = True
+        self.fields['severity'].required = True
+        self.fields['accident_factor'].required = True
+        self.fields['collision_type'].required = True
+        self.fields['crash_type'].required = True
         
         
         self.fields['date'].widget.attrs['class'] = 'form-control datepickstart'
