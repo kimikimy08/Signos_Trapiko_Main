@@ -362,7 +362,7 @@ class ProfileMgmtUpdateFormEdit_1(forms.ModelForm):
         fields = ['birthdate', 'upload_id', 'profile_picture']
     
     def __init__(self, *args, **kwargs):
-        super(ProfileMgmtUpdateFormEdit, self).__init__(*args, **kwargs)
+        super(ProfileMgmtUpdateFormEdit_1, self).__init__(*args, **kwargs)
         self.fields['birthdate'].required = False
         self.fields['upload_id'].required = False
         self.fields['profile_picture'].required = False
