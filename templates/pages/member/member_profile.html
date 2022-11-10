@@ -135,17 +135,19 @@
 
                                     <div class="card-body"> <!-- BACKEND SHOW-->
                                         {% if incident.upload_photovideo %}
-                                        {% if  ".jpg" in incident.upload_photovideo.url or ".png" in incident.upload_photovideo.url or ".jpeg" in incident.upload_photovideo.url%}
+                                        {% if  ".mp4" in incident.upload_photovideo.url or ".mov" in incident.upload_photovideo.url %}
                                         <div style="padding-bottom: 10px">
-                                        <img src="{{incident.upload_photovideo.url}}" alt="Profile Picture" class="photos-side">
+                                            <video controls>
+                                            <source src={{incident.upload_photovideo.url}} type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
                                         </div>
                                         {% else %}
-                                        <video controls>
+                                       
                                             <div style="padding-bottom: 10px">
-                                            <source src={{incident.upload_photovideo.url}} type="video/mp4">
+                                                <img src="{{incident.upload_photovideo.url}}" alt="Profile Picture" class="photos-side">
                                             </div>
-                                          Your browser does not support the video tag.
-                                          </video>
+                                          
                                         {% comment %} <a src="{{incident.upload_photovideo.url}}"> {% endcomment %}
                                         {% endif %}{% endif %}
     

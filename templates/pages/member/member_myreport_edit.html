@@ -134,17 +134,19 @@
                                                 <h6>Upload Image or Video </h6>
                                                 {{form.upload_photovideo}}
                                                 {% if user_report.upload_photovideo %}
-                                                {% if  ".jpg" in user_report.upload_photovideo.url or ".png" in user_report.upload_photovideo.url or ".jpeg" in user_report.upload_photovideo.url %}
+                                                {% if  ".mp4" in user_report.upload_photovideo.url or ".mov" in user_report.upload_photovideo.url %}
                                                             <div style="padding-bottom: 5px; padding-top: 5px" >
-                                                            <img src="{{user_report.upload_photovideo.url}}" width="400" height="auto"  alt="Profile Picture" class="photos-side">
+                                                                <video width="400" height="auto" controls>
+                                                                
+                                                                    <source src={{user_report.upload_photovideo.url}} type="video/mp4">
+                                                                  Your browser does not support the video tag.
+                                                                  </video>
                                                         </div>
                                                             {% else %}
                                                             
                                                             <div style="padding-bottom: 5px; padding-top: 5px " >
-                                                            <video width="400" height="auto" controls>
-                                                                <source src={{user_report.upload_photovideo.url}} type="video/mp4">
-                                                              Your browser does not support the video tag.
-                                                              </video>
+                                                                <img src="{{user_report.upload_photovideo.url}}" width="400" height="auto"  alt="Profile Picture" class="photos-side">
+                                                            
                                                             </div>
                                                             {% comment %} <a src="{{incident.upload_photovideo.url}}"> {% endcomment %}
                                                             {% endif %} 
