@@ -134,7 +134,7 @@
                                                 <h6>Upload Image or Video </h6>
                                                 {{form.upload_photovideo}}
                                                 {% if user_report.upload_photovideo %}
-                                                {% if  ".jpg" in user_report.upload_photovideo.url or ".png" in user_report.upload_photovideo.url %}
+                                                {% if  ".jpg" in user_report.upload_photovideo.url or ".png" in user_report.upload_photovideo.url or ".jpeg" in user_report.upload_photovideo.url %}
                                                             <div style="padding-bottom: 5px; padding-top: 5px" >
                                                             <img src="{{user_report.upload_photovideo.url}}" width="400" height="auto"  alt="Profile Picture" class="photos-side">
                                                         </div>

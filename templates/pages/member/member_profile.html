@@ -135,7 +135,7 @@
 
                                     <div class="card-body"> <!-- BACKEND SHOW-->
                                         {% if incident.upload_photovideo %}
-                                        {% if  ".jpg" in incident.upload_photovideo.url or ".png" in incident.upload_photovideo.url %}
+                                        {% if  ".jpg" in incident.upload_photovideo.url or ".png" in incident.upload_photovideo.url or ".jpeg" in incident.upload_photovideo.url%}
                                         <div style="padding-bottom: 10px">
                                         <img src="{{incident.upload_photovideo.url}}" alt="Profile Picture" class="photos-side">
                                         </div>
