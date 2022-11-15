@@ -9,8 +9,15 @@
 
     <!-- Navbar -->
     <ul class="navbar-nav ml-auto">
+        <a href="{% url 'show-notifications' %} " class="navbar-item">
+            <i class="material-icons">notifications</i>
+            Notifications
+           
+              <span class="badge">{{ count_notifications }}</span>
+            
+          </a>
         <!-- Search -->
-        <form class="d-none d-sm-inline-block form-inline navbar-search">
+        {% comment %} <form class="d-none d-sm-inline-block form-inline navbar-search">
             <div class="input-group">
                 <input type="text" class="form-control bg-light border-1 small"
                     placeholder="Searching for ..." aria-label="Search">
@@ -44,14 +51,14 @@
                         
                 </form>
             </div>
-        </li>
+        </li> {% endcomment %}
 
         <!-- User Photo -->
-        <li class="nav-item ">
+        {% comment %} <li class="nav-item ">
             <a class="nav-link" href="">
                 <img class="img-profile rounded-circle" src="{% static 'images/user.jpeg' %}">
             </a>
-        </li>
+        </li> {% endcomment %}
     </ul>
     <!-- End of Navbar -->
 

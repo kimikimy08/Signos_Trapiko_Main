@@ -26,6 +26,9 @@ def path_and_rename(path):
         # return the whole path to the file
         return os.path.join(path, filename)
     return wrapper
+
+user_image_upload_path = path_and_rename('user/')
+user_image_upload_path.__qualname__ = 'user_image_upload_path'
 class SoftDeleteModel(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True, default=None)
@@ -193,8 +196,8 @@ class User(AbstractBaseUser, SoftDeleteModel):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     birthdate = models.DateField(blank=True, null=True)
-    profile_picture = models.FileField(upload_to=path_and_rename('upload/user/profile_pic/'), blank=True, null=True)
-    upload_id = models.FileField(upload_to=path_and_rename('upload/user/id/'), blank=True, null=True)
+    profile_picture = models.FileField(upload_to=user_image_upload_path, blank=True, null=True)
+    upload_id = models.FileField(upload_to=user_image_upload_path, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

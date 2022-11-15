@@ -9,6 +9,7 @@ from accounts.utils import send_verfication_email, send_sms, detectUser
 from django.urls import reverse
 from django.core.paginator import Paginator
 from incidentreport.models import IncidentGeneral
+from notifications.models import Notification
 
 # Create your views here.
 
@@ -278,10 +279,16 @@ def super_user_account_edit(request, id=None):
             # my_form.username = request.user.username
             profile_form.save()
             user_form.save(commit=False)
+            remarks = "update user account"
             if user.status == 3:
                 user.is_active = False
                 user.status = User.DEACTIVATED
                 user.save()
+                text = "updated status to deactive"
+                incident_report = None
+                sender = profile.user
+                notification_report = Notification(incident_report=incident_report, sender=sender, user=request.user, remarks=remarks, notification_type=2, text_preview=text)
+                notification_report.save()
                 messages.success(request, 'Profile updated')
                 messages.success(request, 'Account is Inactive')
                 return redirect('super_user_account')
@@ -289,6 +296,11 @@ def super_user_account_edit(request, id=None):
                 user.is_active = False
                 user.soft_delete()
                 user.save()
+                text = "updated status to deleted"
+                incident_report = None
+                sender = profile.user
+                notification_report = Notification(incident_report=incident_report, sender=sender, user=request.user, remarks=remarks, notification_type=2, text_preview=text)
+                notification_report.save()
                 messages.success(request, 'Profile updated')
                 messages.success(request, 'Account is Deleted')
                 return redirect('super_user_account')
@@ -296,6 +308,11 @@ def super_user_account_edit(request, id=None):
                 user.is_active = True
                 user.status = User.ACTIVE
                 user.save()
+                text = "updated status to active"
+                incident_report = None
+                sender = profile.user
+                notification_report = Notification(incident_report=incident_report, sender=sender, user=request.user, remarks=remarks, notification_type=2, text_preview=text)
+                notification_report.save()
                 messages.success(request, 'Profile updated')
                 messages.success(request, 'Account is Active')
                 return redirect('super_user_account')

@@ -26,8 +26,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 
     <!-- Default CSS -->
    <link href="{% static 'css/vendor/bootstrap.min.css' %} " rel="stylesheet">
@@ -35,10 +37,23 @@
     <link href="{% static 'css/default.css' %} " rel="stylesheet">
     <link href=" {% static 'css/custom.css' %} " rel="stylesheet"> 
 
+    
 
     {% block styles %}
 
     {% endblock styles %}
+
+    <script>
+        .badge {
+            position: absolute;
+            top: auto;
+            right: 25px;
+            padding: 5px 10px;
+            border-radius: 50%;
+            background: #EAA74D;
+            color: white;
+          }
+    </script>
 
     <!-- Script to close offcanvas when the button is clicked -->
     

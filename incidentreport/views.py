@@ -24,6 +24,7 @@ from django.core.paginator import Paginator
 import pandas as pd
 from django.views.decorators.cache import cache_control
 from django.utils.dateparse import parse_datetime
+from notifications.models import Notification
 
 
 @login_required(login_url='login')
@@ -455,7 +456,8 @@ def my_report_edit(request, id):
         form = IncidentGeneralForm(request.POST or None,
                               request.FILES or None, instance=user_report)
         if form.is_valid():
-            request.FILES
+            # request.FILES
+            
             form.save()
             messages.success(request, 'Report details successfully updated')
             return redirect('my_report')
@@ -535,6 +537,10 @@ class multistepformsubmission_member(SessionWizardView):
         media_instance.save()
         remarks_instance.incident_general = general_instance
         remarks_instance.save()
+        remarks = "new incident"
+        text_preview = "created a new incident report"   
+        notification_report = Notification(incident_report=general_instance,sender=self.request.user,user=self.request.user, remarks=remarks, notification_type=1, text_preview=text_preview)
+        notification_report.save()
         
         # Notification.objects.create(to_user=self.request, IncidentGeneral=self.user_report, notification_type='application', created_by=self.user, extra_id=general_instance.id)
         
@@ -1570,6 +1576,7 @@ def incident_report_general_edit(request, id=None):
             user_report.instance.username = request.user
             general_instance.save()
             user_report.save()
+            
             messages.success(request, 'Profile updated')
 
             return redirect('user_reports')
@@ -1792,12 +1799,27 @@ def incident_report_media_view(request, id, media_id):
 def incident_report_general_edit(request, id=None):
     # incidentGeneral1 =  get_object_or_404(IncidentGeneral, pk=id)
     incidentGeneral = get_object_or_404(IncidentGeneral, pk=id)
+    general = get_object_or_404(IncidentGeneral, pk=id)
     if request.method == 'POST':
         general_instance = IncidentGeneralForm(request.POST  or None, request.FILES  or None, instance=incidentGeneral)
         # user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
         if general_instance.is_valid():
             general_instance.instance.username = request.user
             general_instance.save()
+            remarks = "update incident status"
+            text_preview = general_instance.cleaned_data['status']
+            if text_preview == 1:
+                text = "updated status to pending"
+                notification_report = Notification(incident_report=general, sender=general.user, user=request.user, remarks=remarks, notification_type=1, text_preview=text)
+                notification_report.save()
+            elif text_preview == 2:
+                text = "updated status to approved"
+                notification_report = Notification(incident_report=general,sender=general.user, user=request.user, remarks=remarks, notification_type=1, text_preview=text)
+                notification_report.save()
+            elif text_preview == 3:
+                text = "updated status to rejected"
+                notification_report = Notification(incident_report=general, sender=general.user, user=request.user, remarks=remarks, notification_type=1, text_preview=text)
+                notification_report.save()
             messages.success(request, 'Profile updated')
 
             return redirect('user_reports')
@@ -2220,7 +2242,22 @@ def a_incident_report_general_edit(request, id=None):
         if general_instance.is_valid():
             general_instance.instance.username = request.user
             general_instance.save()
-            
+            general_ins = IncidentGeneral()
+            remarks = "update incident status"
+            text_preview = general_instance.cleaned_data['status']
+            if text_preview == 1:
+                text = "updated status to pending"
+                notification_report = Notification(incident_report=general, sender=general.user, user=request.user, remarks=remarks, notification_type=1, text_preview=text)
+                notification_report.save()
+            elif text_preview == 2:
+                text = "updated status to approved"
+                notification_report = Notification(incident_report=general,sender=general.user, user=request.user, remarks=remarks, notification_type=1, text_preview=text)
+                notification_report.save()
+            elif text_preview == 3:
+                text = "updated status to rejected"
+                notification_report = Notification(incident_report=general, sender=general.user, user=request.user, remarks=remarks, notification_type=1, text_preview=text)
+                notification_report.save()
+           
             messages.success(request, 'Profile updated')
 
             return redirect('user_reports')

@@ -1,4 +1,5 @@
 import os
+import uuid
 from django.db import models
 from accounts.models import User
 from django.db.models.signals import post_save
@@ -16,7 +17,8 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 from datetime import datetime
 from uuid import uuid4
-
+from notifications.models import Notification
+from django.utils.deconstruct import deconstructible
 
 
 def path_and_rename(path):
@@ -31,6 +33,24 @@ def path_and_rename(path):
         # return the whole path to the file
         return os.path.join(path, filename)
     return wrapper
+
+incident_image_upload_path = path_and_rename('incident/')
+incident_image_upload_path.__qualname__ = 'incident_image_upload_path'
+
+# @deconstructible
+# class PathRename(object):
+
+#     def __init__(self, sub_path):
+#         self.path = sub_path
+
+#     def __call__(self, instance, filename):
+#         ext = filename.split('.')[-1]
+#         # set filename as random string
+#         filename = '{}.{}'.format(uuid4().hex, ext)
+#         # return the whole path to the file
+#         return os.path.join(self.path, filename)
+
+# path_and_rename = PathRename("/incident")
 
 class SoftDeleteModel(models.Model):
     is_deleted = models.BooleanField(default=False)
@@ -134,7 +154,7 @@ class IncidentGeneral(SoftDeleteModel):
     latitude = models.FloatField(max_length=20, blank=True, null=True)
     longitude = models.FloatField(max_length=20, blank=True, null=True)
     geo_location = gismodels.PointField(blank=True, null=True, srid=4326) # New field
-    upload_photovideo = models.FileField(upload_to=path_and_rename('upload/incident/'), blank=True, null=True)
+    upload_photovideo = models.FileField(upload_to=incident_image_upload_path, blank=True, null=True)
     date = models.DateField(auto_now_add=False, auto_now=False, blank=True, null=True)
     time = models.TimeField(auto_now_add=False, auto_now=False, blank=True, null=True)
     status = models.PositiveSmallIntegerField(choices=STATUS, blank=True, null=True)
@@ -158,48 +178,12 @@ class IncidentGeneral(SoftDeleteModel):
             incident_status = 'Rejected'
         return incident_status
     
+    
     def save(self, *args, **kwargs):
-        super(IncidentGeneral, self).save(*args, **kwargs)
-        # if self.upload_photovideo:
-        #     if  ".jpg" in self.upload_photovideo.url or ".png" in self.upload_photovideo.url:
-        #      #check if image exists before resize
-        #         img = Image.open(self.upload_photovideo.path)
-
-        #         if img.height > 1080 or img.width > 1920:
-        #             new_height = 720
-        #             new_width = int(new_height / img.height * img.width)
-        #             img = img.resize((new_width, new_height))
-        #             img.save(self.upload_photovideo.path)
-        # image_read = storage.open(self.upload_photovideo.name, "r")
-        # image = Image.open(image_read)
-        # if image.height > 200 or image.width > 200:
-        #     size = 200, 200
-            
-        #     # Create a buffer to hold the bytes
-        #     imageBuffer = BytesIO()
-
-        #     # Resize  
-        #     image.thumbnail(size, Image.ANTIALIAS)
-
-        #     # Save the image as jpeg to the buffer
-        #     image.save(imageBuffer, image.format)
-
-        #     # Check whether it is resized
-        #     image.show()
-
-        #     # Save the modified image
-        #     user = User.objects.get(pk=self.pk)
-        #     user.upload_photovideo.save(self.profile_image.name, ContentFile(imageBuffer.getvalue()))
-
-        #     image_read = storage.open(user.profile_image.name, "r")
-        #     image = Image.open(image_read)
-        #     image.show()
-
-        #     image_read.close()
-
+        # super(IncidentGeneral, self).save(*args, **kwargs)
         if self.latitude and self.longitude:
             self.geo_location = Point(float(self.longitude), float(self.latitude))
-            # return super(IncidentGeneral, self).save(*args, **kwargs)
+            super(IncidentGeneral, self).save(*args, **kwargs)
 
     # @receiver(post_save, sender=UserReport)
     # def create_user_report_general(sender, instance, created, **kwargs):
@@ -207,6 +191,18 @@ class IncidentGeneral(SoftDeleteModel):
     #         IncidentGeneral.objects.create(user_report=instance)
     
     # post_save.connect(create_user_report_general, sender=UserReport) 
+
+class IncidentNotif(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_receiver')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_sender')
+    incident_general_report = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE, related_name='report_general')
+    
+    def user_report_incident (sender, instance, *args, **kwargs):
+        incidentnotif = instance
+        incident_report = incidentnotif.incident_general_report
+        sender = incidentnotif.sender
+        notify = Notification(incident_report=incident_report, sender=sender, user=incident_report.user, notification_type=1)
+        notify.save()
 
 class IncidentPerson(SoftDeleteModel):
     GENDER = (
@@ -272,7 +268,7 @@ class IncidentPerson(SoftDeleteModel):
     incident_driver_error =  models.CharField(choices=DRIVER_ERROR,max_length=250, blank=True, null=True)
     incident_alcohol_drugs =  models.CharField(choices=ALCOHOL_DRUGS, max_length=250,blank=True, null=True)
     incident_seatbelt_helmet =  models.CharField(choices=SEATBELT_HELMET,max_length=250, blank=True, null=True)
-    incident_photo_id = models.FileField(upload_to=path_and_rename('upload/incident/'), blank=True, null=True)
+    incident_photo_id = models.FileField(upload_to=incident_image_upload_path, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -355,6 +351,7 @@ class IncidentVehicle(SoftDeleteModel):
         ('Unsafe Load', 'Unsafe Load'),
         ('Others', 'Others'),
     )
+    
     incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE, null=True, blank=True)
     classification = models.CharField(choices=CLASSIFICATION, max_length=250, blank=True, null=True)
     vehicle_type = models.CharField(choices=VEHICLE_TYPE, max_length=250, blank=True, null=True)
@@ -376,7 +373,7 @@ class IncidentVehicle(SoftDeleteModel):
 class IncidentMedia(SoftDeleteModel):
     incident_general = models.ForeignKey(IncidentGeneral, on_delete=models.CASCADE, null=True, blank=True)
     media_description = models.TextField(max_length=250, blank=True)
-    incident_upload_photovideo = models.FileField(upload_to=path_and_rename('upload/incident/'), blank=True, null=True)
+    incident_upload_photovideo = models.FileField(upload_to=incident_image_upload_path, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -410,3 +407,7 @@ class Incident(SoftDeleteModel):
     incident_vehicle = models.ForeignKey(IncidentVehicle, on_delete=models.SET_NULL, blank=True, null=True)
     incident_media = models.ForeignKey(IncidentMedia, on_delete=models.SET_NULL, blank=True, null=True)
     incident_remark = models.ForeignKey(IncidentRemark, on_delete=models.SET_NULL, blank=True, null=True)
+    
+    
+#Likes
+post_save.connect(IncidentNotif.user_report_incident, sender=IncidentNotif)

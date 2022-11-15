@@ -1,5 +1,7 @@
 {% load static %}
 
+
+
 <!-- Start of Sidebar -->
 <ul class="navbar-nav sidebar sidebar-dark accordion fixed" id="accordionSidebar">
 
@@ -26,7 +28,7 @@
 
     <!-- Divider -->
     <hr class="sidebar-divider">
-
+    <h3>SA</h3>
     <!-- Sidebar Heading -->
     <div class="sidebar-heading">Manage</div>
 
@@ -102,9 +104,15 @@
 
      <!-- Inbox -->
      <li class="{% if '/inbox/sent_messages/' == request.path %} nav-item active {% else %} nav-item {% endif %}">
-        <a class="nav-link" href="{% url 'sent_message' %}">
+        <a class="nav-link" href="{% url 'inbox' %}">
             <i class="fa-solid fa-inbox"></i>
-            <span class="">Inbox</span></a>
+            <span class="">Inbox</span>
+            {% if directs_count %}
+            <span class="badge" style="position: absolute; background: #EAA74D; border-radius: 50%; top: auto; right: 25px; color: white; padding: 5px 10px;">{{ directs_count }}</span> </a>
+        
+            {% endif %}
+        </a>
+            
     </li>
 
     <!-- Settings  -->
