@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'generate_report',
     'dashboard',
     'inbox'
+    'notifications'
     # 'livereload'
     
 ]
