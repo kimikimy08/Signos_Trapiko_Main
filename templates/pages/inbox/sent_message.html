@@ -4,6 +4,18 @@
 {% block styles %}
 <link href="{% static 'css/admin_dashboard.css' %}" rel="stylesheet">
 
+
+
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+  
+  <link href="{% static 'css/admin_dashboard.css' %}" rel="stylesheet">
+  <link href="{% static 'css/sa_inbox.css' %}" rel="stylesheet">
 {% endblock styles %}
 
 
@@ -33,40 +45,72 @@
                 <div class="email-app">
                  
                     <main>
-                        <p class="text-center">Compose Message</p>
-                        <form action="" enctype="multipart/form-data" method="post">
-                            {% csrf_token %}
-                            <div class="form-row mb-3">
-                                <label for="to" class="col-2 col-sm-1 col-form-label">To:</label>
-                                <div class="col-10 col-sm-11">
-                                    {{form.to_email}}
-                                </div>
-                                <label for="to" class="col-2 col-sm-1 col-form-label">Subject:</label>
-                                <div class="col-10 col-sm-11">
-                                    {{form.subject}}
-                                </div>
+                        <div class="columns is-mobile">
+                            <div class="column is-offset-one-fifth">
+                          
+                          
+                          <div class="field has-addons">
+                          <form>
+                            <div class="control">
+                              <input style="margin-bottom: 20px" class="input form-control" name="q" type="text" placeholder="Enter username" value="{{ request.GET.q }}">
                             </div>
+                            <div class="control">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </div>
+                            </form>
+                          </div>
+                          
+                          
+                          </div>
+                          </div>
+                          
+                         
+                          
+                        
+
                        
-                        <div class="row">
-                            <div class="col-sm-11 ml-auto">
-                                
-                                <div class="form-group mt-4">
-                                    {{form.message}}
+                   
+                          
+                            <section id="team" class="team section-back">
+                                <div class="container" data-aos="fade-up">
+                          
+                                  <div class="row">
+                                    
+                                    {% for user in users %}
+                                    <div class="col-lg-6" style="margin-bottom: 20px" >
+                                      <div class="member d-flex align-items-start" >
+                                        <figure class="image is-64x64">
+                                          {% if user.userprofile.profile_picture %}
+                                            <img src="{{ user.userprofile.profile_picture.url }}" alt="Placeholder image">
+                                          {% else %}
+                                            <img src="{% static 'images/user.jpeg' %}" alt="Placeholder image">
+                                          {% endif %}
+                                      </figure>
+                                        
+                                        <div class="member-info">
+                                            <div style="margin-bottom: 20px">{{ user.first_name }} {{ user.last_name }}</strong><small> &lt;{{ user.username }}&gt;</small></div>
+                                            <a href="{% url 'new_message' user.username %}" class="btn btn-success">Send a message!</a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {% endfor %}
+                                 
+                                  </div>
                                 </div>
-                                <div class="form-group text-center">
-                                    <button type="submit" class="btn btn-success ">Send</button>
-                                    <button type="submit" class="btn btn-dark">Discard</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    </main>
-                </div>
-                </div>
+                              </section>
+                          
+                          
+
+                           
+                        
+                          </div>
+                              
+                          
+                          </div>
             <!-- End of Main Content  -->
+                        </div>
 
-
-          
+                        </div>
 
         </div>
         <!-- End of Main Content  -->

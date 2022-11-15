@@ -181,7 +181,35 @@ def a_inbox(request):
     
     return HttpResponse(template.render(context, request))
 
-@login_required
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def m_inbox(request):
+    user = request.user
+    messages = Message.get_messages(user=user)
+    active_user = None
+    directs = None
+    if messages:
+        message = messages[0]
+        active_user = message['user'].username
+        directs = Message.objects.filter(user=user, recipient=message['user'])
+        directs.update(is_read=True)
+        
+        for message in messages:
+            if message['user'].username == active_user:
+                message['unread'] = 0
+    
+    context = {
+		'directs': directs,
+		'messages': messages,
+		'active_user': active_user,
+		}
+    
+    template = loader.get_template('pages/inbox/m_inbox_message.html')
+    
+    return HttpResponse(template.render(context, request))
+
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def user_search(request):
 	query = request.GET.get("q")
 	context = {}
@@ -202,7 +230,8 @@ def user_search(request):
 	
 	return HttpResponse(template.render(context, request))
 
-@login_required
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def a_user_search(request):
 	query = request.GET.get("q")
 	context = {}
@@ -225,7 +254,8 @@ def a_user_search(request):
 
 
 
-@login_required
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def Directs(request, username):
 	user = request.user
 	messages = Message.get_messages(user=user)
@@ -247,7 +277,8 @@ def Directs(request, username):
 	return HttpResponse(template.render(context, request))
 
 
-@login_required
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def a_Directs(request, username):
 	user = request.user
 	messages = Message.get_messages(user=user)
@@ -265,34 +296,71 @@ def a_Directs(request, username):
 	}
 
 	template = loader.get_template('pages/inbox/a_inbox_message.html')
-
 	return HttpResponse(template.render(context, request))
 
-@login_required
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def m_Directs(request, username):
+	user = request.user
+	messages = Message.get_messages(user=user)
+	active_user = username
+	directs = Message.objects.filter(user=user, recipient__username=username)
+	directs.update(is_read=True)
+	for message in messages:
+		if message['user'].username == username:
+			message['unread'] = 0
+
+	context = {
+		'directs': directs,
+		'messages': messages,
+		'active_user':active_user,
+	}
+
+	template = loader.get_template('pages/inbox/m_inbox_message.html')
+	return HttpResponse(template.render(context, request))
+
+
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_message(request, username):
 	from_user = request.user
 	body = ''
 	try:
 		to_user = User.objects.get(username=username)
 	except Exception as e:
-		return redirect('usersearch')
+		return redirect('user_search')
 	if from_user != to_user:
 		Message.send_message(from_user, to_user, body)
 	return redirect('inbox')
 
-@login_required
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def a_new_message(request, username):
 	from_user = request.user
 	body = ''
 	try:
 		to_user = User.objects.get(username=username)
 	except Exception as e:
-		return redirect('usersearch')
+		return redirect('a_user_search')
 	if from_user != to_user:
 		Message.send_message(from_user, to_user, body)
 	return redirect('a_inbox')
 
-@login_required
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def m_new_message(request, username):
+	from_user = request.user
+	body = ''
+	try:
+		to_user = User.objects.get(username=username)
+	except Exception as e:
+		return redirect('m_user_search')
+	if from_user != to_user:
+		Message.send_message(from_user, to_user, body)
+	return redirect('m_inbox')
+
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def send_direct(request):
 	from_user = request.user
 	to_user_username = request.POST.get('to_user')
@@ -304,7 +372,9 @@ def send_direct(request):
 		return redirect('inbox')
 	else:
 		HttpResponseBadRequest()
-  
+
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def a_send_direct(request):
     from_user = request.user
     to_user_username = request.POST.get('to_user')
@@ -317,10 +387,23 @@ def a_send_direct(request):
     else:
         HttpResponseBadRequest()
 
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def m_send_direct(request):
+    from_user = request.user
+    to_user_username = request.POST.get('to_user')
+    body = request.POST.get('body')
+    
+    if request.method == 'POST':
+        to_user = User.objects.get(username=to_user_username)
+        Message.send_message(from_user, to_user, body)
+        return redirect('m_inbox')
+    else:
+        HttpResponseBadRequest()
+
 def check_inbox(request):
 	directs_count = 0
 	if request.user.is_authenticated:
 		directs_count = Message.objects.filter(user=request.user, is_read=False).count()
 
 	return {'directs_count':directs_count}
-
