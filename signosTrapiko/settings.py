@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'formtools',
     'django.contrib.gis',
+    'django.contrib.humanize',
     
     'accounts',
     'member',
