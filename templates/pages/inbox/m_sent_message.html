@@ -25,7 +25,7 @@
 
 <!-- Page Wrapper -->
 
-{% include 'includes/a_sidebar.html' %}
+{% include 'includes/m_sidebar.html' %}
     
 
 
@@ -89,7 +89,7 @@
                                         
                                         <div class="member-info">
                                             <div style="margin-bottom: 20px">{{ user.first_name }} {{ user.last_name }}</strong><small> &lt;{{ user.username }}&gt;</small></div>
-                                            <a href="{% url 'a_new_message' user.username %}" class="btn btn-success">Send a message!</a>
+                                            <a href="{% url 'm_new_message' user.username %}" class="btn btn-success">Send a message!</a>
                                         </div>
                                       </div>
                                     </div>

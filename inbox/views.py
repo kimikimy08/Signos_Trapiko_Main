@@ -252,6 +252,28 @@ def a_user_search(request):
 	
 	return HttpResponse(template.render(context, request))
 
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def m_user_search(request):
+	query = request.GET.get("q")
+	context = {}
+	
+	if query:
+		users = User.objects.filter(Q(username__icontains=query))
+
+		#Pagination
+		paginator = Paginator(users, 6)
+		page_number = request.GET.get('page')
+		users_paginator = paginator.get_page(page_number)
+
+		context = {
+				'users': users_paginator,
+			}
+	
+	template = loader.get_template('pages/inbox/m_sent_message.html')
+	
+	return HttpResponse(template.render(context, request))
+
 
 
 @login_required(login_url='login')

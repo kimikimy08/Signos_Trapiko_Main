@@ -16,8 +16,8 @@ urlpatterns = [
     path('m_send/', views.m_send_direct, name='m_send_direct'),
     path('new_message/', views.user_search, name='user_search'),
     path('a_new_message/', views.a_user_search, name='a_user_search'),
-    # path('m_new_message/', views.m_user_search, name='m_user_search'),
+    path('m_new_message/', views.m_user_search, name='m_user_search'),
     path('new_message/<username>', views.new_message, name='new_message'),
     path('a_new_message/<username>', views.a_new_message, name='a_new_message'),
-    # path('m_new_message/<username>', views.m_new_message, name='m_new_message'),
+    path('m_new_message/<username>', views.m_new_message, name='m_new_message'),
 ]
