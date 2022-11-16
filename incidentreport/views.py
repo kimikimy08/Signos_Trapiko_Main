@@ -487,70 +487,77 @@ def my_report_delete(request, id):
 FORMS1 = [("information", UserForm)]
 
 TEMPLATES2 = {"information": "pages/member/member_myreport_add.html"}
-# class multistepformsubmission_member(SessionWizardView):
+class multistepformsubmission_member(SessionWizardView):
     
 
-#     # template_name = 'pages/incident_report.html'
-#     # form_list = [IncidentGeneralForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm]
-#     file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'incident_report/image'))
+    # template_name = 'pages/incident_report.html'
+    # form_list = [IncidentGeneralForm, IncidentGeneralForm, IncidentPersonForm, IncidentVehicleForm, IncidentMediaForm, IncidentRemarksForm]
+    file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'incident_report/image'))
     
-#     def get_template_names(self):
-#         return [TEMPLATES2[self.steps.current]]
+    def get_template_names(self):
+        return [TEMPLATES2[self.steps.current]]
     
-#     def form_valid(self, form):
-#         try:
-#             form.execute()
-#             # messages.add_message(self.request, messages.SUCCESS, ('Report details successfully added'))
+    def form_valid(self, form):
+        try:
+            form.execute()
+            # messages.add_message(self.request, messages.SUCCESS, ('Report details successfully added'))
             
-#             # messages.add_message(self.request, messages.SUCCESS)
-#         except Exception as err:
-#             messages.add_message(self.request, messages.ERROR, err.message)
-#         else:
-#             messages.add_message(self.request, messages.INFO, ('It worked'))
+            # messages.add_message(self.request, messages.SUCCESS)
+        except Exception as err:
+            messages.add_message(self.request, messages.ERROR, err.message)
+        else:
+            messages.add_message(self.request, messages.INFO, ('It worked'))
     
-#     def done(self, form_list, **kwargs):
-#         # IncidentGeneral, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
-#         profile = get_object_or_404(UserProfile, user=self.request.user)
+    def done(self, form_list, **kwargs):
+        # IncidentGeneral, IncidentGeneral, IncidentRemark, AccidentCausationSub, CollisionTypeSub, IncidentMedia, IncidentPerson, IncidentVehicle
+        profile = get_object_or_404(UserProfile, user=self.request.user)
 
     
-#         general_instance = IncidentGeneral()
-#         person_instance  = IncidentPerson()
-#         vehicle_instance = IncidentVehicle()
-#         media_instance = IncidentMedia()
-#         remarks_instance = IncidentRemark()
-#         #listing_instance.created_by = self.request.user
-#         #listing_instance.listing_owner = self.request.user
-#         #listing_instance.listing_type = 'P'
-#         for form in form_list:
-#             general_instance = construct_instance(form, general_instance, form._meta.fields, form._meta.exclude)
-#             person_instance = construct_instance(form, person_instance, form._meta.fields, form._meta.exclude)
-#             vehicle_instance = construct_instance(form, vehicle_instance, form._meta.fields, form._meta.exclude)
-#             media_instance = construct_instance(form, media_instance, form._meta.fields, form._meta.exclude)
-#             remarks_instance = construct_instance(form, remarks_instance, form._meta.fields, form._meta.exclude)
-#         general_instance.user = self.request.user
-#         general_instance.status = 1
+        general_instance = IncidentGeneral()
+        person_instance  = IncidentPerson()
+        vehicle_instance = IncidentVehicle()
+        media_instance = IncidentMedia()
+        remarks_instance = IncidentRemark()
+        #listing_instance.created_by = self.request.user
+        #listing_instance.listing_owner = self.request.user
+        #listing_instance.listing_type = 'P'
+        for form in form_list:
+            general_instance = construct_instance(form, general_instance, form._meta.fields, form._meta.exclude)
+            person_instance = construct_instance(form, person_instance, form._meta.fields, form._meta.exclude)
+            vehicle_instance = construct_instance(form, vehicle_instance, form._meta.fields, form._meta.exclude)
+            media_instance = construct_instance(form, media_instance, form._meta.fields, form._meta.exclude)
+            remarks_instance = construct_instance(form, remarks_instance, form._meta.fields, form._meta.exclude)
+        general_instance.user = self.request.user
+        general_instance.status = 1
 
-#         general_instance.save()
-#         person_instance.incident_general = general_instance
-#         person_instance.save()
-#         vehicle_instance.incident_general = general_instance
-#         vehicle_instance.save()
-#         media_instance.incident_general = general_instance
-#         media_instance.save()
-#         remarks_instance.incident_general = general_instance
-#         remarks_instance.save()
-#         remarks = "new incident"
-#         text_preview = "created a new incident report"   
-#         notification_report = Notification(incident_report=general_instance,sender=self.request.user,user=self.request.user, remarks=remarks, notification_type=1, text_preview=text_preview)
-#         notification_report.save()
-#         # Notification.objects.create(to_user=self.request, IncidentGeneral=self.user_report, notification_type='application', created_by=self.user, extra_id=general_instance.id)
+        general_instance.save()
+        person_instance.incident_general = general_instance
+        person_instance.save()
+        vehicle_instance.incident_general = general_instance
+        vehicle_instance.save()
+        media_instance.incident_general = general_instance
+        media_instance.save()
+        remarks_instance.incident_general = general_instance
+        remarks_instance.save()
+        remarks = "new incident"
+        text_preview = "created a new incident report"   
+        notification_report = Notification(incident_report=general_instance,sender=self.request.user,user=self.request.user, remarks=remarks, notification_type=1, text_preview=text_preview)
+        notification_report.save()
+        # Notification.objects.create(to_user=self.request, IncidentGeneral=self.user_report, notification_type='application', created_by=self.user, extra_id=general_instance.id)
         
-#         messages.success(self.request, 'Report details successfully added')
-#         context = {
-#             'profile': profile,
+        messages.success(self.request, 'Report details successfully added')
+        context = {
+            'profile': profile,
         
-#         }
-#         return redirect('/myReport', context)
+        }
+        return redirect('/myReport', context)
+
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@user_passes_test(check_role_member)
+def incident_form_member(request):
+    attWizardView = multistepformsubmission_member.as_view(FORMS1)
+    return attWizardView(request)
 
 # @login_required(login_url='login')
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -558,94 +565,89 @@ TEMPLATES2 = {"information": "pages/member/member_myreport_add.html"}
 # def incident_form_member(request):
 #     attWizardView = multistepformsubmission_member.as_view(FORMS1)
 #     return attWizardView(request)
-
-@login_required(login_url='login')
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-@user_passes_test(check_role_member)
-def incident_form_member(request):
-    profile = get_object_or_404(UserProfile, user=request.user)
-    if request.method == 'POST':
-        person_instance  = IncidentPerson()
-        vehicle_instance = IncidentVehicle()
-        media_instance = IncidentMedia()
-        remarks_instance = IncidentRemark()
-        form =  UserForm(request.POST or None, request.FILES or None)
-        form_general = UserForm(request.POST or None, request.FILES or None)
-        # form_people = IncidentRemarksForm(request.POST or None, request.FILES or None)
-        form_media = IncidentRemarksForm(request.POST or None, request.FILES or None)
-        try:
-            if form.is_valid() and form_general.is_valid() :
-                date=parse_datetime(request.POST.get("date"))
-                time=request.POST.get("time")
-                address=request.POST.get("address")
-                city=request.POST.get("city")
-                pin_code=request.POST.get("pin_code")
-                latitude=request.POST.get("latitude")
-                longitude=request.POST.get("longitude")
-                description=request.POST.get("description")
-                upload_photovideo=request.FILES.get("upload_photovideo")
+    # profile = get_object_or_404(UserProfile, user=request.user)
+    # if request.method == 'POST':
+    #     person_instance  = IncidentPerson()
+    #     vehicle_instance = IncidentVehicle()
+    #     media_instance = IncidentMedia()
+    #     remarks_instance = IncidentRemark()
+    #     form =  UserForm(request.POST or None, request.FILES or None)
+    #     form_general = UserForm(request.POST or None, request.FILES or None)
+    #     # form_people = IncidentRemarksForm(request.POST or None, request.FILES or None)
+    #     form_media = IncidentRemarksForm(request.POST or None, request.FILES or None)
+    #     try:
+    #         if form.is_valid() and form_general.is_valid() :
+    #             date=parse_datetime(request.POST.get("date"))
+    #             time=request.POST.get("time")
+    #             address=request.POST.get("address")
+    #             city=request.POST.get("city")
+    #             pin_code=request.POST.get("pin_code")
+    #             latitude=request.POST.get("latitude")
+    #             longitude=request.POST.get("longitude")
+    #             description=request.POST.get("description")
+    #             upload_photovideo=request.FILES.get("upload_photovideo")
                 
                 
-                # date_field = datetime.datetime.strptime(date, '%m-%d-%Y').strftime('%Y-%m-%d')
-                # print(date_field)
+    #             # date_field = datetime.datetime.strptime(date, '%m-%d-%Y').strftime('%Y-%m-%d')
+    #             # print(date_field)
                 
-                responder = request.POST.get("responder")
-                action_taken = request.POST.get("action_taken")
-                form.user = request.user
-                # user_report=IncidentGeneral(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description)
-                # user_report.status = 2
-                # user_report.save()
+    #             responder = request.POST.get("responder")
+    #             action_taken = request.POST.get("action_taken")
+    #             form.user = request.user
+    #             # user_report=IncidentGeneral(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description)
+    #             # user_report.status = 2
+    #             # user_report.save()
                 
 
                 
                 
-                incident_general=IncidentGeneral(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description,
-                                  upload_photovideo=upload_photovideo               )
-                incident_general.status = 1
-                # incident_general.save()
+    #             incident_general=IncidentGeneral(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description,
+    #                               upload_photovideo=upload_photovideo               )
+    #             incident_general.status = 1
+    #             # incident_general.save()
                 
-                user_instance =  IncidentGeneral.objects.filter(date = date, time__lt=Now()-timedelta(hours=1), address = address)
-                if user_instance.exists():
-                    incident_general.duplicate = "Possible Duplicate"
-                    incident_general.save()
-                else:
-                    incident_general.save()
-                
-                
-                person_instance.incident_general = incident_general
-                person_instance.save()
-                vehicle_instance.incident_general = incident_general
-                vehicle_instance.save()
-                media_instance.incident_general = incident_general
-                media_instance.save()
-                remarks_instance.incident_general = incident_general
-                remarks_instance.save()
+    #             user_instance =  IncidentGeneral.objects.filter(date = date, time__lt=Now()-timedelta(hours=1), address = address)
+    #             if user_instance.exists():
+    #                 incident_general.duplicate = "Possible Duplicate"
+    #                 incident_general.save()
+    #             else:
+    #                 incident_general.save()
                 
                 
-                messages.success(request,"Data Save Successfully")
-                return redirect('my_report')
+    #             person_instance.incident_general = incident_general
+    #             person_instance.save()
+    #             vehicle_instance.incident_general = incident_general
+    #             vehicle_instance.save()
+    #             media_instance.incident_general = incident_general
+    #             media_instance.save()
+    #             remarks_instance.incident_general = incident_general
+    #             remarks_instance.save()
+                
+                
+    #             messages.success(request,"Data Save Successfully")
+    #             return redirect('my_report')
             
-            else:
-                messages.error(request,"Data Not Save Successfully")
-                print(form.errors)
-                print(form_general.errors)
-                return redirect('incident_form_member')
+    #         else:
+    #             messages.error(request,"Data Not Save Successfully")
+    #             print(form.errors)
+    #             print(form_general.errors)
+    #             return redirect('incident_form_member')
                 
             
-        except Exception as e:
-            print('invalid form')
-            messages.error(request, str(e))
+    #     except Exception as e:
+    #         print('invalid form')
+    #         messages.error(request, str(e))
 
 
-    else:
-        form = UserForm()
-        form_general = UserForm()     
-    context = {
-        'form': form,
-        'form_general': form_general,
-        'profile':profile
-    }
-    return render(request,"pages/member/member_myreport_add.html", context)
+    # else:
+    #     form = UserForm()
+    #     form_general = UserForm()     
+    # context = {
+    #     'form': form,
+    #     'form_general': form_general,
+    #     'profile':profile
+    # }
+    # return render(request,"pages/member/member_myreport_add.html", context)
 
 
 @login_required(login_url='login')
