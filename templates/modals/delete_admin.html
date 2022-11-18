@@ -23,7 +23,5 @@
 <!-- Modal Footer -->
 {% block modal-footer %}
 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-<a href="{% url 'super_user_account_delete' users.id %}" class="btn btn-outline-danger btn-sm btn-modal">Delete</a>
+<a href="{% url 'admin_user_account_delete' users.id %}" class="btn btn-outline-danger btn-sm btn-modal">Delete</a>
 {% endblock modal-footer %}
-
-
