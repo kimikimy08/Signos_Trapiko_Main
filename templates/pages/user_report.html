@@ -70,26 +70,26 @@
                     <div class="card-header py-3">
                         <ul class="nav nav-pills card-header-pills">
                             <li class="nav-item">
-                                <a class="{% if '/userReports' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports' %}">All Reports</a>
+                                <a class="{% if '/userReport' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report' %}">All Reports</a>
                             </li>
                             <li class="nav-item">
-                                <a class="{% if '/userReports/today' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports_today' %}">Today</a>
+                                <a class="{% if '/userReport/today' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report_today' %}">Today</a>
                             </li>
                             <li class="nav-item">
-                                <a class="{% if '/userReports/pending' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports_pending' %}">Pending</a>
+                                <a class="{% if '/userReport/pending' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report_pending' %}">Pending</a>
                             </li>
                             <li class="nav-item">
-                                <a class="{% if '/userReports/approved' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports_approved' %}">Approved</a>
+                                <a class="{% if '/userReport/approved' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report_approved' %}">Approved</a>
                             </li>
                             <li class="nav-item">
-                                <a class="{% if '/userReports/rejected' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_reports_rejected' %}">Rejected</a>
+                                <a class="{% if '/userReport/rejected' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'user_report_rejected' %}">Rejected</a>
                             </li> 
                         </ul>
                     </div>
 
                     <div class="card-body">
                         <div class="table-responsive">
-                            <form id="form1" action="{% url 'user_reports' %}" enctype="multipart/form-data" method="post">
+                            <form id="form1" action="{% url 'user_report' %}" enctype="multipart/form-data" method="post">
                                 {% csrf_token %}
                                 
                                 {% if incidentReports %}
