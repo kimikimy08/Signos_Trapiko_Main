@@ -47,15 +47,15 @@
                         <div class="pg-title p-2 flex-grow-1 bd-highlight">
                             <h4>User Account Management</h4>
                         </div>
-                        <div class="p-2 bd-highlight">
+                        {% comment %} <div class="p-2 bd-highlight">
                             <a href="{% url 'super_user_account_add' %}" title ="Add User"
                                 class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight">
-                                <i class='bx bx-user-plus'></i> Add User</a>
+                                <i class='bx bx-user-plus'></i> Add User</a> {% endcomment %}
                             <!-- <a href="#add2"
                                 class="d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-1 bd-highlight"
                                 data-toggle="modal" data-toggle="tooltip">
                                 <i class='bx bx-user-plus'></i> Add User</a> -->
-                        </div>
+                        {% comment %} </div> {% endcomment %}
                     </div>
 
                     <!-- User Report Table  -->
@@ -146,7 +146,7 @@
                                               
                                             </td>
                                             <td>
-                                                <a href="{% url 'super_user_account_view' users.id  %}"><i class='bx bxs-folder-open'
+                                                <a href="{% url 'admin_user_account_view' users.id  %}"><i class='bx bxs-folder-open'
                                                     title="View"></i></a>
                                                     <a href="#" data-toggle="modal" data-target="#deleteModal{{ users.id }}"><i class='bx bx-trash'
                                                         data-toggle="tooltip" title="Delete" ></i></a>
