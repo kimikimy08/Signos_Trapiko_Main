@@ -67,15 +67,15 @@
                 <div class="card-header py-3">
                     <ul class="nav nav-pills card-header-pills">
                         <li class="nav-item">
-                            <a class="{% if '/myReport' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report' %}">All Reports</a>
+                            <a class="{% if '/myReport/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report' %}">All Reports</a>
                         </li>
                         <li class="nav-item">
-                            <a class="{% if '/myReport/pending' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report_pending' %}">Pending</a>
+                            <a class="{% if '/myReport/pending/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report_pending' %}">Pending</a>
                         </li>
                         <li class="nav-item">
-                            <a class="{% if '/myReport/approved' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report_approved' %}">Approved</a>
+                            <a class="{% if '/myReport/approved/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report_approved' %}">Approved</a>
                         <li class="nav-item">
-                            <a class="{% if '/myReport/rejected' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report_rejected' %}">Rejected</a>
+                            <a class="{% if '/myReport/rejected/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'my_report_rejected' %}">Rejected</a>
                         </li>
                     </ul>
                 </div>
@@ -208,7 +208,8 @@
             </div>
             <!-- End of User Report Table  -->
 
-
+            {% if incidentReports %}
+<div class="mb-5">
             <!--Pagination-->
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
@@ -254,6 +255,8 @@
         {% endif %}
       </ul>
     </nav>
+</div>
+{% endif %}
     <!--end of Pagination-->
 
         </div>

@@ -25,7 +25,7 @@ import pandas as pd
 from django.views.decorators.cache import cache_control
 from django.utils.dateparse import parse_datetime
 from notifications.models import Notification
-from django.db.models.functions import Now
+from datetime import datetime, timedelta
 
 
 @login_required(login_url='login')
@@ -552,102 +552,107 @@ class multistepformsubmission_member(SessionWizardView):
         }
         return redirect('/myReport', context)
 
-@login_required(login_url='login')
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-@user_passes_test(check_role_member)
-def incident_form_member(request):
-    attWizardView = multistepformsubmission_member.as_view(FORMS1)
-    return attWizardView(request)
-
 # @login_required(login_url='login')
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 # @user_passes_test(check_role_member)
 # def incident_form_member(request):
 #     attWizardView = multistepformsubmission_member.as_view(FORMS1)
 #     return attWizardView(request)
-    # profile = get_object_or_404(UserProfile, user=request.user)
-    # if request.method == 'POST':
-    #     person_instance  = IncidentPerson()
-    #     vehicle_instance = IncidentVehicle()
-    #     media_instance = IncidentMedia()
-    #     remarks_instance = IncidentRemark()
-    #     form =  UserForm(request.POST or None, request.FILES or None)
-    #     form_general = UserForm(request.POST or None, request.FILES or None)
-    #     # form_people = IncidentRemarksForm(request.POST or None, request.FILES or None)
-    #     form_media = IncidentRemarksForm(request.POST or None, request.FILES or None)
-    #     try:
-    #         if form.is_valid() and form_general.is_valid() :
-    #             date=parse_datetime(request.POST.get("date"))
-    #             time=request.POST.get("time")
-    #             address=request.POST.get("address")
-    #             city=request.POST.get("city")
-    #             pin_code=request.POST.get("pin_code")
-    #             latitude=request.POST.get("latitude")
-    #             longitude=request.POST.get("longitude")
-    #             description=request.POST.get("description")
-    #             upload_photovideo=request.FILES.get("upload_photovideo")
+
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@user_passes_test(check_role_member)
+def incident_form_member(request):
+    # attWizardView = multistepformsubmission_member.as_view(FORMS1)
+    # return attWizardView(request)
+    profile = get_object_or_404(UserProfile, user=request.user)
+    if request.method == 'POST':
+        person_instance  = IncidentPerson()
+        vehicle_instance = IncidentVehicle()
+        media_instance = IncidentMedia()
+        remarks_instance = IncidentRemark()
+        form =  UserForm(request.POST or None, request.FILES or None)
+        # form_general = UserForm(request.POST or None, request.FILES or None)
+        # form_people = IncidentRemarksForm(request.POST or None, request.FILES or None)
+        # form_media = IncidentRemarksForm(request.POST or None, request.FILES or None)
+        try:
+            if form.is_valid():
+                date=parse_datetime(request.POST.get("date"))
+                time=request.POST.get("time")
+                
+                address=request.POST.get("address")
+                city=request.POST.get("city")
+                pin_code=request.POST.get("pin_code")
+                latitude=request.POST.get("latitude")
+                longitude=request.POST.get("longitude")
+                description=request.POST.get("description")
+                upload_photovideo=request.FILES.get("upload_photovideo")
                 
                 
-    #             # date_field = datetime.datetime.strptime(date, '%m-%d-%Y').strftime('%Y-%m-%d')
-    #             # print(date_field)
+                # date_field = datetime.datetime.strptime(date, '%m-%d-%Y').strftime('%Y-%m-%d')
+                # print(date_field)
                 
-    #             responder = request.POST.get("responder")
-    #             action_taken = request.POST.get("action_taken")
-    #             form.user = request.user
-    #             # user_report=IncidentGeneral(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description)
-    #             # user_report.status = 2
-    #             # user_report.save()
+                # responder = request.POST.get("responder")
+                # action_taken = request.POST.get("action_taken")
+                form.user = request.user
+                # user_report=IncidentGeneral(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description)
+                # user_report.status = 2
+                # user_report.save()
                 
 
                 
                 
-    #             incident_general=IncidentGeneral(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description,
-    #                               upload_photovideo=upload_photovideo               )
-    #             incident_general.status = 1
-    #             # incident_general.save()
+                incident_general=IncidentGeneral(user=request.user,date=date,time=time,address=address,city=city,pin_code=pin_code,latitude=latitude,longitude=longitude,description=description,
+                                  upload_photovideo=upload_photovideo)
+                incident_general.status = 1
+                time_threshold = datetime.now() - timedelta(hours=1)
+                print(time_threshold)
+                # incident_general.save()
                 
-    #             user_instance =  IncidentGeneral.objects.filter(date = date, time__lt=Now()-timedelta(hours=1), address = address)
-    #             if user_instance.exists():
-    #                 incident_general.duplicate = "Possible Duplicate"
-    #                 incident_general.save()
-    #             else:
-    #                 incident_general.save()
-                
-                
-    #             person_instance.incident_general = incident_general
-    #             person_instance.save()
-    #             vehicle_instance.incident_general = incident_general
-    #             vehicle_instance.save()
-    #             media_instance.incident_general = incident_general
-    #             media_instance.save()
-    #             remarks_instance.incident_general = incident_general
-    #             remarks_instance.save()
+                user_instance =  IncidentGeneral.objects.filter(created_at__lt=time_threshold, address = address).order_by('-created_at')[:1]
+                if user_instance.exists():
+                    incident_general.duplicate = "Possible Duplicate"
+                    incident_general.save()
+                else:
+                    incident_general.save()
                 
                 
-    #             messages.success(request,"Data Save Successfully")
-    #             return redirect('my_report')
+                person_instance.incident_general = incident_general
+                person_instance.save()
+                vehicle_instance.incident_general = incident_general
+                vehicle_instance.save()
+                media_instance.incident_general = incident_general
+                media_instance.save()
+                remarks_instance.incident_general = incident_general
+                remarks_instance.save()
+                
+                
+                messages.success(request,"Data Save Successfully")
+                return redirect('my_report')
             
-    #         else:
-    #             messages.error(request,"Data Not Save Successfully")
-    #             print(form.errors)
-    #             print(form_general.errors)
-    #             return redirect('incident_form_member')
+            else:
+                messages.error(request,"Data Not Save Successfully")
+                print(form.errors)
+               
+                return redirect('incident_form_member')
                 
             
-    #     except Exception as e:
-    #         print('invalid form')
-    #         messages.error(request, str(e))
+        except Exception as e:
+            print('invalid form')
+            print(form.errors)
+            print(e)
+            messages.error(request, str(e))
 
 
-    # else:
-    #     form = UserForm()
-    #     form_general = UserForm()     
-    # context = {
-    #     'form': form,
-    #     'form_general': form_general,
-    #     'profile':profile
-    # }
-    # return render(request,"pages/member/member_myreport_add.html", context)
+    else:
+        form = UserForm()
+       
+    context = {
+        'form': form,
+       
+        'profile':profile
+    }
+    return render(request,"pages/member/member_myreport_add.html", context)
 
 
 @login_required(login_url='login')
@@ -1892,7 +1897,9 @@ def incident_report_general_edit(request, id=None):
     if request.method == 'POST':
         general_instance = IncidentGeneralForm(request.POST  or None, request.FILES  or None, instance=incidentGeneral)
         # user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
-        if general_instance.is_valid():
+        if request.POST.get('Back') == 'Back':
+            return redirect('user_reports')
+        elif general_instance.is_valid():
             general_instance.instance.username = request.user
             general_instance.save()
             remarks = "update incident status"
@@ -1909,7 +1916,7 @@ def incident_report_general_edit(request, id=None):
                 text = "updated status to rejected"
                 notification_report = Notification(incident_report=general, sender=general.user, user=request.user, remarks=remarks, notification_type=1, text_preview=text)
                 notification_report.save()
-            messages.success(request, 'Profile updated')
+            messages.success(request, 'Incident updated')
 
             return redirect('user_reports')
         else:
@@ -1923,7 +1930,7 @@ def incident_report_general_edit(request, id=None):
         'general_instance': general_instance,
         # 'user_report' : user_report,
         'general': incidentGeneral,
-        'IncidentGeneral': IncidentGeneral
+        'incidentGeneral': incidentGeneral
     }
     
     return render(request, 'pages/incident_report_general_edit.html', context)
@@ -1965,16 +1972,19 @@ def incident_report_remarks_edit(request, id=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_super)
 def incident_report_people_edit(request, id=None, people_id=None):
-    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
+    incident_general =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     people = get_object_or_404(IncidentPerson, pk=people_id)
     if request.method == 'POST':
-        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=incident_general)
         person_instance = IncidentPersonForm(request.POST  or None, request.FILES  or None, instance=people)
-        if person_instance.is_valid():
+        if request.POST.get('Back') == 'Back':
+            return redirect('user_reports')
+        
+        elif person_instance.is_valid():
             user_report.instance.username = request.user
             person_instance.save()
-            messages.success(request, 'Profile updated')
+            messages.success(request, 'People updated')
 
             return redirect('user_reports')
         else:
@@ -1988,7 +1998,7 @@ def incident_report_people_edit(request, id=None, people_id=None):
         'person_instance': person_instance,
         'user_report' : user_report,
         'general': general,
-        'IncidentGeneral': IncidentGeneral,
+        'incident_general': incident_general,
         'people': people
     }
     
@@ -1998,16 +2008,18 @@ def incident_report_people_edit(request, id=None, people_id=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_super)
 def incident_report_vehicle_edit(request, id=None, vehicle_id=None):
-    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
+    incident_general =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     vehicle = get_object_or_404(IncidentVehicle, pk=vehicle_id)
     if request.method == 'POST':
-        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=incident_general)
         vehicle_instance = IncidentVehicleForm(request.POST  or None, request.FILES  or None, instance=vehicle)
-        if vehicle_instance.is_valid():
+        if request.POST.get('Back') == 'Back':
+            return redirect('user_reports')
+        elif vehicle_instance.is_valid():
             user_report.instance.username = request.user
             vehicle_instance.save()
-            messages.success(request, 'Profile updated')
+            messages.success(request, 'Vehicle updated')
 
             return redirect('user_reports')
         else:
@@ -2021,7 +2033,7 @@ def incident_report_vehicle_edit(request, id=None, vehicle_id=None):
         'vehicle_instance': vehicle_instance,
         'user_report' : user_report,
         'general': general,
-        'IncidentGeneral': IncidentGeneral,
+        'incident_general': incident_general,
         'vehicle': vehicle
     }
     
@@ -2031,16 +2043,18 @@ def incident_report_vehicle_edit(request, id=None, vehicle_id=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_super)
 def incident_report_media_edit(request, id=None, media_id=None):
-    IncidentGeneral =  get_object_or_404(IncidentGeneral, pk=id)
+    incident_general =  get_object_or_404(IncidentGeneral, pk=id)
     general = get_object_or_404(IncidentGeneral, pk=id)
     media = get_object_or_404(IncidentMedia, pk=media_id)
     if request.method == 'POST':
-        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=IncidentGeneral)
+        user_report = IncidentGeneralForm(request.POST  or None, request.FILES  or None,  instance=incident_general)
         media_instance = IncidentMediaForm(request.POST  or None, request.FILES  or None, instance=media)
-        if media_instance.is_valid():
+        if request.POST.get('Back') == 'Back':
+            return redirect('user_reports')
+        elif media_instance.is_valid():
             user_report.instance.username = request.user
             media_instance.save()
-            messages.success(request, 'Profile updated')
+            messages.success(request, 'Media updated')
 
             return redirect('user_reports')
         else:
@@ -2054,14 +2068,141 @@ def incident_report_media_edit(request, id=None, media_id=None):
         'media_instance': media_instance,
         'user_report' : user_report,
         'general': general,
-        'IncidentGeneral': IncidentGeneral,
+        'incident_general': incident_general,
         'media': media
     }
     
     return render(request, 'pages/incident_report_media_edit.html', context)
 
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@user_passes_test(check_role_super)
+def incident_report_people_add(request, id=None):
+    incident_general =  get_object_or_404(IncidentGeneral, pk=id)
+    general = get_object_or_404(IncidentGeneral, pk=id)
+    if request.method == 'POST':
+        person_instance = IncidentPersonForm(request.POST or None, request.FILES or None)
+        try:
+            if person_instance.is_valid():
+                
+                incident_first_name=request.POST.get("incident_first_name")
+                incident_middle_name=request.POST.get("incident_middle_name")
+                incident_last_name=request.POST.get("incident_last_name")
+                incident_age=request.POST.get("incident_age")
+                incident_gender=request.POST.get("incident_gender")
+                incident_address=request.POST.get("incident_address")
+                incident_involvement=request.POST.get("incident_involvement")
+                incident_id_presented=request.POST.get("incident_id_presented")
+                incident_id_number=request.POST.get("incident_id_number")
+                incident_injury=request.POST.get("incident_injury")
+                incident_driver_error=request.POST.get("incident_driver_error")
+                incident_alcohol_drugs=request.POST.get("incident_alcohol_drugs")
+                incident_seatbelt_helmet=request.POST.get("incident_seatbelt_helmet")
+                
+               
+                incident_person=IncidentPerson(incident_general=incident_general, incident_first_name=incident_first_name,incident_middle_name=incident_middle_name,
+                                       incident_last_name=incident_last_name,incident_age=incident_age,
+                                       incident_gender=incident_gender,incident_address=incident_address,
+                                       incident_involvement=incident_involvement,incident_id_presented=incident_id_presented,
+                                       incident_id_number=incident_id_number, incident_injury=incident_injury,
+                                       incident_driver_error=incident_driver_error, incident_alcohol_drugs=incident_alcohol_drugs,
+                                      incident_seatbelt_helmet=incident_seatbelt_helmet)
+                incident_person.save()
+                messages.success(request, 'People Added')
+                return redirect('user_reports')
+                
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
 
 
+    else:
+        person_instance = IncidentPersonForm()
+    context = {
+        'person_instance' : person_instance,
+        'general': general,
+    }
+    return render(request, 'pages/incident_report_people_add.html', context)
+
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@user_passes_test(check_role_super)
+def incident_report_vehicle_add(request, id=None):
+    incident_general =  get_object_or_404(IncidentGeneral, pk=id)
+    general = get_object_or_404(IncidentGeneral, pk=id)
+    if request.method == 'POST':
+        vehicle_instance = IncidentVehicleForm(request.POST or None, request.FILES or None)
+        try:
+            if vehicle_instance.is_valid():
+                
+                classification=request.POST.get("classification")
+                vehicle_type=request.POST.get("vehicle_type")
+                brand=request.POST.get("brand")
+                plate_number=request.POST.get("plate_number")
+                engine_number=request.POST.get("engine_number")
+                chassis_number=request.POST.get("chassis_number")
+                insurance_details=request.POST.get("insurance_details")
+                maneuver=request.POST.get("maneuver")
+                damage=request.POST.get("damage")
+                defect=request.POST.get("defect")
+                loading=request.POST.get("loading")
+               
+                incident_vehicle=IncidentVehicle(incident_general=incident_general, classification=classification,vehicle_type=vehicle_type,
+                                       brand=brand,plate_number=plate_number,
+                                       engine_number=engine_number,chassis_number=chassis_number,
+                                       insurance_details=insurance_details, maneuver=maneuver,
+                                       damage=damage, defect=defect,
+                                      loading=loading)
+                incident_vehicle.save()
+                messages.success(request, 'Vehicle Added')
+                return redirect('user_reports')
+                
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        vehicle_instance = IncidentVehicleForm()
+    context = {
+        'vehicle_instance' : vehicle_instance,
+        'general': general,
+    }
+    return render(request, 'pages/incident_report_vehicle_add.html', context)
+
+
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@user_passes_test(check_role_super)
+def incident_report_media_add(request, id=None):
+    incident_general =  get_object_or_404(IncidentGeneral, pk=id)
+    general = get_object_or_404(IncidentGeneral, pk=id)
+    if request.method == 'POST':
+        media_instance = IncidentMediaForm(request.POST or None, request.FILES or None)
+        try:
+            if media_instance.is_valid():
+                
+                incident_upload_photovideo=request.POST.get("incident_upload_photovideo")
+                media_description=request.POST.get("media_description")
+               
+                
+                incident_media=IncidentMedia(incident_general=incident_general, media_description=media_description, incident_upload_photovideo=incident_upload_photovideo)
+                incident_media.save()
+                messages.success(request, 'Media Added')
+                return redirect('user_reports')
+                
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        media_instance = IncidentMediaForm()
+    context = {
+        'media_instance' : media_instance,
+        'general': general,
+    }
+    return render(request, 'pages/incident_report_media_add.html', context)
 
 @login_required(login_url = 'login')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -3066,7 +3207,7 @@ def sa_recycle_bin(request):
                     b.delete()
                     # b.is_deleted = False
                     # b.deleted_at = None
-                    messages.success(request, 'User Report successfully restored') 
+                    messages.success(request, 'User Report successfully deleted') 
     context = {
         'profile': profile,
         'incidentReports': page_obj,
@@ -3103,7 +3244,7 @@ def a_recycle_bin(request):
                     b.delete()
                     # b.is_deleted = False
                     # b.deleted_at = None
-                    messages.success(request, 'User Report successfully restored') 
+                    messages.success(request, 'User Report successfully deleted') 
     context = {
         'profile': profile,
         'incidentReports': page_obj,

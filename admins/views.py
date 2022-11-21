@@ -304,6 +304,7 @@ def admin_user_account_delete(request, id=None):
         messages.error(request, 'Unable to Delete Super Admin or Admin account')
         return redirect('admin_user_account')
     
+
 @login_required(login_url='login')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_passes_test(check_role_admin)
@@ -319,22 +320,20 @@ def a_recycle_bin_user(request):
                 print(x)
                 if str(x) == 'on':
                     b = User.objects.get(id=i.id)
-                    b.status = 1
-                    b.is_active = 'True'
                     b.restore()
                     # b.is_deleted = False
                     # b.deleted_at = None
-                    messages.success(request, 'User Report successfully restored')
-        elif request.POST.get('Yes') == 'Yes':
+                    messages.success(request, 'User Account successfully restored')
+        elif request.POST.get('Delete') == 'Delete':
             for i in user:
-                x = User.POST.get(str(i.id))
+                x = request.POST.get(str(i.id))
                 print(x)
                 if str(x) == 'on':
                     b = User.objects.get(id=i.id)
                     b.delete()
                     # b.is_deleted = False
                     # b.deleted_at = None
-                    messages.success(request, 'User Report successfully restored') 
+                    messages.success(request, 'User Account successfully deleted') 
     context = {
         'user': user,
         'page_obj':page_obj

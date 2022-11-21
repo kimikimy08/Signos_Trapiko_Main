@@ -64,23 +64,23 @@
                         <div class="card-header py-3">
                             <ul class="nav nav-pills card-header-pills">
                                 <li class="nav-item">
-                                    <a class="{% if '/admins/userAccount' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account' %}">All Users</a>
+                                    <a class="{% if '/admins/userAccount/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account' %}">All Users</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="{% if '/admins/userAccount/member' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account_member' %}">Members</a>
+                                    <a class="{% if '/admins/userAccount/member/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account_member' %}">Members</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="{% if '/admins/userAccount/admin' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account_admin' %}">Admin</a>
+                                    <a class="{% if '/admins/userAccount/admin/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account_admin' %}">Admin</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="{% if '/admins/userAccount/superadmin' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account_superadmin' %}">Super Admin</a>
+                                    <a class="{% if '/admins/userAccount/superadmin/' == request.path %} nav-link active {% else %} nav-item {% endif %}" href="{% url 'admin_user_account_superadmin' %}">Super Admin</a>
                                 </li>
                             </ul>
                         </div>
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                <form id="form1" action="{% url 'super_user_account' %}" enctype="multipart/form-data" method="post">
+                                <form id="form1" action="{% url 'admin_user_account' %}" enctype="multipart/form-data" method="post">
                                     {% csrf_token %}
                                     
                                     {% if page_obj %}
@@ -148,8 +148,11 @@
                                             <td>
                                                 <a href="{% url 'admin_user_account_view' users.id  %}"><i class='bx bxs-folder-open'
                                                     title="View"></i></a>
+                                                    {% if users.role == 2 or users.role == 3 %}
+                                                    {% else %}
                                                     <a href="#" data-toggle="modal" data-target="#deleteModal{{ users.id }}"><i class='bx bx-trash'
                                                         data-toggle="tooltip" title="Delete" ></i></a>
+                                                        {% endif %}
                                                         
                                             </td>
                                         </tr>

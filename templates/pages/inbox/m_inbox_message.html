@@ -43,12 +43,13 @@
 
                         
                     </div>
+                    {% if messages %}
                     <div class="email-list-wrapper">
                         
                         <div id="email-app-body" class="email-list-scroll-container ps ps--active-y">
                             <ul class="email-list">
                                 {% for message in messages %}
-                                <a class="" href="{% url 'directs' message.user.username %}">
+                                <a class="" href="{% url 'm_directs' message.user.username %}">
                                 <li class="email-list-item {% if active_user == message.user.username %} active{% endif %}">
                                     <div class="recipient">
                                         {% if message.user.userprofile.profile_picture %} 
@@ -78,11 +79,12 @@
                         </div>
                     </div>
 
-
+                    {% endif %}
 
                     <!-- 3RD CONTENT WITH THE WHOLE MESSAGE -->
                     
                     <!-- 3RD CONTENT WITH THE WHOLE MESSAGE -->
+                    {% if messages %}
                     <div class="email-desc-wrapper">
                         {% for direct in directs %}
                         <div class="email-header">
@@ -113,7 +115,9 @@
                             </div>
                           </article>
                           </form>
+                          
                     </div>
+                    {% endif %}
 
                     
                     
@@ -124,7 +128,7 @@
 
             </div>
         <!-- End of Page Content -->
-          
+        </div>
 
         </div>
         <!-- End of Main Content  -->

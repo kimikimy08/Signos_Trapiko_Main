@@ -69,13 +69,13 @@
                                    
                                         <form action="{% url 'incident_report_media_edit' general.id media.id %}" enctype="multipart/form-data" method="post">
                                             {% csrf_token %}
-                                            <div class="form-group">
-                                                <label>Upload Photo</label>
-                                                <div class="input-group mb-3">
-                                                    <div class="custom-file">
-                                                        
-                                                        {{media_instance.incident_upload_photovideo}}
-                                                    </div>
+                                            
+
+                                            <div class="form-row">
+                                                <div class="form-group col-md-12">
+                                                  <label for="inputbirth">Upload Photo</label>
+                                                  
+                                                  {{media_instance.incident_upload_photovideo}}
                                                 </div>
                                             </div>
                                            
@@ -85,8 +85,7 @@
                                             </div>
                                         
                                         <div class="modal-footer">
-                                            <input type="button" class="btn btn-secondary" data-dismiss="modal"
-                                                value="Cancel">
+                                            <button onclick="history.back()" class="btn btn-secondary">Back</button>
                                             <input type="submit" class="btn btn-primary" value="Save">
                                       
                                     </form>

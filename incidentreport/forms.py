@@ -155,8 +155,16 @@ class UserForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
-        self.fields['accident_factor'].widget.attrs['class'] = 'form-control'
-     
+        self.fields['accident_factor'].required = False
+        self.fields['collision_type'].required = False
+        self.fields['crash_type'].required = False
+        self.fields['weather'].required = False
+        self.fields['light'].required = False
+        self.fields['severity'].required = False
+        self.fields['movement_code'].required = False
+        self.fields['country'].required = False
+        self.fields['state'].required = False
+        
         self.fields['collision_type'].widget.attrs['class'] = 'form-control'
      
         self.fields['weather'].widget.attrs['class'] = 'form-control'

@@ -159,14 +159,28 @@
 
                                             <div class="form-row">
                                                 <div class="form-group col-md-12">
-                                                    <label for="inputCrashType">Status</label>
+                                                    {% comment %} <label for="inputCrashType">Status</label> {% endcomment %}
                                                     {{form.status.as_hidden}}
                                                 </div>
                                             </div>
                                     </table>
                                     <div class="text-right mb-1">
-                                        <button type="button"> <a href="{% url 'my_report' %}" class="save-myreports-btn discard-link"> Cancel </a></button>
-                                        <input type="submit" class="save-myreports-btn" value="Save Changes">
+                                        
+                                        <div class="text-right">
+                                            <a href="{% url 'my_report' %}" class="discard-link"> 
+                                                <input type="button" 
+                                                    class="btn btn-secondary" 
+                                                    style="color:white"
+                                                    data-dismiss="modal" 
+                                                    value="Cancel" 
+                                                    title="Discard"> 
+                                            </a>
+                                            <input type="submit" 
+                                                    class="btn btn-primary" 
+                                                    style="color:white"
+                                                    value="Save"
+                                                    title="Save">
+                                        </div>
                                     </div>
                                 </div>
 

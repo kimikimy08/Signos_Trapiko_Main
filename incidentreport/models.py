@@ -26,7 +26,7 @@ def path_and_rename(path):
         ext = filename.split('.')[-1]
         # get filename
         if instance.pk:
-            filename = '{}.{}'.format(instance.pk, ext)
+            filename = '{}.{}'.format(uuid4().hex, ext)
         else:
             # set filename as random string
             filename = '{}.{}'.format(uuid4().hex, ext)
@@ -159,6 +159,7 @@ class IncidentGeneral(SoftDeleteModel):
     time = models.TimeField(auto_now_add=False, auto_now=False, blank=True, null=True)
     status = models.PositiveSmallIntegerField(choices=STATUS, blank=True, null=True)
     duplicate =  models.CharField(choices=IF_DUPLICATE,max_length=250, blank=True, null=True)
+    duplicate_general =  models.ForeignKey('incidentreport.IncidentGeneral', on_delete=models.CASCADE, null=True, blank=True)
     accident_factor = models.ForeignKey(AccidentCausation, on_delete=models.SET_NULL, blank=True, null=True)
     collision_type = models.ForeignKey(CollisionType, on_delete=models.SET_NULL, blank=True, null=True)
     crash_type = models.ForeignKey(CrashType, on_delete=models.SET_NULL, blank=True, null=True)

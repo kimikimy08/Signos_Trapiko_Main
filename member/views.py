@@ -14,11 +14,11 @@ from incidentreport.models import IncidentGeneral
 def member_profile(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incidentReports = IncidentGeneral.objects.filter(user=request.user).order_by('-created_at')
-    incidentReports_top = IncidentGeneral.objects.filter(user=request.user).order_by('-created_at')[:4]
+    incidentReports_pend = IncidentGeneral.objects.filter(status = 1, user=request.user)
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
-        'incidentReports_top': incidentReports_top,
+        'incidentReports_pend': incidentReports_pend,
     }
     return render(request, 'pages/member/member_profile.html', context)
 
@@ -27,11 +27,11 @@ def member_profile(request):
 def member_profile_pending(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incidentReports = IncidentGeneral.objects.filter(status=1, user=request.user).order_by('-created_at')
-    incidentReports_top = IncidentGeneral.objects.filter(user=request.user)[:4]
+    incidentReports_pend = IncidentGeneral.objects.filter(status = 1, user=request.user)
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
-        'incidentReports_top': incidentReports_top,
+        'incidentReports_pend': incidentReports_pend,
     }
     return render(request, 'pages/member/member_profile.html', context)
 
@@ -40,11 +40,11 @@ def member_profile_pending(request):
 def member_profile_approved(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incidentReports = IncidentGeneral.objects.filter(status=2, user=request.user).order_by('-created_at')
-    incidentReports_top = IncidentGeneral.objects.filter(user=request.user)[:4]
+    incidentReports_pend = IncidentGeneral.objects.filter(status = 1, user=request.user)
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
-        'incidentReports_top': incidentReports_top,
+        'incidentReports_pend': incidentReports_pend,
     }
     return render(request, 'pages/member/member_profile.html', context)
 
@@ -53,11 +53,11 @@ def member_profile_approved(request):
 def member_profile_rejected(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     incidentReports = IncidentGeneral.objects.filter(status=3, user=request.user).order_by('-created_at')
-    incidentReports_top = IncidentGeneral.objects.filter(user=request.user)[:4]
+    incidentReports_pend = IncidentGeneral.objects.filter(status = 1, user=request.user)
     context = {
         'profile': profile,
         'incidentReports': incidentReports,
-        'incidentReports_top': incidentReports_top,
+        'incidentReports_pend': incidentReports_pend,
     }
     return render(request, 'pages/member/member_profile.html', context)
 

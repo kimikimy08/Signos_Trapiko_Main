@@ -68,7 +68,7 @@
                                 <table>
                                    
                                     
-                                        <form action="{% url 'incident_report_vehicle_edit' general.id vehicle.id %}" enctype="multipart/form-data" method="post">
+                                        <form action="{% url 'incident_report_vehicle_add' general.id %}" enctype="multipart/form-data" method="post">
                                             {% csrf_token %}
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">

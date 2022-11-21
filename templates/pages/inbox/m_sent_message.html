@@ -11,7 +11,6 @@
 
 
   <!-- Template Main CSS File -->
-  <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
   
   <link href="{% static 'css/admin_dashboard.css' %}" rel="stylesheet">
@@ -52,7 +51,7 @@
                           <div class="field has-addons">
                           <form>
                             <div class="control">
-                              <input style="margin-bottom: 20px" class="input form-control" name="q" type="text" placeholder="Enter username" value="{{ request.GET.q }}">
+                              <input style="margin-bottom: 20px; width: 500px;" class="input form-control" name="q" type="text" placeholder="Enter username" value="{{ request.GET.q }}">
                             </div>
                             <div class="control">
                                 <button type="submit" class="btn btn-primary">Search</button>

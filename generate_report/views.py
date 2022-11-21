@@ -891,7 +891,7 @@ def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
     html  = template.render(context_dict)
     result = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result, link_callback=fetch_resources)
+    pdf = pisa.pisaDocument(BytesIO(html.encode("cp1252")), result, link_callback=fetch_resources)
     if not pdf.err:
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return None
