@@ -615,6 +615,11 @@ def incident_form_member(request):
                     incident_general.save()
                 else:
                     incident_general.save()
+                remarks = "new incident"
+                text_preview = 'created a new incident report'
+
+                notification_report = Notification(incident_report=incident_general, sender=incident_general.user, user=request.user, remarks=remarks, notification_type=1, text_preview=text_preview)
+                notification_report.save()
                 
                 
                 person_instance.incident_general = incident_general
@@ -1300,14 +1305,20 @@ def sa_incidentreports(request):
                                                 crash_type=crash_type,
                                                 weather=weather,light=light,severity=severity,movement_code=movement_code)
                 incident_general.status = 2
-                # incident_general.save()
+                incident_general.save()
                 
-                user_instance =  IncidentGeneral.objects.filter(date = date, address = address)
-                if user_instance.exists():
-                    incident_general.duplicate = "Possible Duplicate"
-                    incident_general.save()
-                else:
-                    incident_general.save()
+                # user_instance =  IncidentGeneral.objects.filter(date = date, address = address)
+                # if user_instance.exists():
+                #     incident_general.duplicate = "Possible Duplicate"
+                #     incident_general.save()
+                # else:
+                #     incident_general.save()
+                    
+                remarks = "new incident"
+                text_preview = 'created a new incident report'
+
+                notification_report = Notification(incident_report=incident_general, sender=incident_general.user, user=request.user, remarks=remarks, notification_type=1, text_preview=text_preview)
+                notification_report.save()
                 
                 incident_remarks = IncidentRemark(incident_general=incident_general, responder=responder,action_taken=action_taken)
                 incident_remarks.save()
@@ -1500,6 +1511,13 @@ def a_incidentreports(request):
                                                 weather=weather,light=light,severity=severity,movement_code=movement_code)
                 incident_general.status = 2
                 incident_general.save()
+                
+                
+                remarks = "new incident"
+                text_preview = 'created a new incident report'
+
+                notification_report = Notification(incident_report=incident_general, sender=incident_general.user, user=request.user, remarks=remarks, notification_type=1, text_preview=text_preview)
+                notification_report.save()
                 
                 incident_remarks = IncidentRemark(incident_general=incident_general,responder=responder,action_taken=action_taken)
                 incident_remarks.save()
@@ -2203,6 +2221,136 @@ def incident_report_media_add(request, id=None):
         'general': general,
     }
     return render(request, 'pages/incident_report_media_add.html', context)
+
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@user_passes_test(check_role_super)
+def a_incident_report_people_add(request, id=None):
+    incident_general =  get_object_or_404(IncidentGeneral, pk=id)
+    general = get_object_or_404(IncidentGeneral, pk=id)
+    if request.method == 'POST':
+        person_instance = IncidentPersonForm(request.POST or None, request.FILES or None)
+        try:
+            if person_instance.is_valid():
+                
+                incident_first_name=request.POST.get("incident_first_name")
+                incident_middle_name=request.POST.get("incident_middle_name")
+                incident_last_name=request.POST.get("incident_last_name")
+                incident_age=request.POST.get("incident_age")
+                incident_gender=request.POST.get("incident_gender")
+                incident_address=request.POST.get("incident_address")
+                incident_involvement=request.POST.get("incident_involvement")
+                incident_id_presented=request.POST.get("incident_id_presented")
+                incident_id_number=request.POST.get("incident_id_number")
+                incident_injury=request.POST.get("incident_injury")
+                incident_driver_error=request.POST.get("incident_driver_error")
+                incident_alcohol_drugs=request.POST.get("incident_alcohol_drugs")
+                incident_seatbelt_helmet=request.POST.get("incident_seatbelt_helmet")
+                
+               
+                incident_person=IncidentPerson(incident_general=incident_general, incident_first_name=incident_first_name,incident_middle_name=incident_middle_name,
+                                       incident_last_name=incident_last_name,incident_age=incident_age,
+                                       incident_gender=incident_gender,incident_address=incident_address,
+                                       incident_involvement=incident_involvement,incident_id_presented=incident_id_presented,
+                                       incident_id_number=incident_id_number, incident_injury=incident_injury,
+                                       incident_driver_error=incident_driver_error, incident_alcohol_drugs=incident_alcohol_drugs,
+                                      incident_seatbelt_helmet=incident_seatbelt_helmet)
+                incident_person.save()
+                messages.success(request, 'People Added')
+                return redirect('user_reports')
+                
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        person_instance = IncidentPersonForm()
+    context = {
+        'person_instance' : person_instance,
+        'general': general,
+    }
+    return render(request, 'pages/a_incident_report_people_add.html', context)
+
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@user_passes_test(check_role_super)
+def a_incident_report_vehicle_add(request, id=None):
+    incident_general =  get_object_or_404(IncidentGeneral, pk=id)
+    general = get_object_or_404(IncidentGeneral, pk=id)
+    if request.method == 'POST':
+        vehicle_instance = IncidentVehicleForm(request.POST or None, request.FILES or None)
+        try:
+            if vehicle_instance.is_valid():
+                
+                classification=request.POST.get("classification")
+                vehicle_type=request.POST.get("vehicle_type")
+                brand=request.POST.get("brand")
+                plate_number=request.POST.get("plate_number")
+                engine_number=request.POST.get("engine_number")
+                chassis_number=request.POST.get("chassis_number")
+                insurance_details=request.POST.get("insurance_details")
+                maneuver=request.POST.get("maneuver")
+                damage=request.POST.get("damage")
+                defect=request.POST.get("defect")
+                loading=request.POST.get("loading")
+               
+                incident_vehicle=IncidentVehicle(incident_general=incident_general, classification=classification,vehicle_type=vehicle_type,
+                                       brand=brand,plate_number=plate_number,
+                                       engine_number=engine_number,chassis_number=chassis_number,
+                                       insurance_details=insurance_details, maneuver=maneuver,
+                                       damage=damage, defect=defect,
+                                      loading=loading)
+                incident_vehicle.save()
+                messages.success(request, 'Vehicle Added')
+                return redirect('user_reports')
+                
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        vehicle_instance = IncidentVehicleForm()
+    context = {
+        'vehicle_instance' : vehicle_instance,
+        'general': general,
+    }
+    return render(request, 'pages/a_incident_report_vehicle_add.html', context)
+
+
+@login_required(login_url='login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@user_passes_test(check_role_super)
+def a_incident_report_media_add(request, id=None):
+    incident_general =  get_object_or_404(IncidentGeneral, pk=id)
+    general = get_object_or_404(IncidentGeneral, pk=id)
+    if request.method == 'POST':
+        media_instance = IncidentMediaForm(request.POST or None, request.FILES or None)
+        try:
+            if media_instance.is_valid():
+                
+                incident_upload_photovideo=request.POST.get("incident_upload_photovideo")
+                media_description=request.POST.get("media_description")
+               
+                
+                incident_media=IncidentMedia(incident_general=incident_general, media_description=media_description, incident_upload_photovideo=incident_upload_photovideo)
+                incident_media.save()
+                messages.success(request, 'Media Added')
+                return redirect('user_reports')
+                
+        except Exception as e:
+            print('invalid form')
+            messages.error(request, str(e))
+
+
+    else:
+        media_instance = IncidentMediaForm()
+    context = {
+        'media_instance' : media_instance,
+        'general': general,
+    }
+    return render(request, 'pages/a_incident_report_media_add.html', context)
 
 @login_required(login_url = 'login')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

@@ -11,13 +11,14 @@ def ShowNotifications(request):
     
     profile = get_object_or_404(UserProfile, user=request.user)
     notifications = Notification.objects.filter(user=request.user).order_by('-date')
-    notifications_create = Notification.objects.all().order_by('-date')
-    notifications_create = notifications_create.exclude(user=request.user)
-  
+    notifications_default = Notification.objects.all().order_by('-date')
+    notifications_create = notifications_default.exclude(user=request.user)
+    notifications_member = Notification.objects.filter(sender=request.user).order_by('-date')
     context = {
         'profile': profile,
         'notifications': notifications,
-        'notifications_create': notifications_create
+        'notifications_create': notifications_create,
+        'notifications_member': notifications_member
     }
     return render(request, 'notifications.html', context)
 

@@ -187,10 +187,9 @@ class UserForm(forms.ModelForm):
         self.fields['date'].widget.attrs['autocomplete'] = 'off'
         self.fields['date'].input_formats = settings.DATE_INPUT_FORMATS
         
-        
         for field in self.fields:
             if field == 'latitude' or field == 'longitude' or field == 'city' or field == 'pin_code':
-                self.fields[field].widget.attrs['readonly'] = 'readonly'
+                self.fields[field].widget = forms.HiddenInput()
         
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
@@ -426,4 +425,5 @@ class IncidentGeneralForm_admin_super(forms.ModelForm):
             self.fields['description'].required = False
             self.fields['date'].widget.attrs['readonly'] = 'readonly'
             self.fields['time'].widget.attrs['readonly'] = 'readonly'
+
 

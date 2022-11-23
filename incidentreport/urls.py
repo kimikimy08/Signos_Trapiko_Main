@@ -108,6 +108,9 @@ urlpatterns = [
     path('incidentReport/vehicle/edit/<int:id>/<int:vehicle_id>/', views.a_incident_report_vehicle_edit, name='a_incident_report_vehicle_edit'),
     path('incidentReport/media/edit/<int:id>/<int:media_id>/', views.a_incident_report_media_edit, name='a_incident_report_media_edit'),
     path('incidentReport/remarks/edit/<int:id>/', views.a_incident_report_remarks_edit, name='a_incident_report_remarks_edit'),
+    path('incidentReport/people/add/<int:id>/', views.a_incident_report_people_add, name='a_incident_report_people_add'),
+    path('incidentReport/vehicle/add/<int:id>/', views.a_incident_report_vehicle_add, name='a_incident_report_vehicle_add'),
+    path('incidentReport/media/add/<int:id>/', views.a_incident_report_media_add, name='a_incident_report_media_add'),
     
     path('incidentReports/people/delete/<int:id>/', views.super_user_report_people_delete, name='super_user_report_people_delete'),
     path('incidentReports/vehicle/delete/<int:id>/', views.super_user_report_vehicle_delete, name='super_user_report_vehicle_delete'),
